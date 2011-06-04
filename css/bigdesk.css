@@ -1,0 +1,136 @@
+/*
+    Colour palettes for inspiration:
+    http://www.colourlovers.com/palettes/
+    http://www.colourlovers.com/palette/110225/Vintage_Modern
+    http://www.colourlovers.com/palette/100694/Machu_Picchu
+    http://www.colourlovers.com/palette/1602104/bug_in_my_nose
+    http://www.colourlovers.com/palette/1602103/Wool_Room
+    
+    http://www.colourlovers.com/palette/1578744/*True_Birdy
+
+    http://www.colourlovers.com/palette/1522870/Its_a_wrap!
+    http://www.colourlovers.com/palette/482416/Wasabi_Suicide
+*/
+/*
+.myPalette {
+    color: #D9EB67;
+    color: #BDCF4C;
+    color: #88A65E;
+    color: #628C6D;
+    color: #1F1B1D;
+
+    color: #FF4242;
+    color: #F4FAD2;
+    color: #D4EE5E;
+    color: #E1EDB9;
+    color: #F0F2EB;
+}
+*/
+html {
+    background-color: #1F1B1D;
+    background-image: url("../images/es-logo.png");
+    background-repeat: no-repeat;
+    background-position: center 200px;
+}
+
+body {
+    background-color: white;
+}
+
+body * {
+    color: #1F1B1D;
+    /*font: normal 12px/20px helvetica,arial,sans-serif;*/
+    font: normal 12px helvetica,arial,sans-serif;
+}
+
+.topSection {
+    padding: 5px 5px 0 5px;
+}
+
+#mainArea {
+    padding-top: 6px;
+    opacity: 0.3;
+    display: none;
+}
+
+.mainSection {
+    margin-top: 5px;
+    border-top: 3px solid #E1EDB9;
+    padding-left: 0px;
+}
+
+.mainSection * {
+    vertical-align: text-top;
+}
+
+.sectionHeader {
+    background-color: #F4FAD2;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:larger;
+    padding: 0 0 2px 0px;
+}
+
+.container {
+    overflow:auto;
+}
+
+.clusterName {
+    border: 2px solid #E1EDB9;
+    background-color: white;
+    padding: 2px 5px 2px 5px;
+    margin: 0 5px 0 5px;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+.node {
+    border: 2px solid #E1EDB9;
+    background-color: white;
+    cursor:pointer;
+    padding: 2px 5px 2px 5px;
+    margin: 0 0 0 5px;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+.node:hover {
+    border-color: #88A65E;
+}
+
+.node.selectedNode {
+    border: 2px solid #628C6D;
+    background-color: #F4FAD2;
+    cursor:default;
+}
+
+form #go,select {
+    margin-right: 20px;
+}
+
+#go {
+    width: 50px;
+}
+
+.v {
+    font-weight:bold;
+}
+
+#about.mainSection {
+    border-top: 3px solid #88A65E;
+    color: #628C6D;
+    background-color: #1F1B1D;
+    padding: 5px 5px 10px 10px;
+}
+
+#about .sectionHeader {
+    cursor: default;
+    color: #628C6D;
+    background-color: #1F1B1D;
+}
+
+#about.mainSection a {
+    color: #88A65E;
+}

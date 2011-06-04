@@ -1,0 +1,21 @@
+h1. BigDesk
+
+Live charts and statistics for ElasticSearch cluster.
+
+Info about cluster nodes:
+
+ * provide info about:
+ ** JVM details
+ ** OS details
+
+ * provides charts about:
+ ** JVM threads
+ ** JVM Heap and non-heap memory
+ ** OS CPU(%)
+ ** OS Mem
+ ** OS Swap
+
+User can switch between nodes in the cluster, new nodes are added and old nodes are removed automatically on the fly.
+
+On top of that it is possible to set refresh interval and time window for the charts (no limits, 1 minute, 5 minutes, ... etc)
+
