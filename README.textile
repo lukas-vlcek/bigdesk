@@ -5,10 +5,11 @@ Live charts and statistics for ElasticSearch cluster.
 Info about cluster nodes:
 
  * provide info about:
+ ** Global info about indices, field and filter caches
  ** JVM details
  ** OS details
 
- * provides charts about:
+ * provides charts:
  ** JVM threads
  ** JVM Heap and non-heap memory
  ** OS CPU(%)

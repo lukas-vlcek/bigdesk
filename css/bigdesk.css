@@ -27,10 +27,7 @@
 }
 */
 html {
-    background-color: #1F1B1D;
-    background-image: url("../images/es-logo.png");
-    background-repeat: no-repeat;
-    background-position: center 200px;
+    background: #1F1B1D url("../images/es-logo.png") no-repeat center 200px;
 }
 
 body {
@@ -116,6 +113,29 @@ form #go,select {
 
 .v {
     font-weight:bold;
+}
+
+.tableContainer {
+    width:300px;
+}
+
+.tableStyle {
+    padding-bottom: 10px;
+}
+
+.tableStyle table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tableStyle th {
+    font-weight: bold;
+    font-size: larger;
+    background-color: #F4FAD2;
+}
+
+.tableStyle td {
+    padding: 1px 3px 0 3px;
 }
 
 #about.mainSection {

@@ -50,7 +50,6 @@
             port.removeAttr("disabled");
             button.val("GO!");
             firstPoint = true;
-//            fadeAll();
             // disconected ...
         } else {
             mainArea.slideDown();
@@ -147,11 +146,6 @@
                 chosswap.series[0].addPoint([os.timestamp - 1, null], false, false);
                 chosswap.series[1].addPoint([os.timestamp - 1, null], false, false);
             }
-
-            // update section headers
-//            $(indicesHeadline).empty().fadeTo("fast",1);
-//            $(jvmUptime).empty().text(jvm.uptime).fadeTo("fast",1);
-//            $(osUptime).empty().text(os.uptime).fadeTo("fast",1);
 
             // update stats that are not charts
             updateIndices(indices);
