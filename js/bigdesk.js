@@ -89,7 +89,21 @@
     ];
 
     function connect (hostVal, portVal) {
-        var path = "http://" + hostVal + ":" + portVal + "/_cluster/health"
+        var path;
+        if (hostVal.indexOf('/') != -1) {
+            var hostArr = hostVal.split('/');
+
+            path = "http://" + hostArr[0] + ":" + portVal;
+            hostArr.shift(); // remove host
+
+            if (hostArr.length > 0) { // anything left?
+                path += "/" + hostArr.join('/');
+            }
+        } else {
+            path = "http://" + hostVal + ":" + portVal;
+        }
+        path += + "/_cluster/health";
+
         $.ajax({
             type: "GET",
             url: path,
