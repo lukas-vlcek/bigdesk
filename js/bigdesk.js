@@ -61,7 +61,7 @@
             if (!hostVal || !portVal || hostVal.trim().length == 0 || portVal.trim().length == 0) {
                 alert("Fill in host and port data!");
             } else {
-                endpoint();
+                setupEndpoint();
                 connect();
             }
         }
@@ -97,7 +97,7 @@
      * @todo Support scheme.
      * @todo Use some sort of parse_uri()
      */
-    function endpoint() {
+    function setupEndpoint() {
         if (host.val().indexOf('/') != -1) {
             var hostArr = host.val().split('/');
 
