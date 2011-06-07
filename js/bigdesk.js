@@ -27,6 +27,8 @@
         nodesSpan = $("#nodes"),
         timer, charts,
         nodes = {},
+        // for easier parsing
+        endpoint,
         // charts
         chjvmthreads, chjvmmemheap, chjvmmemnonheap,
         choscpu, chosmem, chosswap
@@ -59,7 +61,8 @@
             if (!hostVal || !portVal || hostVal.trim().length == 0 || portVal.trim().length == 0) {
                 alert("Fill in host and port data!");
             } else {
-                connect(hostVal, portVal);
+                endpoint();
+                connect();
             }
         }
     });
@@ -88,9 +91,14 @@
         chosswap = chartsBuilder.buildChOsSwap("os-swap",'Swap')
     ];
 
-    function connect (hostVal, portVal) {
-        var path;
-        if (hostVal.indexOf('/') != -1) {
+    /**
+     * Parse host and port fields into an endpoint form.
+     *
+     * @todo Support scheme.
+     * @todo Use some sort of parse_uri()
+     */
+    function endpoint() {
+        if (host.val().indexOf('/') != -1) {
             var hostArr = hostVal.split('/');
 
             path = "http://" + hostArr[0] + ":" + portVal;
@@ -102,6 +110,12 @@
         } else {
             path = "http://" + hostVal + ":" + portVal;
         }
+        endpoint = path;
+    }
+    
+
+    function connect () {
+        var path = endpoint;
         path += "/_cluster/health";
 
         $.ajax({
@@ -321,7 +335,7 @@
 
     function setupInterval (delay) {
         clearInterval(timer);
-        var path = "http://"+host.val()+":"+port.val()+"/_cluster/nodes/stats";
+        var path = endpoint + "/_cluster/nodes/stats";
         var _function = function(){
             $.ajax({
                 type: "GET",
