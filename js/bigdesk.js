@@ -99,16 +99,16 @@
      */
     function endpoint() {
         if (host.val().indexOf('/') != -1) {
-            var hostArr = hostVal.split('/');
+            var hostArr = host.val().split('/');
 
-            path = "http://" + hostArr[0] + ":" + portVal;
+            path = "http://" + hostArr[0] + ":" + port.val();
             hostArr.shift(); // remove host
 
             if (hostArr.length > 0) { // anything left?
                 path += "/" + hostArr.join('/');
             }
         } else {
-            path = "http://" + hostVal + ":" + portVal;
+            path = "http://" + host.val() + ":" + port.val();
         }
         endpoint = path;
     }
