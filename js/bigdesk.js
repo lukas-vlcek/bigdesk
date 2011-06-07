@@ -102,7 +102,7 @@
         } else {
             path = "http://" + hostVal + ":" + portVal;
         }
-        path += + "/_cluster/health";
+        path += "/_cluster/health";
 
         $.ajax({
             type: "GET",
