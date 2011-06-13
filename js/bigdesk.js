@@ -297,14 +297,15 @@
     function refreshNodeInfo (nodeName) {
         var id = getSelectedNodeId(nodeName);
         if (id) {
-            var path = "http://localhost:9200/_cluster/nodes/"+id;
+            var path = endpoint + "/_cluster/nodes/"+id;
             $.ajax({
                 type: "GET",
                 url: path,
                 dataType: 'jsonp',
                 success: function( data ) {
-                    if (data && data.nodes)
-                    updateStaticNodeData(data.nodes[id]);
+                    if (data && data.nodes) {
+                        updateStaticNodeData(data.nodes[id]);
+                    }
                 }
             });
         }
