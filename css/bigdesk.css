@@ -82,6 +82,11 @@ body * {
     -webkit-border-radius: 3px;
 }
 
+.node.masterNode {
+    padding-left: 20px;
+    background: url("../images/award_star_gold.png") no-repeat 1px 1px;
+}
+
 .node {
     border: 2px solid #E1EDB9;
     background-color: white;

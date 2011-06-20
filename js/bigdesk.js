@@ -1,5 +1,6 @@
 /**
  * BigDesk is a monitoring application with live charts and statistics info for ElasticSearch cluster.
+ * @github https://github.com/lukas-vlcek/bigdesk/
  * @author Lukas Vlcek (twitter: @lukasvlcek)
  */
 ;
@@ -115,9 +116,7 @@
     
 
     function connect () {
-        var path = endpoint;
-        path += "/_cluster/health";
-
+        var path = endpoint + "/_cluster/health";
         $.ajax({
             type: "GET",
             url: path,
@@ -133,17 +132,27 @@
         });
     }
 
-    function stats (data) {
+    /**
+     * @param stats /_cluster/nodes/stats
+     */
+    function stats (stats) {
 
-    //    console.log(data);
-        updateClusterAndNodeNames(data);
+        var path = endpoint + "/_cluster/state";
+        $.ajax({
+            type: "GET",
+            url: path,
+            data: "filter_metadata=true&filter_routing_table=true&filter_blocks=true",
+            dataType: 'jsonp',
+            success : function( state ) {
+                updateClusterAndNodeNames( stats, state );
+            }
+        });
 
         var selectedNode = undefined;
-        for (var node in data.nodes) {
-            if (!selectedNode && data.nodes[node].name == selectedNodeName) { selectedNode = data.nodes[node]; }
+        for (var node in stats.nodes) {
+            if (!selectedNode && stats.nodes[node].name == selectedNodeName) { selectedNode = stats.nodes[node]; }
         }
         if (selectedNode) {
-    //        console.log(selectedNode);
 
             var indices = selectedNode.indices;
             var jvm = selectedNode.jvm;
@@ -229,17 +238,27 @@
     }
 
     // Update cluster name and Nodes if there has been any change since the last run.
-    function updateClusterAndNodeNames (data){
-        if (data) {
-            if(data.cluster_name && clusterName != data.cluster_name) {
-                clusterName = data.cluster_name;
+    /**
+     * Update cluster name and Nodes if there has been any change since the last run.
+     * @param stats /_cluster/nodes/stats
+     * @param state /_cluster/state
+     */
+    function updateClusterAndNodeNames ( stats, state ){
+        if (stats) {
+            // get master node id if available
+            var masterNodeId = undefined;
+            if (state) {
+               masterNodeId = state.master_node;
+            }
+            if(stats.cluster_name && clusterName != stats.cluster_name) {
+                clusterName = stats.cluster_name;
                 clusterNameSpan.text(clusterName);
             }
-            if (data.nodes) {
+            if (stats.nodes) {
                 var nodesChanged = false;
                 for (var node in nodes) {
                     // node removed?
-                    if (!data.nodes[node]) {
+                    if (!stats.nodes[node]) {
                         if (selectedNodeName && nodes[node] == selectedNodeName) {
                             selectedNodeName = undefined;
                             cleanCharts(charts);
@@ -249,10 +268,10 @@
                         nodesChanged = true;
                     }
                 }
-                for (var node in data.nodes) {
+                for (var node in stats.nodes) {
                     // new node?
                     if (!nodes[node]) {
-                        nodes[node] = data.nodes[node].name;
+                        nodes[node] = stats.nodes[node].name;
                         nodesChanged = true;
                     }
                 }
@@ -270,6 +289,7 @@
                     $.each(_nodes, function(index, value) {
                         var node =  $(document.createElement("span")).attr("class","node").append(value);
                         if (value == selectedNodeName) { $(node).addClass("selectedNode"); }
+                        if ( masterNodeId == getSelectedNodeId(value)) { $(node).addClass( "masterNode" ); }
                         $(node).click(
                             function(){
                                 // new node selected by user
@@ -319,7 +339,6 @@
     }
 
     function updateStaticNodeData (data) {
-//        console.log(data);
         if (data) {
             $("#networkStateTmpl").mustache(data).appendTo(networkStateContainer.empty());
             if (data.os && data.os.cpu) {
