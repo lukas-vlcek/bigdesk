@@ -47,7 +47,7 @@
     <script id="networkStateTmpl" type="x-tmpl-mustache">
          <tr><td>HTTP address:</td><td>{{http_address}}</td></tr>
          <tr><td>Transport address:</td><td>{{transport_address}}</td></tr>
-         <tr><td>Refresh interval:</td><td>{{#network}}{{refresh_interval}}{{/network}}</td></tr>
+         <tr><td>Refresh interval:</td><td>{{#network}}{{refresh_interval}} ms{{/network}}</td></tr>
     </script>
 
     <script id="transportStateTmpl" type="x-tmpl-mustache">
@@ -110,19 +110,62 @@
         </table>
     </div>
 
-<div id="indices" class="mainSection">
-    <div class="sectionHeader">Indices</div>
-    <div class="container">
-        Not loaded...
+    <div id="indices" class="mainSection">
+        <div class="sectionHeader">Indices</div>
+        <div class="container">
+            Not loaded...
+        </div>
     </div>
-</div>
 
-<div id="jvm" class="mainSection">
-    <div class="sectionHeader">JVM</div>
-    <div class="container">
+    <div id="jvm" class="mainSection">
+        <div class="sectionHeader">JVM</div>
+        <div class="container">
+            <table>
+                <tr>
+                    <td rowspan="2" style="vertical-align:middle;">
+                        <div class="tableContainer">
+                            <table style=" margin-left:auto; margin-right: auto;">
+                                <tr>
+                                    <td>
+                                        <div class="tableStyle">
+                                            <table>
+                                                <thead>
+                                                    <tr><th colspan="2">JVM</th></tr>
+                                                </thead>
+                                                <tbody id="jvmStateContainer">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="tableStyle">
+                                            <table style="width:100%;">
+                                                <thead>
+                                                    <tr><th colspan="3">GC</th></tr>
+                                                    <tr><th>Type:</th><th>Count:</th><th>Time:</th></tr>
+                                                </thead>
+                                                <tbody id="jvmStatsContainer"/>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                    <td rowspan="2"><div id="jvm-mem-heap" style="width: 680px; height: 350px"></div></td>
+                    <td><div id="jvm-threads" style="width: 450px; height: 200px"></div></td>
+                </tr>
+                <tr>
+                    <td><div id="jvm-mem-non-heap" style="width: 450px; height: 150px"></div></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="os" class="mainSection">
+        <div class="sectionHeader">System</div>
+        <div class="container">
         <table>
             <tr>
-                <td style="vertical-align:middle;">
+                <td rowspan="2" style="vertical-align:middle;">
                     <div class="tableContainer">
                         <table style=" margin-left:auto; margin-right: auto;">
                             <tr>
@@ -130,81 +173,41 @@
                                     <div class="tableStyle">
                                         <table>
                                             <thead>
-                                                <tr><th colspan="2">JVM</th></tr>
+                                                <tr><th colspan="2">CPU</th></tr>
                                             </thead>
-                                            <tbody id="jvmStateContainer">
-                                            </tbody>
+                                            <tbody id="cpuStateContainer"/>
                                         </table>
                                     </div>
                                     <div class="tableStyle">
-                                        <table style="width:100%;">
+                                        <table>
                                             <thead>
-                                                <tr><th colspan="3">GC</th></tr>
-                                                <tr><th>Type:</th><th>Count:</th><th>Time:</th></tr>
+                                                <tr><th colspan="2">Network</th></tr>
                                             </thead>
-                                            <tbody id="jvmStatsContainer"/>
+                                            <tbody id="networkStateContainer"/>
                                         </table>
                                     </div>
-
+                                    <div class="tableStyle">
+                                        <table>
+                                            <thead>
+                                                <tr><th colspan="2">Transport</th></tr>
+                                            </thead>
+                                            <tbody id="transportStateContainer"/>
+                                        </table>
+                                    </div>
                                 </td>
                             </tr>
                         </table>
                     </div>
                 </td>
-                <td><div id="jvm-threads" style="width: 640px; height: 350px"></div></td>
-                <td><div id="jvm-mem-heap" style="width: 450px; height: 350px"></div></td>
-                <td><div id="jvm-mem-non-heap" style="width: 450px; height: 350px"></div></td>
+                <td rowspan="2"><div id="os-cpu" style="width: 680px; height: 350px"></div></td>
+                <td><div id="os-mem" style="width: 450px; height: 200px"></div></td>
+            </tr>
+            <tr>
+                <td><div id="os-swap" style="width: 450px; height: 150px"></div></td>
             </tr>
         </table>
+        </div>
     </div>
-</div>
-
-<div id="os" class="mainSection">
-    <div class="sectionHeader">System</div>
-    <div class="container">
-    <table>
-        <tr>
-            <td style="vertical-align:middle;">
-                <div class="tableContainer">
-                    <table style=" margin-left:auto; margin-right: auto;">
-                        <tr>
-                            <td>
-                                <div class="tableStyle">
-                                    <table>
-                                        <thead>
-                                            <tr><th colspan="2">CPU</th></tr>
-                                        </thead>
-                                        <tbody id="cpuStateContainer"/>
-                                    </table>
-                                </div>
-                                <div class="tableStyle">
-                                    <table>
-                                        <thead>
-                                            <tr><th colspan="2">Network</th></tr>
-                                        </thead>
-                                        <tbody id="networkStateContainer"/>
-                                    </table>
-                                </div>
-                                <div class="tableStyle">
-                                    <table>
-                                        <thead>
-                                            <tr><th colspan="2">Transport</th></tr>
-                                        </thead>
-                                        <tbody id="transportStateContainer"/>
-                                    </table>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </td>
-            <td><div id="os-cpu" style="width: 640px; height: 350px"></div></td>
-            <td><div id="os-mem" style="width: 450px; height: 350px"></div></td>
-            <td><div id="os-swap" style="width: 450px; height: 350px"></div></td>
-        </tr>
-    </table>
-    </div>
-</div>
 
 </div>
 

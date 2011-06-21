@@ -84,8 +84,8 @@
     charts = [
         // jvm charts
         chjvmthreads = chartsBuilder.buildChJvmThreads('jvm-threads'),
-        chjvmmemheap = chartsBuilder.buildChJvmMem('jvm-mem-heap', 'Mem Heap'),
-        chjvmmemnonheap = chartsBuilder.buildChJvmMem('jvm-mem-non-heap', 'Mem Non-Heap'),
+        chjvmmemheap = chartsBuilder.buildChJvmHeapMem('jvm-mem-heap', 'Mem Heap'),
+        chjvmmemnonheap = chartsBuilder.buildChJvmNonHeapMem('jvm-mem-non-heap', 'Mem Non-Heap'),
         // os charts
         choscpu = chartsBuilder.buildChOsCpu("os-cpu"),
         chosmem = chartsBuilder.buildChOsMem("os-mem"),
