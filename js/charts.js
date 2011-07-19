@@ -5,6 +5,13 @@
 ;
 var chartsBuilder = (function() {
 
+    // use client local time
+    Highcharts.setOptions({
+    global: {
+        useUTC: false
+        }
+    });
+
     var buildChJvmThreads = function(renderTo) {
         return new Highcharts.Chart({
             chart: {
