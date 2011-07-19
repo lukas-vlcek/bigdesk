@@ -63,6 +63,19 @@
          <tr><td>PID:</td><td>{{pid}}</td></tr>
     </script>
 
+    <script id="processStateTmpl" type="x-tmpl-mustache">
+          <td>Max file descriptors:</td><td>{{max_file_descriptors}}</td>
+    </script>
+
+    <script id="processStatsTmpl" type="x-tmpl-mustache">
+          <td>Open file descriptors:</td><td>{{open_file_descriptors}}</td>
+    </script>
+
+    <script id="nodeStatsTmpl" type="x-tmpl-mustache">
+          <tr><td>Open http channels:</td><td>{{#http}}{{server_open}}{{/http}}</td></tr>
+          <tr><td>Open transport channels:</td><td>{{#transport}}{{server_open}}{{/transport}}</td></tr>
+    </script>
+
 </head>
 <body>
 
@@ -110,10 +123,53 @@
         </table>
     </div>
 
+    <div class="containerScroll">
+
     <div id="indices" class="mainSection">
         <div class="sectionHeader">Indices</div>
         <div class="container">
             Not loaded...
+        </div>
+    </div>
+
+    <div id="process" class="mainSection">
+        <div class="sectionHeader">Process</div>
+        <div class="container">
+            <table>
+                <tr>
+                    <td style="vertical-align:middle;">
+                        <div class="tableContainer">
+                            <table style=" margin-left:auto; margin-right: auto;">
+                                <tr id="processStatsContainer"></tr>
+                                <tr id="processStateContainer"></tr>
+                            </table>
+                        </div>
+                    </td>
+                    <td style="vertical-align:middle;">
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="node" class="mainSection">
+        <div class="sectionHeader">Node</div>
+        <div class="container">
+            <table>
+                <tr>
+                    <td style="vertical-align:middle;">
+                        <div class="tableContainer">
+                            <table style=" margin-left:auto; margin-right: auto;">
+                                <tbody id="nodeStatsContainer"></tbody>
+                            </table>
+                        </div>
+                    </td>
+                    <td style="vertical-align:middle;">
+
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 
@@ -207,6 +263,8 @@
             </tr>
         </table>
         </div>
+    </div>
+
     </div>
 
 </div>

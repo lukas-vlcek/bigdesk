@@ -35,7 +35,8 @@ body {
 }
 
 body * {
-    color: #1F1B1D;
+    /*color: #1F1B1D;*/
+    color: #343032;
     /*font: normal 12px/20px helvetica,arial,sans-serif;*/
     font: normal 12px helvetica,arial,sans-serif;
 }
@@ -51,9 +52,15 @@ body * {
 }
 
 .mainSection {
+    /*width: 100%;*/
     margin-top: 5px;
-    border-top: 3px solid #E1EDB9;
-    padding-left: 0px;
+    /*border-top: 3px solid #E1EDB9;*/
+    /*border-top: 0px solid;*/
+    /*padding-left: 0px;*/
+    /*margin-left: 10px;*/
+    /*border: 1px solid black;*/
+    background-color: #eee;
+    /*width: 100%;*/
 }
 
 .mainSection * {
@@ -61,20 +68,37 @@ body * {
 }
 
 .sectionHeader {
-    background-color: #F4FAD2;
+    /*background-color: #e5ede0;*/
+    background-color: #e5e5e5;
     cursor:pointer;
     font-weight:bold;
     font-size:larger;
     padding: 0 0 2px 0px;
 }
 
-.container {
-    overflow:auto;
+.sectionHeader:hover {
+    /*background-color: #d4e2cc;*/
+}
+
+/*.container {*/
+/*}*/
+
+.containerScroll {
+    overflow: auto;
+    /*padding-top: 10px;*/
+    margin-top: 10px;
+    background-color: white;
+    box-shadow: 0px 0px 10px 1px #ddd;
+    -moz-box-shadow: 0px 0px 10px 1px #ddd;
+    -webkit-box-shadow: 0px 0px 10px 1px #ddd;
 }
 
 .clusterName {
-    border: 2px solid #E1EDB9;
-    background-color: white;
+    /*border: 2px solid #E1EDB9;*/
+    border: 2px solid #666;
+    /*background-color: white;*/
+    background-color: #666666;
+    color: white;
     padding: 2px 5px 2px 5px;
     margin: 0 5px 0 5px;
     border-radius: 3px;
@@ -88,7 +112,8 @@ body * {
 }
 
 .node {
-    border: 2px solid #E1EDB9;
+    /*border: 2px solid #E1EDB9;*/
+    border: 2px solid #cccccc;
     background-color: white;
     cursor:pointer;
     padding: 2px 5px 2px 5px;
@@ -100,11 +125,15 @@ body * {
 
 .node:hover {
     border-color: #88A65E;
+    background-color: #eee;
 }
 
 .node.selectedNode {
-    border: 2px solid #628C6D;
-    background-color: #F4FAD2;
+    /*border: 2px solid #628C6D;*/
+    border: 2px solid #336600;
+    /*background-color: #F4FAD2;*/
+    background-color: #aeba9c;
+    color: white;
     cursor:default;
 }
 
@@ -136,7 +165,7 @@ form #go,select {
 .tableStyle th {
     font-weight: bold;
     font-size: larger;
-    background-color: #F4FAD2;
+    /*background-color: #F4FAD2;*/
 }
 
 .tableStyle td {

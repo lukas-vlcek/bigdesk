@@ -18,6 +18,9 @@
         transportStateContainer = $("#transportStateContainer"),
         networkStateContainer = $("#networkStateContainer"),
         jvmStateContainer = $("#jvmStateContainer"),
+        processStateContainer = $("#processStateContainer"),
+        processStatsContainer = $("#processStatsContainer"),
+        nodeStatsContainer = $("#nodeStatsContainer"),
         connected = false,
         firstPoint = true,
         winsize = $("#winsize"),
@@ -157,6 +160,7 @@
             var indices = selectedNode.indices;
             var jvm = selectedNode.jvm;
             var os = selectedNode.os;
+            var process = selectedNode.process;
 
             // insert blank space into charts
             if (firstPoint) {
@@ -187,6 +191,8 @@
             // update stats that are not charts
             updateIndices(indices);
             updateJvmGC(jvm.gc);
+            updateProcessStats(process);
+            updateNodeStats(selectedNode);
 
             // populate charts
             chjvmthreads.series[0].addPoint([jvm.timestamp, (jvm.threads ? jvm.threads.count : null)], false, false);
@@ -235,6 +241,18 @@
             gc.collectorsX.push(col);
         });
         $("#jvmStatsTmpl").mustache(gc).appendTo(jvmStatsContainer.empty());
+    }
+
+    function updateProcessStats (process) {
+        if (process) {
+            $("#processStatsTmpl").mustache(process).appendTo(processStatsContainer.empty());
+        }
+    }
+
+    function updateNodeStats (node) {
+        if (node) {
+            $("#nodeStatsTmpl").mustache(node).appendTo(nodeStatsContainer.empty());
+        }
     }
 
     // Update cluster name and Nodes if there has been any change since the last run.
@@ -349,6 +367,9 @@
             }
             if (data.jvm) {
                 $("#jvmStateTmpl").mustache(data.jvm).appendTo(jvmStateContainer.empty());;
+            }
+            if (data.process) {
+                $("#processStateTmpl").mustache(data.process).appendTo(processStateContainer.empty());
             }
         }
     }
