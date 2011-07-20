@@ -34,9 +34,12 @@
         // for easier parsing
         endpoint,
         // charts
+        chProcessFileDesc, chNodeOpenChannels,
         chjvmthreads, chjvmmemheap, chjvmmemnonheap,
         choscpu, chosmem, chosswap
         ;
+
+    var _selectedNodeState = {};
 
     mainArea.slideUp();
 
@@ -85,6 +88,9 @@
 
     // build all charts
     charts = [
+        // process chart
+        chProcessFileDesc = chartsBuilder.buildChProcessFileDesc('process_file_descriptors'),
+        chNodeOpenChannels = chartsBuilder.buildChNodeOpenChannels('node_open_channels'),
         // jvm charts
         chjvmthreads = chartsBuilder.buildChJvmThreads('jvm-threads'),
         chjvmmemheap = chartsBuilder.buildChJvmHeapMem('jvm-mem-heap', 'Mem Heap'),
@@ -161,11 +167,18 @@
             var jvm = selectedNode.jvm;
             var os = selectedNode.os;
             var process = selectedNode.process;
+            var currentMillis = new Date().getTime();
 
             // insert blank space into charts
             if (firstPoint) {
 
                 firstPoint = false;
+
+                chProcessFileDesc.series[0].addPoint([process.timestamp - 1, null], false, false);
+                chProcessFileDesc.series[1].addPoint([process.timestamp - 1, null], false, false);
+
+                chNodeOpenChannels.series[0].addPoint([currentMillis - 1, null], false, false);
+                chNodeOpenChannels.series[1].addPoint([currentMillis - 1, null], false, false);
 
                 chjvmthreads.series[0].addPoint([jvm.timestamp - 1, null], false, false);
                 chjvmthreads.series[1].addPoint([jvm.timestamp - 1, null], false, false);
@@ -195,6 +208,17 @@
             updateNodeStats(selectedNode);
 
             // populate charts
+
+            chartPoint(chProcessFileDesc.series[0], process.timestamp, process.open_file_descriptors);
+            chartPoint(chProcessFileDesc.series[1], process.timestamp, ( _selectedNodeState.process ? _selectedNodeState.process.max_file_descriptors : null));
+
+            shrinkCharts([chProcessFileDesc], process.timestamp - winsizeVal);
+
+            chartPoint(chNodeOpenChannels.series[0], currentMillis, (selectedNode.http ? selectedNode.http.server_open : null));
+            chartPoint(chNodeOpenChannels.series[1], currentMillis, (selectedNode.transport ? selectedNode.transport.server_open : null));
+
+            shrinkCharts([chNodeOpenChannels], currentMillis - winsizeVal);
+
             chartPoint(chjvmthreads.series[0], jvm.timestamp, (jvm.threads ? jvm.threads.count : null));
             chartPoint(chjvmthreads.series[1], jvm.timestamp, (jvm.threads ? jvm.threads.peak_count : null));
 
@@ -347,6 +371,7 @@
     }
 
     function refreshNodeInfo (nodeName) {
+        _selectedNodeState = {}; // TODO temporary
         var id = getSelectedNodeId(nodeName);
         if (id) {
             var path = endpoint + "/_cluster/nodes/"+id;
@@ -384,6 +409,7 @@
             }
             if (data.process) {
                 $("#processStateTmpl").mustache(data.process).appendTo(processStateContainer.empty());
+                _selectedNodeState.process = { max_file_descriptors: data.process.max_file_descriptors };
             }
         }
     }

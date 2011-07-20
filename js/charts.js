@@ -89,8 +89,77 @@ var chartsBuilder = (function() {
                 enabled: false
             },
             series: [
-                { name: 'count' },
-                { name: 'max cnt' }
+                { name: 'open' },
+                { name: 'max' }
+            ]
+        });
+    };
+
+    var buildChNodeOpenChannels = function(renderTo) {
+        return new Highcharts.Chart({
+            chart: {
+                renderTo: renderTo,
+                defaultSeriesType: 'line',
+                borderWidth: _default.chart.borderWidth,
+                borderColor: _default.chart.borderColor,
+                plotBackgroundColor: _default.chart.plotBackgroundColor,
+                marginRight: _default.chart.marginRight,
+                marginBottom: _default.chart.marginBottom,
+                marginTop: _default.chart.marginTop,
+                spacingTop: _default.chart.spacingTop,
+                spacingRight: _default.chart.spacingRight,
+                spacingBottom: _default.chart.spacingBottom
+            },
+            title: {
+                text: 'Open Channels'
+            },
+            plotOptions: {
+                series: {
+                    lineWidth: 0.5,
+                    marker: { radius: 2 }
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150
+            },
+            yAxis: {
+                title: {
+                    text: 'Count'
+                },
+                plotLines: [
+                    {
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }
+                ]
+            },
+            tooltip: {
+                formatter: function() {
+                    return '<b>' + this.series.name + '</b><br/>' +
+                            Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                            Highcharts.numberFormat(this.y, 2);
+                }
+            },
+            legend: {
+                enabled: true,
+                align: 'right',
+                layout: 'vertical',
+                verticalAlign: 'bottom',
+                borderWidth: 0,
+                x: -5,
+                y: -32
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [
+                { name: 'http' },
+                { name: 'transport' }
             ]
         });
     };
@@ -540,6 +609,7 @@ var chartsBuilder = (function() {
 
     return {
         buildChProcessFileDesc : buildChProcessFileDesc,
+        buildChNodeOpenChannels : buildChNodeOpenChannels,
         buildChJvmThreads : buildChJvmThreads,
         buildChJvmHeapMem : buildChJvmHeapMem,
         buildChJvmNonHeapMem : buildChJvmNonHeapMem,
