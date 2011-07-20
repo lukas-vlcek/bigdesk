@@ -5,6 +5,20 @@
 ;
 var chartsBuilder = (function() {
 
+    var _default = {
+        chart : {
+            borderWidth: 1,
+            borderColor : '#eee',
+            plotBackgroundColor : '#f7f7f7',
+            marginRight: 105,
+            marginBottom: 30,
+            marginTop: 35,
+            spacingTop: 0,
+            spacingRight: 0,
+            spacingBottom: 0
+        }
+    };
+
     // use client local time
     Highcharts.setOptions({
     global: {
@@ -12,22 +26,89 @@ var chartsBuilder = (function() {
         }
     });
 
+    var buildChProcessFileDesc = function(renderTo) {
+        return new Highcharts.Chart({
+            chart: {
+                renderTo: renderTo,
+                defaultSeriesType: 'line',
+                borderWidth: _default.chart.borderWidth,
+                borderColor: _default.chart.borderColor,
+                plotBackgroundColor: _default.chart.plotBackgroundColor,
+                marginRight: _default.chart.marginRight,
+                marginBottom: _default.chart.marginBottom,
+                marginTop: _default.chart.marginTop,
+                spacingTop: _default.chart.spacingTop,
+                spacingRight: _default.chart.spacingRight,
+                spacingBottom: _default.chart.spacingBottom
+            },
+            title: {
+                text: 'File Descriptors'
+            },
+            plotOptions: {
+                series: {
+                    lineWidth: 0.5,
+                    marker: { radius: 2 }
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150
+            },
+            yAxis: {
+                title: {
+                    text: 'Count'
+                },
+                plotLines: [
+                    {
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }
+                ]
+            },
+            tooltip: {
+                formatter: function() {
+                    return '<b>' + this.series.name + '</b><br/>' +
+                            Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                            Highcharts.numberFormat(this.y, 2);
+                }
+            },
+            legend: {
+                enabled: true,
+                align: 'right',
+                layout: 'vertical',
+                verticalAlign: 'bottom',
+                borderWidth: 0,
+                x: -5,
+                y: -32
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [
+                { name: 'count' },
+                { name: 'max cnt' }
+            ]
+        });
+    };
+
     var buildChJvmThreads = function(renderTo) {
         return new Highcharts.Chart({
             chart: {
                 renderTo: renderTo,
                 defaultSeriesType: 'line',
-                borderWidth: 1,
-//                borderColor: '#E1EDB9',
-                borderColor: '#eee',
-//                plotBackgroundColor: '#FCFFE5',
-                plotBackgroundColor: '#f7f7f7',
-                marginRight: 105,
-                marginBottom: 30,
-                marginTop: 35,
-                spacingTop: 0,
-                spacingRight: 0,
-                spacingBottom: 0
+                borderWidth: _default.chart.borderWidth,
+                borderColor: _default.chart.borderColor,
+                plotBackgroundColor: _default.chart.plotBackgroundColor,
+                marginRight: _default.chart.marginRight,
+                marginBottom: _default.chart.marginBottom,
+                marginTop: _default.chart.marginTop,
+                spacingTop: _default.chart.spacingTop,
+                spacingRight: _default.chart.spacingRight,
+                spacingBottom: _default.chart.spacingBottom
             },
             title: {
                 text: 'Threads'
@@ -88,17 +169,15 @@ var chartsBuilder = (function() {
             chart: {
                 renderTo: renderTo,
                 defaultSeriesType: 'area',
-                borderWidth: 1,
-//                borderColor: '#E1EDB9',
-                borderColor: '#eee',
-//                plotBackgroundColor: '#FCFFE5',
-                plotBackgroundColor: '#f7f7f7',
-                marginRight: 105,
-                marginBottom: 30,
-                marginTop: 35,
-                spacingTop: 0,
-                spacingRight: 0,
-                spacingBottom: 0
+                borderWidth: _default.chart.borderWidth,
+                borderColor: _default.chart.borderColor,
+                plotBackgroundColor: _default.chart.plotBackgroundColor,
+                marginRight: _default.chart.marginRight,
+                marginBottom: _default.chart.marginBottom,
+                marginTop: _default.chart.marginTop,
+                spacingTop: _default.chart.spacingTop,
+                spacingRight: _default.chart.spacingRight,
+                spacingBottom: _default.chart.spacingBottom
             },
             title: {
                 text: title
@@ -167,17 +246,15 @@ var chartsBuilder = (function() {
             chart: {
                 renderTo: renderTo,
                 defaultSeriesType: 'area',
-                borderWidth: 1,
-//                borderColor: '#E1EDB9',
-                borderColor: '#eee',
-//                plotBackgroundColor: '#FCFFE5',
-                plotBackgroundColor: '#f7f7f7',
-                marginRight: 105,
-                marginBottom: 30,
-                marginTop: 35,
-                spacingTop: 0,
-                spacingRight: 0,
-                spacingBottom: 0
+                borderWidth: _default.chart.borderWidth,
+                borderColor: _default.chart.borderColor,
+                plotBackgroundColor: _default.chart.plotBackgroundColor,
+                marginRight: _default.chart.marginRight,
+                marginBottom: _default.chart.marginBottom,
+                marginTop: _default.chart.marginTop,
+                spacingTop: _default.chart.spacingTop,
+                spacingRight: _default.chart.spacingRight,
+                spacingBottom: _default.chart.spacingBottom
             },
             title: {
                 text: title
@@ -246,17 +323,15 @@ var chartsBuilder = (function() {
             chart: {
                 renderTo: renderTo,
                 defaultSeriesType: 'area',
-                borderWidth: 1,
-//                borderColor: '#E1EDB9',
-                borderColor: '#eee',
-//                plotBackgroundColor: '#FCFFE5',
-                plotBackgroundColor: '#f7f7f7',
-                marginRight: 105,
-                marginBottom: 30,
-                marginTop: 35,
-                spacingTop: 0,
-                spacingRight: 0,
-                spacingBottom: 0
+                borderWidth: _default.chart.borderWidth,
+                borderColor: _default.chart.borderColor,
+                plotBackgroundColor: _default.chart.plotBackgroundColor,
+                marginRight: _default.chart.marginRight,
+                marginBottom: _default.chart.marginBottom,
+                marginTop: _default.chart.marginTop,
+                spacingTop: _default.chart.spacingTop,
+                spacingRight: _default.chart.spacingRight,
+                spacingBottom: _default.chart.spacingBottom
             },
             title: {
                 text: 'CPU(%)'
@@ -313,17 +388,15 @@ var chartsBuilder = (function() {
             chart: {
                 renderTo: renderTo,
                 defaultSeriesType: 'area',
-                borderWidth: 1,
-//                borderColor: '#E1EDB9',
-                borderColor: '#eee',
-//                plotBackgroundColor: '#FCFFE5',
-                plotBackgroundColor: '#f7f7f7',
-                marginRight: 105,
-                marginBottom: 30,
-                marginTop: 35,
-                spacingTop: 0,
-                spacingRight: 0,
-                spacingBottom: 0
+                borderWidth: _default.chart.borderWidth,
+                borderColor: _default.chart.borderColor,
+                plotBackgroundColor: _default.chart.plotBackgroundColor,
+                marginRight: _default.chart.marginRight,
+                marginBottom: _default.chart.marginBottom,
+                marginTop: _default.chart.marginTop,
+                spacingTop: _default.chart.spacingTop,
+                spacingRight: _default.chart.spacingRight,
+                spacingBottom: _default.chart.spacingBottom
             },
             title: {
                 text: title
@@ -392,17 +465,15 @@ var chartsBuilder = (function() {
             chart: {
                 renderTo: renderTo,
                 defaultSeriesType: 'area',
-                borderWidth: 1,
-//                borderColor: '#E1EDB9',
-                borderColor: '#eee',
-                plotBackgroundColor: '#f7f7f7',
-//                plotBackgroundColor: '#FCFFE5',
-                marginRight: 105,
-                marginBottom: 30,
-                marginTop: 35,
-                spacingTop: 0,
-                spacingRight: 0,
-                spacingBottom: 0
+                borderWidth: _default.chart.borderWidth,
+                borderColor: _default.chart.borderColor,
+                plotBackgroundColor: _default.chart.plotBackgroundColor,
+                marginRight: _default.chart.marginRight,
+                marginBottom: _default.chart.marginBottom,
+                marginTop: _default.chart.marginTop,
+                spacingTop: _default.chart.spacingTop,
+                spacingRight: _default.chart.spacingRight,
+                spacingBottom: _default.chart.spacingBottom
             },
             title: {
                 text: "Mem"
@@ -468,6 +539,7 @@ var chartsBuilder = (function() {
     };
 
     return {
+        buildChProcessFileDesc : buildChProcessFileDesc,
         buildChJvmThreads : buildChJvmThreads,
         buildChJvmHeapMem : buildChJvmHeapMem,
         buildChJvmNonHeapMem : buildChJvmNonHeapMem,
