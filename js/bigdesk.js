@@ -195,33 +195,47 @@
             updateNodeStats(selectedNode);
 
             // populate charts
-            chjvmthreads.series[0].addPoint([jvm.timestamp, (jvm.threads ? jvm.threads.count : null)], false, false);
-            chjvmthreads.series[1].addPoint([jvm.timestamp, (jvm.threads ? jvm.threads.peak_count : null)], false, false);
+            chartPoint(chjvmthreads.series[0], jvm.timestamp, (jvm.threads ? jvm.threads.count : null));
+            chartPoint(chjvmthreads.series[1], jvm.timestamp, (jvm.threads ? jvm.threads.peak_count : null));
 
-            chjvmmemheap.series[0].addPoint([jvm.timestamp, (jvm.mem ? jvm.mem.heap_committed_in_bytes : null)], false, false);
-            chjvmmemheap.series[1].addPoint([jvm.timestamp, (jvm.mem ? jvm.mem.heap_used_in_bytes : null)], false, false);
+            chartPoint(chjvmmemheap.series[0], jvm.timestamp, (jvm.mem ? jvm.mem.heap_committed_in_bytes : null));
+            chartPoint(chjvmmemheap.series[1], jvm.timestamp, (jvm.mem ? jvm.mem.heap_used_in_bytes : null));
 
-            chjvmmemnonheap.series[0].addPoint([jvm.timestamp, (jvm.mem ? jvm.mem.non_heap_committed_in_bytes : null)], false, false);
-            chjvmmemnonheap.series[1].addPoint([jvm.timestamp, (jvm.mem ? jvm.mem.non_heap_used_in_bytes : null)], false, false);
+            chartPoint(chjvmmemnonheap.series[0], jvm.timestamp, (jvm.mem ? jvm.mem.non_heap_committed_in_bytes : null));
+            chartPoint(chjvmmemnonheap.series[1], jvm.timestamp, (jvm.mem ? jvm.mem.non_heap_used_in_bytes : null));
 
             shrinkCharts([chjvmthreads, chjvmmemheap, chjvmmemnonheap], jvm.timestamp - winsizeVal);
 
-            choscpu.series[0].addPoint([os.timestamp, (os.cpu ? os.cpu.idle : null)], false, false);
-            choscpu.series[1].addPoint([os.timestamp, (os.cpu ? os.cpu.sys : null)], false, false);
-            choscpu.series[2].addPoint([os.timestamp, (os.cpu ? os.cpu.user : null)], false, false);
+            chartPoint(choscpu.series[0], os.timestamp, (os.cpu ? os.cpu.idle : null));
+            chartPoint(choscpu.series[1], os.timestamp, (os.cpu ? os.cpu.sys : null));
+            chartPoint(choscpu.series[2], os.timestamp, (os.cpu ? os.cpu.user : null));
 
-            chosmem.series[0].addPoint([os.timestamp, (os.mem.actual_free_in_bytes && os.mem.actual_used_in_bytes ? os.mem.actual_free_in_bytes + os.mem.actual_used_in_bytes : null)], false, false);
-            chosmem.series[1].addPoint([os.timestamp, (os.mem.used_in_bytes ? os.mem.used_in_bytes : null)], false, false);
-            chosmem.series[2].addPoint([os.timestamp, (os.mem.actual_used_in_bytes ? os.mem.actual_used_in_bytes : null)], false, false);
+            chartPoint(chosmem.series[0], os.timestamp, (os.mem.actual_free_in_bytes && os.mem.actual_used_in_bytes ? os.mem.actual_free_in_bytes + os.mem.actual_used_in_bytes : null));
+            chartPoint(chosmem.series[1], os.timestamp, (os.mem.used_in_bytes ? os.mem.used_in_bytes : null));
+            chartPoint(chosmem.series[2], os.timestamp, (os.mem.actual_used_in_bytes ? os.mem.actual_used_in_bytes : null));
 
-            chosswap.series[0].addPoint([os.timestamp, (os.swap ? os.swap.free_in_bytes : null)], false, false);
-            chosswap.series[1].addPoint([os.timestamp, (os.swap ? os.swap.used_in_bytes : null)], false, false);
+            chartPoint(chosswap.series[0], os.timestamp, (os.swap ? os.swap.free_in_bytes : null));
+            chartPoint(chosswap.series[1], os.timestamp, (os.swap ? os.swap.used_in_bytes : null));
 
             shrinkCharts([choscpu, chosmem, chosswap],os.timestamp - winsizeVal);
 
             // redraw all charts
             redrawCharts(charts);
 
+        }
+    }
+
+    function chartPoint ( series, timestamp, value ) {
+        if ( series && series.data && series.data.length > 0 ) {
+            var point = series.data[ series.data.length -1 ];
+            if ( point && point.category ) {
+                // do not add point with the same timestamp (causes issues in highcharts)
+                if ( point.category < timestamp ) {
+                    series.addPoint( [timestamp, value], false, false );
+                }
+            } else {
+                series.addPoint( [timestamp, value], false, false );
+            }
         }
     }
 
