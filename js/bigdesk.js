@@ -208,7 +208,6 @@
             updateNodeStats(selectedNode);
 
             // populate charts
-
             chartPoint(chProcessFileDesc.series[0], process.timestamp, process.open_file_descriptors);
             chartPoint(chProcessFileDesc.series[1], process.timestamp, ( _selectedNodeState.process ? _selectedNodeState.process.max_file_descriptors : null));
 
@@ -250,11 +249,15 @@
     }
 
     function chartPoint ( series, timestamp, value ) {
-        if ( series && series.data && series.data.length > 0 ) {
-            var point = series.data[ series.data.length -1 ];
-            if ( point && point.category ) {
-                // do not add point with the same timestamp (causes issues in highcharts)
-                if ( point.category < timestamp ) {
+        if ( series && series.data ) {
+            if ( series.data.length > 0) {
+                var point = series.data[ series.data.length -1 ];
+                if ( point && point.category ) {
+                    // do not add point with the same timestamp (causes issues in highcharts)
+                    if ( point.category < timestamp ) {
+                        series.addPoint( [timestamp, value], false, false );
+                    }
+                } else {
                     series.addPoint( [timestamp, value], false, false );
                 }
             } else {
@@ -445,7 +448,9 @@
             for (var i = 0; i < chartsArray.length; i++) {
                 for (var s = 0; s < chartsArray[i].series.length; s++) {
                     var series = chartsArray[i].series[s];
-                    while (series.data[0].category && series.data[0].category < threshold) series.data[0].remove(false);
+                    if (series.data && series.data.length > 0 ) {
+                        while (series.data[0].category && series.data[0].category < threshold) series.data[0].remove(false);
+                    }
                 }
             }
         }
