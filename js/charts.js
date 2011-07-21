@@ -607,6 +607,65 @@ var chartsBuilder = (function() {
         });
     };
 
+    var buildChCacheSize = function(renderTo) {
+        return new Highcharts.Chart({
+            chart: {
+                renderTo: renderTo,
+                borderWidth: _default.chart.borderWidth,
+                borderColor: _default.chart.borderColor,
+                plotBackgroundColor: _default.chart.plotBackgroundColor,
+                plotBorderWidth: 0,
+                marginRight: 60,
+                marginLeft: 10,
+                marginBottom: 10,
+                marginTop: _default.chart.marginTop,
+                spacingTop: _default.chart.spacingTop,
+                spacingRight: _default.chart.spacingRight,
+                spacingBottom: _default.chart.spacingBottom
+            },
+            title: {
+                text: "Cache Size"
+            },
+            credits: {
+                enabled: false
+            },
+            tooltip: {
+                formatter: function() {
+                    return '<b>'+ this.point.name +'</b>: '+ this.y +' bytes';
+                 }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    innerSize: 25,
+                    size: "100%",
+                    showInLegend: true
+                }
+            },
+            legend: {
+                enabled: true,
+                align: 'right',
+                layout: 'vertical',
+                verticalAlign: 'bottom',
+                borderWidth: 0,
+                x: 0,
+                y: -16
+            },
+            series: [{
+                type: 'pie',
+                name: 'Browser share',
+                data: [
+                    ['field',  null],
+                    ['filter', null]
+                ]
+            }]
+        });
+    };
+
     return {
         buildChProcessFileDesc : buildChProcessFileDesc,
         buildChNodeOpenChannels : buildChNodeOpenChannels,
@@ -615,6 +674,7 @@ var chartsBuilder = (function() {
         buildChJvmNonHeapMem : buildChJvmNonHeapMem,
         buildChOsCpu : buildChOsCpu,
         buildChOsMem : buildChOsMem,
-        buildChOsSwap : buildChOsSwap
+        buildChOsSwap : buildChOsSwap,
+        buildChCacheSize : buildChCacheSize
     }
 })();
