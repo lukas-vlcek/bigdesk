@@ -12,7 +12,7 @@
         host = $("#host"),
         port = $("#port"),
         interval = $("#interval"),
-        indicesStatsContainer = $("#indices div.container"),
+        indicesStatsContainer = $("#indicesContainer"),
         jvmStatsContainer = $("#jvmStatsContainer"),
         cpuStateContainer = $("#cpuStateContainer"),
         transportStateContainer = $("#transportStateContainer"),
@@ -34,6 +34,7 @@
         // for easier parsing
         endpoint,
         // charts
+        chCacheSize,
         chProcessFileDesc, chNodeOpenChannels,
         chjvmthreads, chjvmmemheap, chjvmmemnonheap,
         choscpu, chosmem, chosswap
@@ -100,6 +101,7 @@
         chosmem = chartsBuilder.buildChOsMem("os-mem"),
         chosswap = chartsBuilder.buildChOsSwap("os-swap",'Swap')
     ];
+    chCacheSize = chartsBuilder.buildChCacheSize("cache_size");
 
     /**
      * Parse host and port fields into an endpoint form.
@@ -174,6 +176,9 @@
 
                 firstPoint = false;
 
+                chCacheSize.series[0].data[0].update(null);
+                chCacheSize.series[0].data[1].update(null);
+
                 chProcessFileDesc.series[0].addPoint([process.timestamp - 1, null], false, false);
                 chProcessFileDesc.series[1].addPoint([process.timestamp - 1, null], false, false);
 
@@ -207,7 +212,13 @@
             updateProcessStats(process);
             updateNodeStats(selectedNode);
 
-            // populate charts
+            // update pie chart
+            if (indices.cache) {
+                chCacheSize.series[0].data[0].update(indices.cache.field_size_in_bytes);
+                chCacheSize.series[0].data[1].update(indices.cache.filter_size_in_bytes);
+            }
+
+            // populate area and line charts
             chartPoint(chProcessFileDesc.series[0], process.timestamp, process.open_file_descriptors);
             chartPoint(chProcessFileDesc.series[1], process.timestamp, ( _selectedNodeState.process ? _selectedNodeState.process.max_file_descriptors : null));
 

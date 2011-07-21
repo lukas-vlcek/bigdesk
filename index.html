@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="css/bigdesk.css">
     
     <script id="indicesStatsTmpl" type="x-tmpl-mustache">
-        <table>
             <tr><td nowrap>
                 Number of documents: <span class="v">{{#docs}}{{num_docs}}{{/docs}}</span>,
                 Store size: <span class="v">{{size}}</span> (<span class="v">{{size_in_bytes}} B</span>)
@@ -26,7 +25,6 @@
                     Total: <span class="v">{{total}}</span>,
                     Took: <span class="v">{{total_time}}</span>{{/merges}}
             </td></tr>
-        </table>
     </script>
 
     <script id="jvmStatsTmpl" type="x-tmpl-mustache">
@@ -128,7 +126,20 @@
     <div id="indices" class="mainSection">
         <div class="sectionHeader">Indices</div>
         <div class="container">
-            Not loaded...
+            <table>
+                <tr>
+                    <td style="vertical-align:middle;">
+                        <div class="tableContainer" style="width:530px;">
+                            <table style=" margin-left:auto; margin-right: auto;">
+                                <tbody id="indicesContainer">
+                                    <tr><td>Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                    <td><div id="cache_size" style="width: 150px; height: 110px"></div></td>
+                </tr>
+            </table>
         </div>
     </div>
 
