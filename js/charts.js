@@ -636,14 +636,17 @@ var chartsBuilder = (function() {
             },
             plotOptions: {
                 pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
+                    allowPointSelect: false,
                     dataLabels: {
                         enabled: false
                     },
-                    innerSize: 25,
                     size: "100%",
-                    showInLegend: true
+                    showInLegend: true,
+                    point: {
+                        events: {
+                            legendItemClick: function(event){ return false; }
+                        }
+                    }
                 }
             },
             legend: {
@@ -655,14 +658,27 @@ var chartsBuilder = (function() {
                 x: 0,
                 y: -16
             },
-            series: [{
-                type: 'pie',
-                name: 'Browser share',
-                data: [
-                    ['field',  null],
-                    ['filter', null]
-                ]
-            }]
+            series: [
+                {
+                    type: 'pie',
+                    name: 'Cache Proportion',
+                    innerSize: '25%',
+                    size: '78%',
+                    showInLegend: false,
+                    data: [
+                        { name:'field',  color:'#494' },
+                        { name:'filter', color:'#939' }
+                    ]
+                },{
+                    type: 'pie',
+                    name: 'With Heap',
+                    innerSize: '79%',
+                    data: [
+                        { name:'heap',   color:'#aaa' },
+                        { name:'field',  color:'#494' },
+                        { name:'filter', color:'#939' }
+                    ]
+                }]
         });
     };
 
