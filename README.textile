@@ -10,6 +10,8 @@ Info about cluster nodes:
  ** OS details
 
  * provides charts:
+ ** Size of Field and Filter Caches
+ ** File Descriptors and Open Channels
  ** JVM threads
  ** JVM Heap and non-heap memory
  ** OS CPU(%)
