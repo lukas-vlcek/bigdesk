@@ -1,43 +1,15 @@
 /*
     Colour palettes for inspiration:
     http://www.colourlovers.com/palettes/
-    http://www.colourlovers.com/palette/110225/Vintage_Modern
-    http://www.colourlovers.com/palette/100694/Machu_Picchu
-    http://www.colourlovers.com/palette/1602104/bug_in_my_nose
-    http://www.colourlovers.com/palette/1602103/Wool_Room
-    
-    http://www.colourlovers.com/palette/1578744/*True_Birdy
-
-    http://www.colourlovers.com/palette/1522870/Its_a_wrap!
-    http://www.colourlovers.com/palette/482416/Wasabi_Suicide
-*/
-/*
-.myPalette {
-    color: #D9EB67;
-    color: #BDCF4C;
-    color: #88A65E;
-    color: #628C6D;
-    color: #1F1B1D;
-
-    color: #FF4242;
-    color: #F4FAD2;
-    color: #D4EE5E;
-    color: #E1EDB9;
-    color: #F0F2EB;
-}
 */
 html {
-    background: #1F1B1D url("../images/es-logo.png") no-repeat center 200px;
-}
-
-body {
-    background-color: white;
+    background: white url("../images/es-logo.png") no-repeat center 200px;
+    overflow: -moz-scrollbars-vertical;
+    overflow-y: scroll;
 }
 
 body * {
-    /*color: #1F1B1D;*/
     color: #343032;
-    /*font: normal 12px/20px helvetica,arial,sans-serif;*/
     font: normal 12px helvetica,arial,sans-serif;
 }
 
@@ -51,16 +23,13 @@ body * {
     display: none;
 }
 
+.clusterInfo {
+    margin-left: 5px;
+}
+
 .mainSection {
-    /*width: 100%;*/
     margin-top: 5px;
-    /*border-top: 3px solid #E1EDB9;*/
-    /*border-top: 0px solid;*/
-    /*padding-left: 0px;*/
-    /*margin-left: 10px;*/
-    /*border: 1px solid black;*/
     background-color: #eee;
-    /*width: 100%;*/
 }
 
 .mainSection * {
@@ -68,23 +37,24 @@ body * {
 }
 
 .sectionHeader {
-    /*background-color: #e5ede0;*/
     background-color: #e5e5e5;
-    cursor:pointer;
+    /*cursor:pointer;*/
     font-weight:bold;
     font-size:larger;
     padding: 0 0 2px 0px;
+    margin-left: 5px;
 }
 
 .sectionHeader:hover {
     /*background-color: #d4e2cc;*/
 }
 
-/*.container {*/
-/*}*/
+.container {
+    width: 100%;
+}
 
 .containerScroll {
-    overflow: auto;
+    /*overflow: auto;*/
     /*padding-top: 10px;*/
     margin-top: 10px;
     background-color: white;
@@ -172,19 +142,18 @@ form #go,select {
     padding: 1px 3px 0 3px;
 }
 
+#about .sectionHeader {
+    cursor: default;
+    color: #d1d1d1;
+    background-color: white;
+}
+
 #about.mainSection {
-    border-top: 3px solid #88A65E;
-    color: #628C6D;
-    background-color: #1F1B1D;
+    color: #d1d1d1;
+    background-color: white;
     padding: 5px 5px 10px 10px;
 }
 
-#about .sectionHeader {
-    cursor: default;
-    color: #628C6D;
-    background-color: #1F1B1D;
-}
-
 #about.mainSection a {
-    color: #88A65E;
+    color: #d1d1d1;
 }

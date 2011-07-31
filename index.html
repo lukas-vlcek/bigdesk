@@ -77,6 +77,7 @@
 </head>
 <body>
 
+<table><tr><td>
 <div id="top" class="topSection">
     <form id="form" action="#">
         <input id="host" type="text" value="localhost"/>
@@ -110,9 +111,10 @@
     </form>
 </div>
 
+<table><tr><td>
 <div id="mainArea">
 
-    <div>
+    <div class="clusterInfo">
         <table>
             <tr>
                 <td>Cluster:<span id="cluster-name" class="clusterName"></span></td>
@@ -265,11 +267,13 @@
     </div>
 
 </div>
+</td></tr></table>
 
 <div id="about" class="mainSection">
-    <div class="sectionHeader">About BigDesk</div>
-    v 1.0.1-SNAPSHOT, GitHub: <a href="https://github.com/lukas-vlcek/bigdesk" target="_blank">BigDesk</a>
+    BigDesk v1.0.1-SNAPSHOT, GitHub: <a href="https://github.com/lukas-vlcek/bigdesk" target="_blank">BigDesk</a>
 </div>
+
+</td></tr></table>
 
 <script src="js/lib/jquery/jquery-1.4.4.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/lib/mustache/mustache.js" type="text/javascript" charset="utf-8"></script>
