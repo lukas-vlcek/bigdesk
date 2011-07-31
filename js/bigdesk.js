@@ -221,7 +221,7 @@
                 chCacheSize.series[0].data[0].update(indices.cache.field_size_in_bytes);
                 chCacheSize.series[0].data[1].update(indices.cache.filter_size_in_bytes);
 
-                chCacheSize.series[1].data[0].update((jvm.mem ? jvm.mem.non_heap_committed_in_bytes : null));
+                chCacheSize.series[1].data[0].update((jvm.mem ? jvm.mem.heap_committed_in_bytes : null));
                 chCacheSize.series[1].data[1].update(indices.cache.field_size_in_bytes);
                 chCacheSize.series[1].data[2].update(indices.cache.filter_size_in_bytes);
             }
