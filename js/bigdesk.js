@@ -44,9 +44,9 @@
 
     mainArea.slideUp();
 
-    $(".sectionHeader").click(function(event){
-        $(".container",event.target.parentNode).slideToggle();
-    });
+//    $(".sectionHeader").click(function(event){
+//        $(".container",event.target.parentNode).slideToggle();
+//    });
 
     form.bind('submit', function(){ return false; });
 
