@@ -264,7 +264,7 @@ var chartsBuilder = (function() {
                 },
                 labels: {
                     formatter: function() {
-                        var res = this.value / 1024000;
+                        var res = this.value / 1048576;
                         res = Math.round(res * Math.pow(10, 2)) / Math.pow(10, 2);
                         return res;
                     }
@@ -274,7 +274,7 @@ var chartsBuilder = (function() {
                 formatter: function() {
                     return '' +
                             Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + ': ' +
-                            Highcharts.numberFormat(this.y / 1024000, 1) + 'mb';
+                            Highcharts.numberFormat(this.y / 1048576, 1) + 'mb';
                 }
             },
             plotOptions: {
@@ -341,7 +341,7 @@ var chartsBuilder = (function() {
                 },
                 labels: {
                     formatter: function() {
-                        var res = this.value / 1024000;
+                        var res = this.value / 1048576;
                         res = Math.round(res * Math.pow(10, 2)) / Math.pow(10, 2);
                         return res;
                     }
@@ -351,7 +351,7 @@ var chartsBuilder = (function() {
                 formatter: function() {
                     return '' +
                             Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + ': ' +
-                            Highcharts.numberFormat(this.y / 1024000, 1) + 'mb';
+                            Highcharts.numberFormat(this.y / 1048576, 1) + 'mb';
                 }
             },
             plotOptions: {
@@ -483,7 +483,7 @@ var chartsBuilder = (function() {
                 },
                 labels: {
                     formatter: function() {
-                        var res = this.value / 1024000;
+                        var res = this.value / 1048576;
                         res = Math.round(res * Math.pow(10, 2)) / Math.pow(10, 2);
                         return res;
                     }
@@ -493,7 +493,7 @@ var chartsBuilder = (function() {
                 formatter: function() {
                     return '' +
                             Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + ': ' +
-                            Highcharts.numberFormat(this.y / 1024000, 1) + 'mb';
+                            Highcharts.numberFormat(this.y / 1048576, 1) + 'mb';
                 }
             },
             plotOptions: {
@@ -560,7 +560,7 @@ var chartsBuilder = (function() {
                 },
                 labels: {
                     formatter: function() {
-                        var res = this.value / 1024000;
+                        var res = this.value / 1048576;
                         res = Math.round(res * Math.pow(10, 2)) / Math.pow(10, 2);
                         return res;
                     }
@@ -570,7 +570,7 @@ var chartsBuilder = (function() {
                 formatter: function() {
                     return '' +
                             Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + ': ' +
-                            Highcharts.numberFormat(this.y / 1024000, 1) + 'mb';
+                            Highcharts.numberFormat(this.y / 1048576, 1) + 'mb';
                 }
             },
             plotOptions: {
