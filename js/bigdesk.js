@@ -127,6 +127,24 @@
     
 
     function connect () {
+        getClusterHealth( function(data) {
+            setupInterval( $("option:selected", interval).val() );
+            connected = true;
+            host.attr("disabled", "true");
+            port.attr("disabled", "true");
+            button.val("STOP");
+        });
+    }
+
+    function updateClusterHealthStatus() {
+        getClusterHealth( function(data) {
+            if ( data && data.status) {
+                $("#cluster-name").removeClass("red yellow green").addClass(data.status);
+            }
+        });
+    }
+
+    function getClusterHealth( callback ) {
         var path = endpoint + "/_cluster/health";
         $.ajax({
             type: "GET",
@@ -134,11 +152,9 @@
             data: "level=shards",
             dataType: 'jsonp',
             success : function( data ) {
-                setupInterval( $("option:selected", interval).val() );
-                connected = true;
-                host.attr("disabled", "true");
-                port.attr("disabled", "true");
-                button.val("STOP");
+                if ( typeof callback == 'function' ) {
+                    callback( data );
+                }
             }
         });
     }
@@ -448,6 +464,7 @@
                     stats(data);
                 }
             });
+            updateClusterHealthStatus();
         };
         _function(); // execute the _function right now before the first delay interval elapses
         timer = setInterval(_function, delay);

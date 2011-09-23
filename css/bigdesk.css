@@ -64,9 +64,7 @@ body * {
 }
 
 .clusterName {
-    /*border: 2px solid #E1EDB9;*/
     border: 2px solid #666;
-    /*background-color: white;*/
     background-color: #666666;
     color: white;
     padding: 2px 5px 2px 5px;
@@ -156,4 +154,17 @@ form #go,select {
 
 #about.mainSection a {
     color: #d1d1d1;
+}
+
+#cluster-name.red {
+    background-color: red;
+}
+
+#cluster-name.yellow {
+    background-color: yellow;
+    color: black;
+}
+
+#cluster-name.green {
+    background-color: green;
 }
