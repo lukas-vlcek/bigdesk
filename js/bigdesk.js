@@ -229,6 +229,8 @@
             // update stats that are not charts
             updateIndices(indices);
             updateJvmGC(jvm.gc);
+            updateJvmUptime(jvm.uptime);
+            updateOsUptime(os.uptime);
             updateProcessStats(process);
             updateNodeStats(selectedNode);
 
@@ -317,6 +319,14 @@
             gc.collectorsX.push(col);
         });
         $("#jvmStatsTmpl").mustache(gc).appendTo(jvmStatsContainer.empty());
+    }
+
+    function updateJvmUptime (uptime) {
+        $("#jvm_uptime").text(uptime);
+    }
+
+    function updateOsUptime (uptime) {
+        $("#os_uptime").text(uptime);
     }
 
     function updateProcessStats (process) {
