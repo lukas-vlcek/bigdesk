@@ -2,6 +2,8 @@ h1. BigDesk
 
 Live charts and statistics for ElasticSearch cluster.
 
+!https://github.com/lukas-vlcek/bigdesk/blob/master/screenshot.jpg!
+
 Info about cluster nodes:
 
  * provide info about:
