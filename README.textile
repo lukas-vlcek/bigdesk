@@ -24,3 +24,5 @@ User can switch between nodes in the cluster, new nodes are added and old nodes 
 
 On top of that it is possible to set refresh interval and time window for the charts (no limits, 1 minute, 5 minutes, ... etc)
 
+Supports elasticsearch 0.17.x and 0.18.x
+
