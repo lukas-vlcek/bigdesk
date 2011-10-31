@@ -307,6 +307,16 @@
         if (!indices) return;
         // response format changed in 0.16
         // see https://github.com/elasticsearch/elasticsearch/issues/746
+        // another change happened in 0.18.x
+        if (indices.docs && indices.docs.count) {
+            // hotfix for 0.18.x
+            indices.docs.num_docs = indices.docs.count;
+        }
+        if (indices.store && indices.store.size) {
+            // hotfix for 0.18.x
+            indices.size = indices.store.size;
+            indices.size_in_bytes = indices.store.size_in_bytes;
+        }
         $("#indicesStatsTmpl").mustache(indices).appendTo(indicesStatsContainer.empty());
     }
 
