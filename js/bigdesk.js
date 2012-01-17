@@ -87,6 +87,20 @@
         redrawCharts(charts);
     });
 
+    parsedUri = parseUri(document.location.href);
+
+    if (typeof parsedUri.queryKey.host !== 'undefined') {
+        host.val(parsedUri.queryKey.host);
+    }
+
+    if (typeof parsedUri.queryKey.port !== 'undefined') {
+        port.val(parsedUri.queryKey.port);
+    }
+
+    if (typeof parsedUri.queryKey.go !== 'undefined') {
+        button.click();
+    }
+
     // build all charts
     charts = [
         // process chart
