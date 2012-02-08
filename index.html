@@ -300,6 +300,15 @@
 <script src="js/lib/parseUri/parseuri.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/charts.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/bigdesk.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    $(function() {
+        if (location.href.indexOf("/_plugin/") != -1) {
+            document.forms['form'].host.value = location.hostname;
+            document.forms['form'].port.value = location.port;
+            $("#go").click();
+        }
+    });
+</script>
 
 </body>
 </html>
