@@ -488,7 +488,7 @@
 
     function setupInterval (delay) {
         clearInterval(timer);
-        var path = endpoint + "/_cluster/nodes/stats";
+        var path = endpoint + "/_cluster/nodes/stats?all=true";
         var _function = function(){
             $.ajax({
                 type: "GET",
