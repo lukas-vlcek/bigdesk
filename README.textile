@@ -6,9 +6,9 @@ Live charts and statistics for ElasticSearch cluster.
 | master | 0.19.x -> master |
 | 1.0.0 | 0.17.x -> 0.18.x |
 
-In order to install the plugin, simply run: <code>bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/ </code> for master version.
+In order to install the plugin, simply run: <code>bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/</code> for master version.
 
-To get specific version of bigdesk use:  <code>bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/1.0.0 </code>
+To get specific version of bigdesk use:  <code>bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/1.0.0</code>
 
 The below screenshot is bigdesk 1.0.0
 !https://github.com/lukas-vlcek/bigdesk/raw/master/screenshot.jpg!
