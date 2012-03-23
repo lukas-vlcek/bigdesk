@@ -142,7 +142,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     stats = _.filter(stats, function(item){ return (item!=undefined)});
 
                     var stats_the_latest = stats[stats.length - 1];
-                    console.log("the latest stats snapshot", stats_the_latest);
+//                    console.log("the latest stats snapshot", stats_the_latest);
 
                     // --------------------------------------------
                     // File Descriptors
