@@ -170,7 +170,7 @@ function timeAreaChart() {
 
         if (data3 && data3.length > 0) {
             // we assume data3 (if present) is always max
-            value_scale.domain([0,d3.max(data3, function(d){return d.value})]);
+            value_scale.domain([0,d3.max(data3, function(d){return d.value})]).nice();
         } else {
             value_scale.domain([0,
                 d3.max([
