@@ -126,6 +126,18 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         width: 55})
                     .svg(d3.select("#svg_osSwap"));
 
+                var chart_osLoadAvg = timeSeriesChart()
+                    .width(270).height(160)
+                    .legend({
+                        caption: "Load Average",
+                        series1: "0",
+                        series2: "1",
+                        series3: "2",
+                        margin_left: 5,
+                        margin_bottom: 6,
+                        width: 40})
+                    .svg(d3.select("#svg_osLoadAvg"));
+
                 var nodesStatsCollection = _view.model.get("nodesStats");
 
                 var updateCharts = function() {
@@ -339,6 +351,27 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     });
                     chart_osSwap.update(os_swap_used, os_swap_free);
 
+                    // --------------------------------------------
+                    // OS load average
+                    var os_loadAvg_0 = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.node.os.timestamp,
+                            value: + snapshot.node.os.load_average["0"]
+                        }
+                    });
+                    var os_loadAvg_1 = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.node.os.timestamp,
+                            value: + snapshot.node.os.load_average["1"]
+                        }
+                    });
+                    var os_loadAvg_2 = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.node.os.timestamp,
+                            value: + snapshot.node.os.load_average["2"]
+                        }
+                    });
+                    chart_osLoadAvg.update(os_loadAvg_0, os_loadAvg_1, os_loadAvg_2);
 
                 };
 
@@ -613,9 +646,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
         var osCharts2 = this.make("div", {},
             "<svg width='100%' height='160'>" +
                 "<svg id='svg_osSwap' clip_id='clip_osSwap' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-                "<svg id='svg_osDummy' clip_id='clip_osDummy' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'>" +
-                    "<rect id='example' x='0' y='0' width='100%' height='100%' fill='#eee'/>" +
-                "</svg>" +
+                "<svg id='svg_osLoadAvg' clip_id='clip_osLoadAvg' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
             "</svg>"
         );
 
