@@ -44,6 +44,12 @@
     fill: white;
 }
 
+.circle_line3 {
+    stroke: #7c9;
+    stroke-width: 0.7;
+    fill: white;
+}
+
 .legend_background {
     stroke: #ccc;
     stroke-width: 0.7;
@@ -70,6 +76,12 @@
 
 .legend_circle_line2 {
     stroke: #c77;
+    stroke-width: 1.5;
+    fill: white;
+}
+
+.legend_circle_line3 {
+    stroke: #7c9;
     stroke-width: 1.5;
     fill: white;
 }

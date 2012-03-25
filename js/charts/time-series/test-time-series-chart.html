@@ -45,6 +45,7 @@ Chart holds series up to 20 data points.
 
     var data1Chart2 = [],
         data2Chart2 = [];
+        data3Chart2 = [];
 
     var width = 330,
         height = 150;
@@ -62,7 +63,7 @@ Chart holds series up to 20 data points.
     var chart1 = timeSeriesChart()
             .width(width).height(height)
             .legend({
-                caption: "Time series 1",
+                caption: "2x Time series",
                 series1: "Open File Descriptors",
                 series2: "Max File Descriptors",
                 margin_left: 5,
@@ -74,20 +75,22 @@ Chart holds series up to 20 data points.
     var chart2 = timeSeriesChart()
             .width(width).height(height)
             .legend({
-                caption: "Time series 2",
-                series1: "Open File Descriptors",
-                series2: "Max File Descriptors",
+                caption: "3x Time series",
+                series1: "First series",
+                series2: "Second series",
+                series3: "Thirds series",
                 margin_left: 5,
                 margin_bottom: 6,
-                width: 150
+                width: 110
             })
             .svg(svgChart2);
 
     chart1.update(data1Chart1, data2Chart1);
-    chart2.update(data1Chart2, data2Chart2);
+    chart2.update(data1Chart2, data2Chart2, data3Chart2);
 
     var random1 = d3.random.normal(100, 30);
     var random2 = d3.random.normal(150, 20);
+    var random3 = d3.random.normal(180, 40);
 
     var updateChart1 = function() {
 
@@ -107,12 +110,14 @@ Chart holds series up to 20 data points.
         if (data1Chart2.length > 19) {
             data1Chart2.shift();
             data2Chart2.shift();
+            data3Chart2.shift();
         }
         var now = new Date().getTime();
         data1Chart2.push({ timestamp: now, value: random1() });
         data2Chart2.push({ timestamp: now, value: random2() });
+        data3Chart2.push({ timestamp: now, value: random3() });
 
-        chart2.update(data1Chart2, data2Chart2);
+        chart2.update(data1Chart2, data2Chart2, data3Chart2);
     }
 
 </script>

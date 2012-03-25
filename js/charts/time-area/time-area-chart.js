@@ -164,6 +164,8 @@ function timeAreaChart() {
 
     };
 
+    // data1 and data2 are mandatory
+    // data3 is optional
     chart.update = function(data1, data2, data3) {
 
         if (!initialized) init();

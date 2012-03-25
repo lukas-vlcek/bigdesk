@@ -6,19 +6,24 @@ function timeSeriesChart() {
         legend = { caption: "Time series", series1: "series1", series2: "series2", width: 110 },
         svg = undefined,
         initialized = false,
+
+        line = undefined,
         path1 = undefined,
         path2 = undefined,
+        path3 = undefined,
+
         circlesContainer = undefined,
+
         time_scale = undefined,
         time_scale_axis = undefined,
         value_scale = undefined,
+
         xAxis = undefined,
-        yAxis = undefined,
-        line = undefined;
+        yAxis = undefined;
 
     function chart() {};
 
-    function init() {
+    function init(data1, data2, data3) {
 
         if (!svg || svg.length == 0) throw "svg element must be set";
 
@@ -75,6 +80,12 @@ function timeSeriesChart() {
             .attr("clip-path", "url(#"+clip_id+")")
             .append("path");
 
+        if (data3) {
+            path3 = svg.append("g")
+                .attr("clip-path", "url(#"+clip_id+")")
+                .append("path");
+        }
+
         circlesContainer = svg.append("g")
             .attr("clip-path", "url(#"+clip_id+")")
             .attr("id","circlesContainer");
@@ -91,7 +102,7 @@ function timeSeriesChart() {
             .call(yAxis);
 
         // legend
-        var legendSize = { width: legend.width, height: 31 };
+        var legendSize = { width: legend.width, height: (data3 ? 47 : 31)};
 
         var legendSvg = svg.append("svg:g");
 
@@ -106,6 +117,7 @@ function timeSeriesChart() {
 
         var legend1 = legendSvg.append("text").text(legend.series1).attr("class","legend_text");
         var legend2 = legendSvg.append("text").text(legend.series2).attr("class","legend_text");
+        var legend3 = legendSvg.append("text").text(legend.series3).attr("class","legend_text");
 
         legend1.attr("font-size", 10)
             .attr("font-family", "Verdana")
@@ -125,6 +137,19 @@ function timeSeriesChart() {
             .attr("class", "legend_circle_line2")
             .attr("transform","translate("+10+","+(legendSize.height - 8 - 14)+")");
 
+        if (data3) {
+
+            legend3.attr("font-size", 10)
+                .attr("font-family", "Verdana")
+                .attr("transform","translate("+20+","+(legendSize.height - 5 - 14 - 14)+")");
+
+            legendSvg.append("circle")
+                .attr("r", 3)
+                .attr("class", "legend_circle_line3")
+                .attr("transform","translate("+10+","+(legendSize.height - 8 - 14 - 14)+")");
+
+        }
+
         // caption
         if (legend.caption && legend.caption.length > 0) {
 
@@ -138,9 +163,11 @@ function timeSeriesChart() {
 
     };
 
-    chart.update = function(data1, data2) {
+    // data1 and data2 are mandatory
+    // data3 is optional
+    chart.update = function(data1, data2, data3) {
 
-        if (!initialized) init();
+        if (!initialized) init(data1, data2, data3);
 
         var circles1 = circlesContainer.selectAll("circle.circle_line1")
             .data(data1, function(d){return d.timestamp});
@@ -158,10 +185,25 @@ function timeSeriesChart() {
             .attr("class","circle_line2")
             .attr("r", 1.5);
 
+        var circles3 = undefined;
+
+        if (data3) {
+
+            circles3 = circlesContainer.selectAll("circle.circle_line3")
+                .data(data3, function(d){return d.timestamp});
+
+            circles3.enter()
+                .append("circle")
+                .attr("class","circle_line3")
+                .attr("r", 1.5);
+
+        }
+
         value_scale.domain([0,
             d3.max([
                 d3.max(data1, function(d){return d.value}),
-                d3.max(data2, function(d){return d.value})
+                d3.max(data2, function(d){return d.value}),
+                d3.max(data3 ? data3 : [], function(d){return d.value})
             ])
         ]).nice();
 
@@ -195,6 +237,21 @@ function timeSeriesChart() {
             .attr("class", "line2")
             .attr("d", line(data2));
 
+        if (data3) {
+
+            circles3.attr("cx", function(d){return time_scale(new Date(d.timestamp))})
+                .attr("cy", function(d){return value_scale(d.value)});
+
+            circles3.transition().duration(250).ease("linear")
+                .attr("cx", function(d){return time_scale(new Date(d.timestamp))})
+                .attr("cy", function(d){return value_scale(d.value)});
+
+            path3.data(data3)
+                .attr("class", "line3")
+                .attr("d", line(data3));
+
+        }
+
         if (data1.length > 2)
             time_scale.domain([
                 data1[1].timestamp,
@@ -212,6 +269,11 @@ function timeSeriesChart() {
 
         circles1.exit().remove();
         circles2.exit().remove();
+
+        if (data3) {
+            path3.transition().duration(250).ease("linear").attr("d", line(data3));
+            circles3.exit().remove();
+        }
 
     };
 
