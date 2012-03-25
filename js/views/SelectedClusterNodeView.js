@@ -373,6 +373,24 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     });
                     chart_osLoadAvg.update(os_loadAvg_0, os_loadAvg_1, os_loadAvg_2);
 
+                    // --------------------------------------------
+                    // Indices
+
+                    if (stats_the_latest && stats_the_latest.node) {
+                        $("#indices_docs_count").text(stats_the_latest.node.indices.docs.count);
+                        $("#indices_docs_deleted").text(stats_the_latest.node.indices.docs.deleted);
+                        $("#indices_store_size").text(stats_the_latest.node.indices.store.size);
+                        $("#indices_flush_total").text(stats_the_latest.node.indices.flush.total + ", " + stats_the_latest.node.indices.flush.total_time);
+                        $("#indices_refresh_total").text(stats_the_latest.node.indices.refresh.total + ", " + stats_the_latest.node.indices.refresh.total_time);
+                    } else {
+                        $("#indices_docs_count").text("n/a");
+                        $("#indices_docs_deleted").text("n/a");
+                        $("#indices_store_size").text("n/a");
+                        $("#indices_flush_total").text("n/a");
+                        $("#indices_refresh_total").text("n/a");
+                    }
+
+
                 };
 
                 // add custom listener for the collection to update UI and charts on changes
@@ -409,7 +427,6 @@ var SelectedClusterNodeView = Backbone.View.extend({
     ].join("<br>"),
 
     fileDescriptorsTemplate: [
-//        "<h2>File Descriptors:</h2>",
         "<svg width='100%' height='90'><svg id='svg_fileDescriptors' clip_id='clip_fileDescriptors' x='0' y='0' preserveAspectRatio='xMinYMid' viewBox='0 0 270 110'/></svg>",
         "<div>Max: {{process.max_file_descriptors}}</div>",
         "<div>Open: <span id='open_file_descriptors'>na</span></div>",
@@ -417,7 +434,6 @@ var SelectedClusterNodeView = Backbone.View.extend({
     ].join(""),
 
     channelsTemplate: [
-//        "<h2>Channels:</h2>",
         "<svg width='100%' height='90'><svg id='svg_channels' clip_id='clip_channels' x='0' y='0' preserveAspectRatio='xMinYMid' viewBox='0 0 270 110'/></svg>",
         "<div>Transport: <span id='open_transport_channels'>na</span></div>",
         "<div>HTTP: <span id='open_http_channels'>na</span>, Total opened: <span id='total_opened_http_channels'>na</span></div>",
@@ -425,9 +441,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
     ].join(""),
 
     TDBTemplate: [
-//        "<h2>TDB</h2>",
         "<svg width='100%' height='90'>" +
-            "<rect x='0' y='0' width='100%' height='100%' fill='#eee' stroke='red' stroke-width='1' />" +
+            "<rect x='0' y='0' width='100%' height='100%' fill='#eee' stroke-width='1' />" +
         "</svg>"
     ].join(""),
 
@@ -459,21 +474,19 @@ var SelectedClusterNodeView = Backbone.View.extend({
     ].join("<br>"),
 
     indices1Template: [
-        "<h2>Indices stats 1:</h2>" +
-            "<h3>Docs</h3>" +
-            "count: ?",
-        "deleted: ?" +
-            "<h3>Store</h3>" +
-            "size: ?",
-        "?"
+        "Size: <span id='indices_store_size'>n/a</span>",
+        "Docs count: <span id='indices_docs_count'>n/a</span>",
+        "Docs deleted: <span id='indices_docs_deleted'>n/a</span>",
+        "Flush: <span id='indices_flush_total'>n/a</span>",
+        "Refresh: <span id='indices_refresh_total'>n/a</span>"
     ].join("<br>"),
 
     indices2Template: [
-        "<h2>Indices stats 2:</h2>"
+        ""
     ].join(""),
 
     indices3Template: [
-        "<h2>Indices stats 3:</h2>"
+        ""
     ].join(""),
 
 //    jvmMemPoolTemplate: [
@@ -659,6 +672,15 @@ var SelectedClusterNodeView = Backbone.View.extend({
         $(osColCharts1).append(osCharts1);
         $(osColCharts2).append(osCharts2);
 
+        // Indices title
+
+        var indicesTitleP = this.make("p", {}, "<h2>Indices</h2>");
+        var indicesTitleCol = this.make("div", {"class":"twelvecol last"});
+        var rawIndicesTitle = this.make("div", {"class":"row nodeDetail newSection"});
+
+        $(rawIndicesTitle).append(indicesTitleCol);
+        $(indicesTitleCol).append(indicesTitleP);
+
         // Indices detail row
 
         var indices1Info = Mustache.render(this.indices1Template, {});
@@ -682,7 +704,6 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
         this.$el.parent().append(
             rowSelectedNode,
-//            rowIndices,
 
             rowJvmTitle,
             rowJvm,
@@ -694,7 +715,10 @@ var SelectedClusterNodeView = Backbone.View.extend({
             rowOS,
             rowOsCharts,
 
-            rowDes//,
+            rowDes,
+
+            rawIndicesTitle,
+            rowIndices//,
 //            "<div class='row nodeDetail'>" +
 //                "<div class='threecol'><p>Network info</p></div>" +
 //                "<div class='ninecol last'><p>Network stats</p></div>" +
