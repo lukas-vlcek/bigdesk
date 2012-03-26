@@ -28,9 +28,13 @@ If you are using bigdesk 1.0.0 you can immediately connect to a particular host,
 
 h3. Screenshot
 
-The below screenshot is bigdesk 1.0.0
+bigdesk <b>1.0.0</b>
 
-!https://github.com/lukas-vlcek/bigdesk/raw/master/screenshot.jpg!
+!https://github.com/lukas-vlcek/bigdesk/raw/master/bigdesk-1.0.0.jpg!
+
+bigdesk <b>master</b>
+
+!https://github.com/lukas-vlcek/bigdesk/raw/master/bigdesk-2.0.0-SNAPSHOT.jpg!
 
 Info about cluster nodes:
 
