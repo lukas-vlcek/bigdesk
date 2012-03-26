@@ -138,6 +138,28 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         width: 40})
                     .svg(d3.select("#svg_osLoadAvg"));
 
+                var chart_indicesSearchReqs = timeSeriesChart()
+                    .width(270).height(160)
+                    .legend({
+                        caption: "Search requests per second",
+                        series1: "Fetch",
+                        series2: "Query",
+                        margin_left: 5,
+                        margin_bottom: 6,
+                        width: 65})
+                    .svg(d3.select("#svg_indicesSearchReqs"));
+
+                var chart_indicesSearchTime = timeSeriesChart()
+                    .width(270).height(160)
+                    .legend({
+                        caption: "Search time per second",
+                        series1: "Fetch",
+                        series2: "Query",
+                        margin_left: 5,
+                        margin_bottom: 6,
+                        width: 65})
+                    .svg(d3.select("#svg_indicesSearchTime"));
+
                 var nodesStatsCollection = _view.model.get("nodesStats");
 
                 var updateCharts = function() {
@@ -388,6 +410,102 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         $("#indices_store_size").text("n/a");
                         $("#indices_flush_total").text("n/a");
                         $("#indices_refresh_total").text("n/a");
+                    }
+
+                    // --------------------------------------------
+                    // Indices: search requests
+
+                    var indices_fetch_reqs = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.id,
+                            value: +snapshot.node.indices.search.fetch_total
+                        }
+                    });
+                    var indices_query_reqs = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.id,
+                            value: +snapshot.node.indices.search.query_total
+                        }
+                    });
+                    if (indices_fetch_reqs.length > 1 && indices_query_reqs.length > 1) {
+
+                        for (var i=(indices_fetch_reqs.length - 1); i > 0 ; i--) {
+                            // delta value
+                            indices_fetch_reqs[i].value -= indices_fetch_reqs[i-1].value;
+                            // normalize value to seconds
+                            indices_fetch_reqs[i].value = indices_fetch_reqs[i].value / (
+                                ( indices_fetch_reqs[i].timestamp - indices_fetch_reqs[i-1].timestamp ) <= 1000 ? 1 :
+                                ( indices_fetch_reqs[i].timestamp - indices_fetch_reqs[i-1].timestamp ) / 1000
+                            );
+                            // avg timestamp
+                            indices_fetch_reqs[i].timestamp = Math.round( ( indices_fetch_reqs[i].timestamp + indices_fetch_reqs[i].timestamp ) / 2 );
+                        }
+                        indices_fetch_reqs.shift();
+
+                        for (var i=(indices_query_reqs.length - 1); i > 0 ; i--) {
+                            // delta value
+                            indices_query_reqs[i].value -= indices_query_reqs[i-1].value;
+                            // normalize value to seconds
+                            indices_query_reqs[i].value = indices_query_reqs[i].value / (
+                                ( indices_query_reqs[i].timestamp - indices_query_reqs[i-1].timestamp ) <= 1000 ? 1 :
+                                ( indices_query_reqs[i].timestamp - indices_query_reqs[i-1].timestamp ) / 1000
+                            );
+                            // avg timestamp
+                            indices_query_reqs[i].timestamp = Math.round( ( indices_query_reqs[i].timestamp + indices_query_reqs[i].timestamp ) / 2 );
+                        }
+                        indices_query_reqs.shift();
+
+                        chart_indicesSearchReqs.update(indices_fetch_reqs, indices_query_reqs);
+                    }
+
+                    // --------------------------------------------
+                    // Indices: search time
+
+                    var indices_fetch_time = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.id,
+                            value: +snapshot.node.indices.search.fetch_time_in_millis
+                        }
+                    });
+                    var indices_query_time = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.id,
+                            value: +snapshot.node.indices.search.query_time_in_millis
+                        }
+                    });
+
+//                    if (indices_query_time.length > 1)
+//                    console.log("query time",indices_query_time[indices_query_time.length-1].value, indices_query_time[indices_query_time.length-1].value - indices_query_time[indices_query_time.length-2].value, indices_query_time[indices_query_time.length-1].timestamp);
+
+                    if (indices_fetch_time.length > 1 && indices_query_time.length > 1) {
+
+                        for (var i=(indices_fetch_time.length - 1); i > 0 ; i--) {
+                            // delta value
+                            indices_fetch_time[i].value -= indices_fetch_time[i-1].value;
+                            // normalize value to seconds
+                            indices_fetch_time[i].value = indices_fetch_time[i].value / (
+                                ( indices_fetch_time[i].timestamp - indices_fetch_time[i-1].timestamp ) <= 1000 ? 1 :
+                                ( indices_fetch_time[i].timestamp - indices_fetch_time[i-1].timestamp ) / 1000
+                            );
+                            // avg timestamp
+                            indices_fetch_time[i].timestamp = Math.round( ( indices_fetch_time[i].timestamp + indices_fetch_time[i].timestamp ) / 2 );
+                        }
+                        indices_fetch_time.shift();
+
+                        for (var i=(indices_query_time.length - 1); i > 0 ; i--) {
+                            // delta value
+                            indices_query_time[i].value -= indices_query_time[i-1].value;
+                            // normalize value to seconds
+                            indices_query_time[i].value = indices_query_time[i].value / (
+                                ( indices_query_time[i].timestamp - indices_query_time[i-1].timestamp ) <= 1000 ? 1 :
+                                ( indices_query_time[i].timestamp - indices_query_time[i-1].timestamp ) / 1000
+                            );
+                            // avg timestamp
+                            indices_query_time[i].timestamp = Math.round( ( indices_query_time[i].timestamp + indices_query_time[i].timestamp ) / 2 );
+                        }
+                        indices_query_time.shift();
+
+                        chart_indicesSearchTime.update(indices_fetch_time, indices_query_time);
                     }
 
 
@@ -688,7 +806,12 @@ var SelectedClusterNodeView = Backbone.View.extend({
         var indices3Info = Mustache.render(this.indices3Template, {});
 
         var indicesp1 = this.make("p", {}, indices1Info);
-        var indicesp2 = this.make("p", {}, indices2Info);
+        var indicesp2 = this.make("p", {},
+            "<svg width='100%' height='160'>" +
+                "<svg id='svg_indicesSearchReqs' clip_id='clip_indicesSearchReqs' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "<svg id='svg_indicesSearchTime' clip_id='clip_indicesSearchTime' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+            "</svg>"
+        );
         var indicesp3 = this.make("p", {}, indices3Info);
 
         var indicesCol1 = this.make("div", {"class":"fourcol"});
