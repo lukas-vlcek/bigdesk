@@ -32,25 +32,9 @@ bigdesk <b>1.0.0</b>
 
 !https://github.com/lukas-vlcek/bigdesk/raw/master/bigdesk-1.0.0.jpg!
 
-bigdesk <b>master</b>
+bigdesk <b>master</b> (this is WIP, actual screen can be different)
 
 !https://github.com/lukas-vlcek/bigdesk/raw/master/bigdesk-2.0.0-SNAPSHOT.jpg!
-
-Info about cluster nodes:
-
- * provide info about:
- ** Global info about indices, field and filter caches
- ** JVM details
- ** OS details
-
- * provides charts:
- ** Size of Field and Filter Caches
- ** File Descriptors and Open Channels
- ** JVM threads
- ** JVM Heap and non-heap memory
- ** OS CPU(%)
- ** OS Mem
- ** OS Swap
 
 h3. Supported web browsers
 
