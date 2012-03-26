@@ -16,7 +16,7 @@ You can also chekout bigdesk into your local harddrive (or download and extract 
 
 h3. How to use bigdesk
 
-Once you open bigdesk in your web broswer, you need to <b>point it to the elasticsearch node REST endopint<b>. For example if you run elasticsearch locally the REST endpoint would be <code>http://localhost:9200/</code> by default. In bigdesk from master you can simply specify any endpoint URL in the text field on top of the screen. If you are using bigdesk 1.0.0 (ie. you want to connect bigdesk to elasticearch 0.17.x - 0.18.x) then you need to fill into two different text fields. First you specify <code>hostname</code> of the elasticsearch node into the first text field and its <code>port number</code> into the second text field (but in some situations this can limiting, for example if you run elasticsearch behind firewal).
+Once you open bigdesk in your web broswer, you need to <b>point it to the elasticsearch node REST endopint</b>. For example if you run elasticsearch locally the REST endpoint would be <code>http://localhost:9200/</code> by default. In bigdesk from master you can simply specify any endpoint URL in the text field on top of the screen. If you are using bigdesk 1.0.0 (ie. you want to connect bigdesk to elasticearch 0.17.x - 0.18.x) then you need to fill into two different text fields. First you specify <code>hostname</code> of the elasticsearch node into the first text field and its <code>port number</code> into the second text field (but in some situations this can limiting, for example if you run elasticsearch behind firewal).
 
 Then you hit <code>Connect</code> button (it is called <code>START</code> button in bigdesk 1.0.0) and that's it.
 
