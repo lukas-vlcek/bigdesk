@@ -8,9 +8,9 @@ Live charts and statistics for ElasticSearch cluster.
 
 h3. Installation
 
-In order to install the plugin, simply run: <code>bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/</code> for master version.
+In order to install the plugin, simply run: <code>bin/plugin -install lukas-vlcek/bigdesk</code> for master version.
 
-To get specific version of bigdesk use:  <code>bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/1.0.0</code>
+To get specific version of bigdesk use:  <code>bin/plugin -install lukas-vlcek/bigdesk/1.0.0</code>
 
 You can also checkout bigdesk into your local harddrive (or download and extract zip from github) and simply use it by opening <code>index.html</code> in your favorite web browser.
 
