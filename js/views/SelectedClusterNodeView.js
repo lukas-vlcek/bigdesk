@@ -12,6 +12,23 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
     render: function() {
 
+        // Input is an array of objects having two properties: timestamp and value.
+        // It update both properties timestamp and value and removes the first item.
+        var normalizedDeltaToSeconds = function(items) {
+            for (var i=(items.length - 1); i > 0 ; i--) {
+                // delta value
+                items[i].value -= items[i-1].value;
+                // normalize value to seconds
+                items[i].value = items[i].value / (
+                    ( items[i].timestamp - items[i-1].timestamp ) <= 1000 ? 1 :
+                        ( items[i].timestamp - items[i-1].timestamp ) / 1000
+                    );
+                // avg timestamp
+                items[i].timestamp = Math.round( ( items[i].timestamp + items[i].timestamp ) / 2 );
+            }
+            items.shift();
+        };
+
         var _view = this;
         var nodeInfoModel = this.model.get("nodeInfo");
 
@@ -26,6 +43,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
                 console.log("node info", selectedNodeInfo);
 
                 _view.renderNodeDetail(model);
+
+                // Create all charts
 
                 var chart_fileDescriptors = timeSeriesChart()
                     .width(270).height(110)
@@ -208,6 +227,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                 var nodesStatsCollection = _view.model.get("nodesStats");
 
+                // function to update all charts
                 var updateCharts = function() {
 
                     // get stats for selected node
@@ -226,6 +246,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     // --------------------------------------------
                     // File Descriptors
+
                     var open_file_descriptors = stats.map(function(snapshot){
                         return {
                             timestamp: +snapshot.node.process.timestamp,
@@ -246,6 +267,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     // --------------------------------------------
                     // Channels
+
                     var opened_transport_server_channels = stats.map(function(snapshot){
                         return {
                             timestamp: +snapshot.id,
@@ -274,6 +296,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     // --------------------------------------------
                     // JVM Info
+
                     if (stats_the_latest && stats_the_latest.node) {
                         $("#jvm_uptime").text(stats_the_latest.node.jvm.uptime);
                     } else {
@@ -282,6 +305,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     // --------------------------------------------
                     // JVM Threads
+
                     var jvm_threads_count = stats.map(function(snapshot){
                         return {
                             timestamp: +snapshot.node.jvm.timestamp,
@@ -298,6 +322,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     // --------------------------------------------
                     // JVM GC
+
                     var jvm_gc_collection_count_delta = stats.map(function(snapshot){
                         return {
                             timestamp: +snapshot.node.jvm.timestamp,
@@ -327,6 +352,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     // --------------------------------------------
                     // JVM Heap Mem
+
                     var jvm_heap_used_mem= stats.map(function(snapshot){
                         return {
                             timestamp: +snapshot.node.jvm.timestamp,
@@ -343,6 +369,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     // --------------------------------------------
                     // JVM Non Heap Mem
+
                     var jvm_non_heap_used_mem= stats.map(function(snapshot){
                         return {
                             timestamp: +snapshot.node.jvm.timestamp,
@@ -359,6 +386,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     // --------------------------------------------
                     // OS CPU
+
                     var os_cpu_sys = stats.map(function(snapshot){
                         return {
                             timestamp: +snapshot.node.os.timestamp,
@@ -381,6 +409,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     // --------------------------------------------
                     // OS Info
+
                     if (stats_the_latest && stats_the_latest.node) {
                         $("#os_uptime").text(stats_the_latest.node.os.uptime);
                     } else {
@@ -389,6 +418,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     // --------------------------------------------
                     // OS Mem
+
                     var os_mem_actual_used = stats.map(function(snapshot){
                         return {
                             timestamp: +snapshot.node.os.timestamp,
@@ -405,6 +435,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     // --------------------------------------------
                     // OS swap
+
                     var os_swap_used = stats.map(function(snapshot){
                         return {
                             timestamp: +snapshot.node.os.timestamp,
@@ -421,6 +452,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     // --------------------------------------------
                     // OS load average
+
                     var os_loadAvg_0 = stats.map(function(snapshot){
                         return {
                             timestamp: +snapshot.node.os.timestamp,
@@ -475,31 +507,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     });
                     if (indices_fetch_reqs.length > 1 && indices_query_reqs.length > 1) {
 
-                        for (var i=(indices_fetch_reqs.length - 1); i > 0 ; i--) {
-                            // delta value
-                            indices_fetch_reqs[i].value -= indices_fetch_reqs[i-1].value;
-                            // normalize value to seconds
-                            indices_fetch_reqs[i].value = indices_fetch_reqs[i].value / (
-                                ( indices_fetch_reqs[i].timestamp - indices_fetch_reqs[i-1].timestamp ) <= 1000 ? 1 :
-                                ( indices_fetch_reqs[i].timestamp - indices_fetch_reqs[i-1].timestamp ) / 1000
-                            );
-                            // avg timestamp
-                            indices_fetch_reqs[i].timestamp = Math.round( ( indices_fetch_reqs[i].timestamp + indices_fetch_reqs[i].timestamp ) / 2 );
-                        }
-                        indices_fetch_reqs.shift();
-
-                        for (var i=(indices_query_reqs.length - 1); i > 0 ; i--) {
-                            // delta value
-                            indices_query_reqs[i].value -= indices_query_reqs[i-1].value;
-                            // normalize value to seconds
-                            indices_query_reqs[i].value = indices_query_reqs[i].value / (
-                                ( indices_query_reqs[i].timestamp - indices_query_reqs[i-1].timestamp ) <= 1000 ? 1 :
-                                ( indices_query_reqs[i].timestamp - indices_query_reqs[i-1].timestamp ) / 1000
-                            );
-                            // avg timestamp
-                            indices_query_reqs[i].timestamp = Math.round( ( indices_query_reqs[i].timestamp + indices_query_reqs[i].timestamp ) / 2 );
-                        }
-                        indices_query_reqs.shift();
+                        normalizedDeltaToSeconds(indices_fetch_reqs);
+                        normalizedDeltaToSeconds(indices_query_reqs);
 
                         chart_indicesSearchReqs.update(indices_fetch_reqs, indices_query_reqs);
                     }
@@ -522,31 +531,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     if (indices_fetch_time.length > 1 && indices_query_time.length > 1) {
 
-                        for (var i=(indices_fetch_time.length - 1); i > 0 ; i--) {
-                            // delta value
-                            indices_fetch_time[i].value -= indices_fetch_time[i-1].value;
-                            // normalize value to seconds
-                            indices_fetch_time[i].value = indices_fetch_time[i].value / (
-                                ( indices_fetch_time[i].timestamp - indices_fetch_time[i-1].timestamp ) <= 1000 ? 1 :
-                                ( indices_fetch_time[i].timestamp - indices_fetch_time[i-1].timestamp ) / 1000
-                            );
-                            // avg timestamp
-                            indices_fetch_time[i].timestamp = Math.round( ( indices_fetch_time[i].timestamp + indices_fetch_time[i].timestamp ) / 2 );
-                        }
-                        indices_fetch_time.shift();
-
-                        for (var i=(indices_query_time.length - 1); i > 0 ; i--) {
-                            // delta value
-                            indices_query_time[i].value -= indices_query_time[i-1].value;
-                            // normalize value to seconds
-                            indices_query_time[i].value = indices_query_time[i].value / (
-                                ( indices_query_time[i].timestamp - indices_query_time[i-1].timestamp ) <= 1000 ? 1 :
-                                ( indices_query_time[i].timestamp - indices_query_time[i-1].timestamp ) / 1000
-                            );
-                            // avg timestamp
-                            indices_query_time[i].timestamp = Math.round( ( indices_query_time[i].timestamp + indices_query_time[i].timestamp ) / 2 );
-                        }
-                        indices_query_time.shift();
+                        normalizedDeltaToSeconds(indices_fetch_time);
+                        normalizedDeltaToSeconds(indices_query_time);
 
                         chart_indicesSearchTime.update(indices_fetch_time, indices_query_time);
                     }
@@ -575,44 +561,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     if (indices_get_reqs.length > 1 && indices_missing_reqs.length > 1 && indices_exists_reqs.length > 1) {
 
-                        for (var i=(indices_get_reqs.length - 1); i > 0 ; i--) {
-                            // delta value
-                            indices_get_reqs[i].value -= indices_get_reqs[i-1].value;
-                            // normalize value to seconds
-                            indices_get_reqs[i].value = indices_get_reqs[i].value / (
-                                ( indices_get_reqs[i].timestamp - indices_get_reqs[i-1].timestamp ) <= 1000 ? 1 :
-                                    ( indices_get_reqs[i].timestamp - indices_get_reqs[i-1].timestamp ) / 1000
-                                );
-                            // avg timestamp
-                            indices_get_reqs[i].timestamp = Math.round( ( indices_get_reqs[i].timestamp + indices_get_reqs[i].timestamp ) / 2 );
-                        }
-                        indices_get_reqs.shift();
-
-                        for (var i=(indices_missing_reqs.length - 1); i > 0 ; i--) {
-                            // delta value
-                            indices_missing_reqs[i].value -= indices_missing_reqs[i-1].value;
-                            // normalize value to seconds
-                            indices_missing_reqs[i].value = indices_missing_reqs[i].value / (
-                                ( indices_missing_reqs[i].timestamp - indices_missing_reqs[i-1].timestamp ) <= 1000 ? 1 :
-                                    ( indices_missing_reqs[i].timestamp - indices_missing_reqs[i-1].timestamp ) / 1000
-                                );
-                            // avg timestamp
-                            indices_missing_reqs[i].timestamp = Math.round( ( indices_missing_reqs[i].timestamp + indices_missing_reqs[i].timestamp ) / 2 );
-                        }
-                        indices_missing_reqs.shift();
-
-                        for (var i=(indices_exists_reqs.length - 1); i > 0 ; i--) {
-                            // delta value
-                            indices_exists_reqs[i].value -= indices_exists_reqs[i-1].value;
-                            // normalize value to seconds
-                            indices_exists_reqs[i].value = indices_exists_reqs[i].value / (
-                                ( indices_exists_reqs[i].timestamp - indices_exists_reqs[i-1].timestamp ) <= 1000 ? 1 :
-                                    ( indices_exists_reqs[i].timestamp - indices_exists_reqs[i-1].timestamp ) / 1000
-                                );
-                            // avg timestamp
-                            indices_exists_reqs[i].timestamp = Math.round( ( indices_exists_reqs[i].timestamp + indices_exists_reqs[i].timestamp ) / 2 );
-                        }
-                        indices_exists_reqs.shift();
+                        normalizedDeltaToSeconds(indices_get_reqs);
+                        normalizedDeltaToSeconds(indices_missing_reqs);
+                        normalizedDeltaToSeconds(indices_exists_reqs);
 
                         chart_indicesGetReqs.update(indices_get_reqs, indices_missing_reqs, indices_exists_reqs);
                     }
@@ -641,44 +592,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     if (indices_get_time.length > 1 && indices_missing_time.length > 1 && indices_exists_time.length > 1) {
 
-                        for (var i=(indices_get_time.length - 1); i > 0 ; i--) {
-                            // delta value
-                            indices_get_time[i].value -= indices_get_time[i-1].value;
-                            // normalize value to seconds
-                            indices_get_time[i].value = indices_get_time[i].value / (
-                                ( indices_get_time[i].timestamp - indices_get_time[i-1].timestamp ) <= 1000 ? 1 :
-                                    ( indices_get_time[i].timestamp - indices_get_time[i-1].timestamp ) / 1000
-                                );
-                            // avg timestamp
-                            indices_get_time[i].timestamp = Math.round( ( indices_get_time[i].timestamp + indices_get_time[i].timestamp ) / 2 );
-                        }
-                        indices_get_time.shift();
-
-                        for (var i=(indices_missing_time.length - 1); i > 0 ; i--) {
-                            // delta value
-                            indices_missing_time[i].value -= indices_missing_time[i-1].value;
-                            // normalize value to seconds
-                            indices_missing_time[i].value = indices_missing_time[i].value / (
-                                ( indices_missing_time[i].timestamp - indices_missing_time[i-1].timestamp ) <= 1000 ? 1 :
-                                    ( indices_missing_time[i].timestamp - indices_missing_time[i-1].timestamp ) / 1000
-                                );
-                            // avg timestamp
-                            indices_missing_time[i].timestamp = Math.round( ( indices_missing_time[i].timestamp + indices_missing_time[i].timestamp ) / 2 );
-                        }
-                        indices_missing_time.shift();
-
-                        for (var i=(indices_exists_time.length - 1); i > 0 ; i--) {
-                            // delta value
-                            indices_exists_time[i].value -= indices_exists_time[i-1].value;
-                            // normalize value to seconds
-                            indices_exists_time[i].value = indices_exists_time[i].value / (
-                                ( indices_exists_time[i].timestamp - indices_exists_time[i-1].timestamp ) <= 1000 ? 1 :
-                                    ( indices_exists_time[i].timestamp - indices_exists_time[i-1].timestamp ) / 1000
-                                );
-                            // avg timestamp
-                            indices_exists_time[i].timestamp = Math.round( ( indices_exists_time[i].timestamp + indices_exists_time[i].timestamp ) / 2 );
-                        }
-                        indices_exists_time.shift();
+                        normalizedDeltaToSeconds(indices_get_time);
+                        normalizedDeltaToSeconds(indices_missing_time);
+                        normalizedDeltaToSeconds(indices_exists_time);
 
                         chart_indicesGetTime.update(indices_get_time, indices_missing_time, indices_exists_time);
                     }
@@ -701,31 +617,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     if (indices_indexing_index_reqs.length > 1 && indices_indexing_delete_reqs.length > 1) {
 
-                        for (var i=(indices_indexing_index_reqs.length - 1); i > 0 ; i--) {
-                            // delta value
-                            indices_indexing_index_reqs[i].value -= indices_indexing_index_reqs[i-1].value;
-                            // normalize value to seconds
-                            indices_indexing_index_reqs[i].value = indices_indexing_index_reqs[i].value / (
-                                ( indices_indexing_index_reqs[i].timestamp - indices_indexing_index_reqs[i-1].timestamp ) <= 1000 ? 1 :
-                                    ( indices_indexing_index_reqs[i].timestamp - indices_indexing_index_reqs[i-1].timestamp ) / 1000
-                                );
-                            // avg timestamp
-                            indices_indexing_index_reqs[i].timestamp = Math.round( ( indices_indexing_index_reqs[i].timestamp + indices_indexing_index_reqs[i].timestamp ) / 2 );
-                        }
-                        indices_indexing_index_reqs.shift();
-
-                        for (var i=(indices_indexing_delete_reqs.length - 1); i > 0 ; i--) {
-                            // delta value
-                            indices_indexing_delete_reqs[i].value -= indices_indexing_delete_reqs[i-1].value;
-                            // normalize value to seconds
-                            indices_indexing_delete_reqs[i].value = indices_indexing_delete_reqs[i].value / (
-                                ( indices_indexing_delete_reqs[i].timestamp - indices_indexing_delete_reqs[i-1].timestamp ) <= 1000 ? 1 :
-                                    ( indices_indexing_delete_reqs[i].timestamp - indices_indexing_delete_reqs[i-1].timestamp ) / 1000
-                                );
-                            // avg timestamp
-                            indices_indexing_delete_reqs[i].timestamp = Math.round( ( indices_indexing_delete_reqs[i].timestamp + indices_indexing_delete_reqs[i].timestamp ) / 2 );
-                        }
-                        indices_indexing_delete_reqs.shift();
+                        normalizedDeltaToSeconds(indices_indexing_index_reqs);
+                        normalizedDeltaToSeconds(indices_indexing_delete_reqs);
 
                         chart_indicesIndexingReqs.update(indices_indexing_index_reqs, indices_indexing_delete_reqs);
                     }
@@ -748,31 +641,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     if (indices_indexing_index_time.length > 1 && indices_indexing_delete_time.length > 1) {
 
-                        for (var i=(indices_indexing_index_time.length - 1); i > 0 ; i--) {
-                            // delta value
-                            indices_indexing_index_time[i].value -= indices_indexing_index_time[i-1].value;
-                            // normalize value to seconds
-                            indices_indexing_index_time[i].value = indices_indexing_index_time[i].value / (
-                                ( indices_indexing_index_time[i].timestamp - indices_indexing_index_time[i-1].timestamp ) <= 1000 ? 1 :
-                                    ( indices_indexing_index_time[i].timestamp - indices_indexing_index_time[i-1].timestamp ) / 1000
-                                );
-                            // avg timestamp
-                            indices_indexing_index_time[i].timestamp = Math.round( ( indices_indexing_index_time[i].timestamp + indices_indexing_index_time[i].timestamp ) / 2 );
-                        }
-                        indices_indexing_index_time.shift();
-
-                        for (var i=(indices_indexing_delete_time.length - 1); i > 0 ; i--) {
-                            // delta value
-                            indices_indexing_delete_time[i].value -= indices_indexing_delete_time[i-1].value;
-                            // normalize value to seconds
-                            indices_indexing_delete_time[i].value = indices_indexing_delete_time[i].value / (
-                                ( indices_indexing_delete_time[i].timestamp - indices_indexing_delete_time[i-1].timestamp ) <= 1000 ? 1 :
-                                    ( indices_indexing_delete_time[i].timestamp - indices_indexing_delete_time[i-1].timestamp ) / 1000
-                                );
-                            // avg timestamp
-                            indices_indexing_delete_time[i].timestamp = Math.round( ( indices_indexing_delete_time[i].timestamp + indices_indexing_delete_time[i].timestamp ) / 2 );
-                        }
-                        indices_indexing_delete_time.shift();
+                        normalizedDeltaToSeconds(indices_indexing_index_time);
+                        normalizedDeltaToSeconds(indices_indexing_delete_time);
 
                         chart_indicesIndexingTime.update(indices_indexing_index_time, indices_indexing_delete_time);
                     }
