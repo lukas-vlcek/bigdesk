@@ -146,7 +146,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         series2: "Query",
                         margin_left: 5,
                         margin_bottom: 6,
-                        width: 65})
+                        width: 60})
                     .svg(d3.select("#svg_indicesSearchReqs"));
 
                 var chart_indicesSearchTime = timeSeriesChart()
@@ -157,8 +157,32 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         series2: "Query",
                         margin_left: 5,
                         margin_bottom: 6,
-                        width: 65})
+                        width: 60})
                     .svg(d3.select("#svg_indicesSearchTime"));
+
+                var chart_indicesGetReqs = timeSeriesChart()
+                    .width(270).height(160)
+                    .legend({
+                        caption: "Get requests per second",
+                        series1: "Missing",
+                        series2: "Exists",
+                        series3: "Get",
+                        margin_left: 5,
+                        margin_bottom: 6,
+                        width: 65})
+                    .svg(d3.select("#svg_indicesGetReqs"));
+
+                var chart_indicesGetTime = timeSeriesChart()
+                    .width(270).height(160)
+                    .legend({
+                        caption: "Get time per second",
+                        series1: "Missing",
+                        series2: "Exists",
+                        series3: "Get",
+                        margin_left: 5,
+                        margin_bottom: 6,
+                        width: 65})
+                    .svg(d3.select("#svg_indicesGetTime"));
 
                 var nodesStatsCollection = _view.model.get("nodesStats");
 
@@ -474,9 +498,6 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         }
                     });
 
-//                    if (indices_query_time.length > 1)
-//                    console.log("query time",indices_query_time[indices_query_time.length-1].value, indices_query_time[indices_query_time.length-1].value - indices_query_time[indices_query_time.length-2].value, indices_query_time[indices_query_time.length-1].timestamp);
-
                     if (indices_fetch_time.length > 1 && indices_query_time.length > 1) {
 
                         for (var i=(indices_fetch_time.length - 1); i > 0 ; i--) {
@@ -506,6 +527,138 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         indices_query_time.shift();
 
                         chart_indicesSearchTime.update(indices_fetch_time, indices_query_time);
+                    }
+
+                    // --------------------------------------------
+                    // Indices: get requests
+
+                    var indices_get_reqs = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.id,
+                            value: +snapshot.node.indices.get.total
+                        }
+                    });
+                    var indices_missing_reqs = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.id,
+                            value: +snapshot.node.indices.get.missing_total
+                        }
+                    });
+                    var indices_exists_reqs = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.id,
+                            value: +snapshot.node.indices.get.exists_total
+                        }
+                    });
+
+                    if (indices_get_reqs.length > 1 && indices_missing_reqs.length > 1 && indices_exists_reqs.length > 1) {
+
+                        for (var i=(indices_get_reqs.length - 1); i > 0 ; i--) {
+                            // delta value
+                            indices_get_reqs[i].value -= indices_get_reqs[i-1].value;
+                            // normalize value to seconds
+                            indices_get_reqs[i].value = indices_get_reqs[i].value / (
+                                ( indices_get_reqs[i].timestamp - indices_get_reqs[i-1].timestamp ) <= 1000 ? 1 :
+                                    ( indices_get_reqs[i].timestamp - indices_get_reqs[i-1].timestamp ) / 1000
+                                );
+                            // avg timestamp
+                            indices_get_reqs[i].timestamp = Math.round( ( indices_get_reqs[i].timestamp + indices_get_reqs[i].timestamp ) / 2 );
+                        }
+                        indices_get_reqs.shift();
+
+                        for (var i=(indices_missing_reqs.length - 1); i > 0 ; i--) {
+                            // delta value
+                            indices_missing_reqs[i].value -= indices_missing_reqs[i-1].value;
+                            // normalize value to seconds
+                            indices_missing_reqs[i].value = indices_missing_reqs[i].value / (
+                                ( indices_missing_reqs[i].timestamp - indices_missing_reqs[i-1].timestamp ) <= 1000 ? 1 :
+                                    ( indices_missing_reqs[i].timestamp - indices_missing_reqs[i-1].timestamp ) / 1000
+                                );
+                            // avg timestamp
+                            indices_missing_reqs[i].timestamp = Math.round( ( indices_missing_reqs[i].timestamp + indices_missing_reqs[i].timestamp ) / 2 );
+                        }
+                        indices_missing_reqs.shift();
+
+                        for (var i=(indices_exists_reqs.length - 1); i > 0 ; i--) {
+                            // delta value
+                            indices_exists_reqs[i].value -= indices_exists_reqs[i-1].value;
+                            // normalize value to seconds
+                            indices_exists_reqs[i].value = indices_exists_reqs[i].value / (
+                                ( indices_exists_reqs[i].timestamp - indices_exists_reqs[i-1].timestamp ) <= 1000 ? 1 :
+                                    ( indices_exists_reqs[i].timestamp - indices_exists_reqs[i-1].timestamp ) / 1000
+                                );
+                            // avg timestamp
+                            indices_exists_reqs[i].timestamp = Math.round( ( indices_exists_reqs[i].timestamp + indices_exists_reqs[i].timestamp ) / 2 );
+                        }
+                        indices_exists_reqs.shift();
+
+                        chart_indicesGetReqs.update(indices_get_reqs, indices_missing_reqs, indices_exists_reqs);
+                    }
+
+                    // --------------------------------------------
+                    // Indices: get time
+
+                    var indices_get_time = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.id,
+                            value: +snapshot.node.indices.get.time_in_millis
+                        }
+                    });
+                    var indices_missing_time = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.id,
+                            value: +snapshot.node.indices.get.missing_time_in_millis
+                        }
+                    });
+                    var indices_exists_time = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.id,
+                            value: +snapshot.node.indices.get.exists_time_in_millis
+                        }
+                    });
+
+                    if (indices_get_time.length > 1 && indices_missing_time.length > 1 && indices_exists_time.length > 1) {
+
+                        for (var i=(indices_get_time.length - 1); i > 0 ; i--) {
+                            // delta value
+                            indices_get_time[i].value -= indices_get_time[i-1].value;
+                            // normalize value to seconds
+                            indices_get_time[i].value = indices_get_time[i].value / (
+                                ( indices_get_time[i].timestamp - indices_get_time[i-1].timestamp ) <= 1000 ? 1 :
+                                    ( indices_get_time[i].timestamp - indices_get_time[i-1].timestamp ) / 1000
+                                );
+                            // avg timestamp
+                            indices_get_time[i].timestamp = Math.round( ( indices_get_time[i].timestamp + indices_get_time[i].timestamp ) / 2 );
+                        }
+                        indices_get_time.shift();
+
+                        for (var i=(indices_missing_time.length - 1); i > 0 ; i--) {
+                            // delta value
+                            indices_missing_time[i].value -= indices_missing_time[i-1].value;
+                            // normalize value to seconds
+                            indices_missing_time[i].value = indices_missing_time[i].value / (
+                                ( indices_missing_time[i].timestamp - indices_missing_time[i-1].timestamp ) <= 1000 ? 1 :
+                                    ( indices_missing_time[i].timestamp - indices_missing_time[i-1].timestamp ) / 1000
+                                );
+                            // avg timestamp
+                            indices_missing_time[i].timestamp = Math.round( ( indices_missing_time[i].timestamp + indices_missing_time[i].timestamp ) / 2 );
+                        }
+                        indices_missing_time.shift();
+
+                        for (var i=(indices_exists_time.length - 1); i > 0 ; i--) {
+                            // delta value
+                            indices_exists_time[i].value -= indices_exists_time[i-1].value;
+                            // normalize value to seconds
+                            indices_exists_time[i].value = indices_exists_time[i].value / (
+                                ( indices_exists_time[i].timestamp - indices_exists_time[i-1].timestamp ) <= 1000 ? 1 :
+                                    ( indices_exists_time[i].timestamp - indices_exists_time[i-1].timestamp ) / 1000
+                                );
+                            // avg timestamp
+                            indices_exists_time[i].timestamp = Math.round( ( indices_exists_time[i].timestamp + indices_exists_time[i].timestamp ) / 2 );
+                        }
+                        indices_exists_time.shift();
+
+                        chart_indicesGetTime.update(indices_get_time, indices_missing_time, indices_exists_time);
                     }
 
 
@@ -598,14 +751,6 @@ var SelectedClusterNodeView = Backbone.View.extend({
         "Flush: <span id='indices_flush_total'>n/a</span>",
         "Refresh: <span id='indices_refresh_total'>n/a</span>"
     ].join("<br>"),
-
-    indices2Template: [
-        ""
-    ].join(""),
-
-    indices3Template: [
-        ""
-    ].join(""),
 
 //    jvmMemPoolTemplate: [
 //        "<svg id='{{pool_id}}'></svg>",
@@ -802,8 +947,6 @@ var SelectedClusterNodeView = Backbone.View.extend({
         // Indices detail row
 
         var indices1Info = Mustache.render(this.indices1Template, {});
-        var indices2Info = Mustache.render(this.indices2Template, {});
-        var indices3Info = Mustache.render(this.indices3Template, {});
 
         var indicesp1 = this.make("p", {}, indices1Info);
         var indicesp2 = this.make("p", {},
@@ -812,11 +955,16 @@ var SelectedClusterNodeView = Backbone.View.extend({
                 "<svg id='svg_indicesSearchTime' clip_id='clip_indicesSearchTime' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
             "</svg>"
         );
-        var indicesp3 = this.make("p", {}, indices3Info);
+        var indicesp3 = this.make("p", {},
+            "<svg width='100%' height='160'>" +
+                "<svg id='svg_indicesGetReqs' clip_id='clip_indicesSearchReqs' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "<svg id='svg_indicesGetTime' clip_id='clip_indicesSearchTime' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "</svg>"
+        );
 
-        var indicesCol1 = this.make("div", {"class":"fourcol"});
-        var indicesCol2 = this.make("div", {"class":"fourcol"});
-        var indicesCol3 = this.make("div", {"class":"fourcol last"});
+        var indicesCol1 = this.make("div", {"class":"twocol"});
+        var indicesCol2 = this.make("div", {"class":"fivecol"});
+        var indicesCol3 = this.make("div", {"class":"fivecol last"});
 
         var rowIndices = this.make("div", {"class":"row nodeDetail", "id":"inicesInfo"});
         $(rowIndices).append(indicesCol1, indicesCol2, indicesCol3);
