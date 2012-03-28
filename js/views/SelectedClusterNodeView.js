@@ -184,6 +184,28 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         width: 65})
                     .svg(d3.select("#svg_indicesGetTime"));
 
+                var chart_indicesIndexingReqs = timeSeriesChart()
+                    .width(270).height(160)
+                    .legend({
+                        caption: "Indexing requests per second",
+                        series1: "Index",
+                        series2: "Delete",
+                        margin_left: 5,
+                        margin_bottom: 6,
+                        width: 65})
+                    .svg(d3.select("#svg_indicesIndexingReqs"));
+
+                var chart_indicesIndexingTime = timeSeriesChart()
+                    .width(270).height(160)
+                    .legend({
+                        caption: "Indexing time per second",
+                        series1: "Index",
+                        series2: "Delete",
+                        margin_left: 5,
+                        margin_bottom: 6,
+                        width: 65})
+                    .svg(d3.select("#svg_indicesIndexingTime"));
+
                 var nodesStatsCollection = _view.model.get("nodesStats");
 
                 var updateCharts = function() {
@@ -661,6 +683,99 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         chart_indicesGetTime.update(indices_get_time, indices_missing_time, indices_exists_time);
                     }
 
+                    // --------------------------------------------
+                    // Indices: indexing requests
+
+                    var indices_indexing_index_reqs = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.id,
+                            value: +snapshot.node.indices.indexing.index_total
+                        }
+                    });
+                    var indices_indexing_delete_reqs = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.id,
+                            value: +snapshot.node.indices.indexing.delete_total
+                        }
+                    });
+
+                    if (indices_indexing_index_reqs.length > 1 && indices_indexing_delete_reqs.length > 1) {
+
+                        for (var i=(indices_indexing_index_reqs.length - 1); i > 0 ; i--) {
+                            // delta value
+                            indices_indexing_index_reqs[i].value -= indices_indexing_index_reqs[i-1].value;
+                            // normalize value to seconds
+                            indices_indexing_index_reqs[i].value = indices_indexing_index_reqs[i].value / (
+                                ( indices_indexing_index_reqs[i].timestamp - indices_indexing_index_reqs[i-1].timestamp ) <= 1000 ? 1 :
+                                    ( indices_indexing_index_reqs[i].timestamp - indices_indexing_index_reqs[i-1].timestamp ) / 1000
+                                );
+                            // avg timestamp
+                            indices_indexing_index_reqs[i].timestamp = Math.round( ( indices_indexing_index_reqs[i].timestamp + indices_indexing_index_reqs[i].timestamp ) / 2 );
+                        }
+                        indices_indexing_index_reqs.shift();
+
+                        for (var i=(indices_indexing_delete_reqs.length - 1); i > 0 ; i--) {
+                            // delta value
+                            indices_indexing_delete_reqs[i].value -= indices_indexing_delete_reqs[i-1].value;
+                            // normalize value to seconds
+                            indices_indexing_delete_reqs[i].value = indices_indexing_delete_reqs[i].value / (
+                                ( indices_indexing_delete_reqs[i].timestamp - indices_indexing_delete_reqs[i-1].timestamp ) <= 1000 ? 1 :
+                                    ( indices_indexing_delete_reqs[i].timestamp - indices_indexing_delete_reqs[i-1].timestamp ) / 1000
+                                );
+                            // avg timestamp
+                            indices_indexing_delete_reqs[i].timestamp = Math.round( ( indices_indexing_delete_reqs[i].timestamp + indices_indexing_delete_reqs[i].timestamp ) / 2 );
+                        }
+                        indices_indexing_delete_reqs.shift();
+
+                        chart_indicesIndexingReqs.update(indices_indexing_index_reqs, indices_indexing_delete_reqs);
+                    }
+
+                    // --------------------------------------------
+                    // Indices: indexing time
+
+                    var indices_indexing_index_time = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.id,
+                            value: +snapshot.node.indices.indexing.index_time_in_millis
+                        }
+                    });
+                    var indices_indexing_delete_time = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.id,
+                            value: +snapshot.node.indices.indexing.delete_time_in_millis
+                        }
+                    });
+
+                    if (indices_indexing_index_time.length > 1 && indices_indexing_delete_time.length > 1) {
+
+                        for (var i=(indices_indexing_index_time.length - 1); i > 0 ; i--) {
+                            // delta value
+                            indices_indexing_index_time[i].value -= indices_indexing_index_time[i-1].value;
+                            // normalize value to seconds
+                            indices_indexing_index_time[i].value = indices_indexing_index_time[i].value / (
+                                ( indices_indexing_index_time[i].timestamp - indices_indexing_index_time[i-1].timestamp ) <= 1000 ? 1 :
+                                    ( indices_indexing_index_time[i].timestamp - indices_indexing_index_time[i-1].timestamp ) / 1000
+                                );
+                            // avg timestamp
+                            indices_indexing_index_time[i].timestamp = Math.round( ( indices_indexing_index_time[i].timestamp + indices_indexing_index_time[i].timestamp ) / 2 );
+                        }
+                        indices_indexing_index_time.shift();
+
+                        for (var i=(indices_indexing_delete_time.length - 1); i > 0 ; i--) {
+                            // delta value
+                            indices_indexing_delete_time[i].value -= indices_indexing_delete_time[i-1].value;
+                            // normalize value to seconds
+                            indices_indexing_delete_time[i].value = indices_indexing_delete_time[i].value / (
+                                ( indices_indexing_delete_time[i].timestamp - indices_indexing_delete_time[i-1].timestamp ) <= 1000 ? 1 :
+                                    ( indices_indexing_delete_time[i].timestamp - indices_indexing_delete_time[i-1].timestamp ) / 1000
+                                );
+                            // avg timestamp
+                            indices_indexing_delete_time[i].timestamp = Math.round( ( indices_indexing_delete_time[i].timestamp + indices_indexing_delete_time[i].timestamp ) / 2 );
+                        }
+                        indices_indexing_delete_time.shift();
+
+                        chart_indicesIndexingTime.update(indices_indexing_index_time, indices_indexing_delete_time);
+                    }
 
                 };
 
@@ -944,7 +1059,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
         $(rawIndicesTitle).append(indicesTitleCol);
         $(indicesTitleCol).append(indicesTitleP);
 
-        // Indices detail row
+        // Indices detail row #1
 
         var indices1Info = Mustache.render(this.indices1Template, {});
 
@@ -957,8 +1072,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
         );
         var indicesp3 = this.make("p", {},
             "<svg width='100%' height='160'>" +
-                "<svg id='svg_indicesGetReqs' clip_id='clip_indicesSearchReqs' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-                "<svg id='svg_indicesGetTime' clip_id='clip_indicesSearchTime' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "<svg id='svg_indicesGetReqs' clip_id='clip_indicesGetReqs' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "<svg id='svg_indicesGetTime' clip_id='clip_indicesGetTime' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
                 "</svg>"
         );
 
@@ -966,12 +1081,36 @@ var SelectedClusterNodeView = Backbone.View.extend({
         var indicesCol2 = this.make("div", {"class":"fivecol"});
         var indicesCol3 = this.make("div", {"class":"fivecol last"});
 
-        var rowIndices = this.make("div", {"class":"row nodeDetail", "id":"inicesInfo"});
+        var rowIndices = this.make("div", {"class":"row nodeDetail"});
         $(rowIndices).append(indicesCol1, indicesCol2, indicesCol3);
         $(indicesCol1).append(indicesp1);
         $(indicesCol2).append(indicesp2);
         $(indicesCol3).append(indicesp3);
 
+        // Indices detail row #2
+
+        var indicesp1_2 = this.make("p", {}, "");
+        var indicesp2_2 = this.make("p", {},
+            "<svg width='100%' height='160'>" +
+                "<rect x='0' y='0' width='100%' height='100%' fill='#eee' stroke-width='1' />" +
+            "</svg>"
+        );
+        var indicesp3_2 = this.make("p", {},
+            "<svg width='100%' height='160'>" +
+                "<svg id='svg_indicesIndexingReqs' clip_id='clip_indicesIndexingReqs' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "<svg id='svg_indicesIndexingTime' clip_id='clip_indicesIndexingTime' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+            "</svg>"
+        );
+
+        var indicesCol1_2 = this.make("div", {"class":"twocol"});
+        var indicesCol2_2 = this.make("div", {"class":"fivecol"});
+        var indicesCol3_2 = this.make("div", {"class":"fivecol last"});
+
+        var rowIndices_2 = this.make("div", {"class":"row nodeDetail"});
+        $(rowIndices_2).append(indicesCol1_2, indicesCol2_2, indicesCol3_2);
+        $(indicesCol1_2).append(indicesp1_2);
+        $(indicesCol2_2).append(indicesp2_2);
+        $(indicesCol3_2).append(indicesp3_2);
 
         this.$el.parent().append(
             rowSelectedNode,
@@ -989,7 +1128,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
             rowDes,
 
             rawIndicesTitle,
-            rowIndices//,
+            rowIndices,
+            rowIndices_2//,
 //            "<div class='row nodeDetail'>" +
 //                "<div class='threecol'><p>Network info</p></div>" +
 //                "<div class='ninecol last'><p>Network stats</p></div>" +
