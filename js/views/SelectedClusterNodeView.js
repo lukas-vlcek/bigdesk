@@ -241,7 +241,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     .legend({
                         caption: "CPU (%)",
                         series1: "process",
-                        series2: "100%",
+                        series2: ( +selectedNodeInfo.nodes[selectedNodeId].os.cpu.total_cores * 100 )+ "%",
                         margin_left: 5,
                         margin_bottom: 6,
                         width: 65})
@@ -720,13 +720,14 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             value: +snapshot.node.process.cpu.percent
                         }
                     });
-                    var process_cpu_100 = process_cpu_pct.map(function(item){
+                    var _total_cores = selectedNodeInfo.nodes[selectedNodeId].os.cpu.total_cores;
+                    var process_cpu_max = process_cpu_pct.map(function(item){
                         return {
                             timestamp: item.timestamp,
-                            value: 100
+                            value: ( 100 * _total_cores )
                         }
                     });
-                    chart_processCPU_pct.update(process_cpu_pct, process_cpu_100);
+                    chart_processCPU_pct.update(process_cpu_pct, process_cpu_max);
 
                     // --------------------------------------------
                     // Process: Mem
