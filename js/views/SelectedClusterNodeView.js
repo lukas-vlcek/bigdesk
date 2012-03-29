@@ -239,8 +239,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
                 var chart_processCPU_pct = timeAreaChart()
                     .width(270).height(160)
                     .legend({
-                        caption: "CPU pct",
-                        series1: "pct",
+                        caption: "CPU (%)",
+                        series1: "process",
                         series2: "100%",
                         margin_left: 5,
                         margin_bottom: 6,
@@ -250,7 +250,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                 var chart_processMem = timeAreaChart()
                     .width(270).height(160)
                     .legend({
-                        caption: "CPU mem",
+                        caption: "Mem",
                         series1: "share",
                         series2: "resident",
                         series3: "total virtual",
