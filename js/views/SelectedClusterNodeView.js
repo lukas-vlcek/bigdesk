@@ -47,7 +47,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                 // Create all charts
 
                 var chart_fileDescriptors = timeSeriesChart()
-                    .width(270).height(110)
+                    .width(270).height(160)
                     .legend({
                         caption: "File Descriptors",
                         series1: "Open",
@@ -225,6 +225,40 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         width: 65})
                     .svg(d3.select("#svg_indicesIndexingTime"));
 
+                var chart_processCPU_time = timeSeriesChart()
+                    .width(270).height(160)
+                    .legend({
+                        caption: "CPU time",
+                        series1: "User",
+                        series2: "Sys",
+                        margin_left: 5,
+                        margin_bottom: 6,
+                        width: 65})
+                    .svg(d3.select("#svg_processCPU_time"));
+
+                var chart_processCPU_pct = timeAreaChart()
+                    .width(270).height(160)
+                    .legend({
+                        caption: "CPU pct",
+                        series1: "pct",
+                        series2: "100%",
+                        margin_left: 5,
+                        margin_bottom: 6,
+                        width: 65})
+                    .svg(d3.select("#svg_processCPU_pct"));
+
+                var chart_processMem = timeAreaChart()
+                    .width(270).height(160)
+                    .legend({
+                        caption: "CPU mem",
+                        series1: "share",
+                        series2: "resident",
+                        series3: "total virtual",
+                        margin_left: 5,
+                        margin_bottom: 6,
+                        width: 100})
+                    .svg(d3.select("#svg_processMem"));
+
                 var nodesStatsCollection = _view.model.get("nodesStats");
 
                 // function to update all charts
@@ -243,27 +277,6 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     var stats_the_latest = stats[stats.length - 1];
 //                    console.log("the latest stats snapshot", stats_the_latest);
-
-                    // --------------------------------------------
-                    // File Descriptors
-
-                    var open_file_descriptors = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.process.timestamp,
-                            value: +snapshot.node.process.open_file_descriptors
-                        }
-                    });
-                    var max_file_descriptors = open_file_descriptors.slice(0).map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.timestamp,
-                            value: +selectedNodeInfo.nodes[selectedNodeId].process.max_file_descriptors
-                        }
-                    });
-                    chart_fileDescriptors.update(open_file_descriptors, max_file_descriptors);
-
-                    if (open_file_descriptors.length > 0) {
-                        $("#open_file_descriptors").text(open_file_descriptors[open_file_descriptors.length-1].value);
-                    }
 
                     // --------------------------------------------
                     // Channels
@@ -647,6 +660,97 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         chart_indicesIndexingTime.update(indices_indexing_index_time, indices_indexing_delete_time);
                     }
 
+                    // --------------------------------------------
+                    // Process: CPU time (in millis)
+
+                    var process_cpu_time_sys_delta = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.node.process.timestamp,
+                            value: +snapshot.node.process.cpu.sys_in_millis
+                        }
+                    });
+                    var process_cpu_time_user_delta = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.node.process.timestamp,
+                            value: +snapshot.node.process.cpu.user_in_millis
+                        }
+                    });
+                    if (process_cpu_time_sys_delta.length > 1 && process_cpu_time_user_delta.length > 1) {
+
+                        for (var i=(process_cpu_time_sys_delta.length - 1); i > 0 ; i--) {
+                            process_cpu_time_sys_delta[i].value -= process_cpu_time_sys_delta[i-1].value;
+                        }
+                        process_cpu_time_sys_delta.shift();
+
+                        for (var i=(process_cpu_time_user_delta.length - 1); i > 0 ; i--) {
+                            process_cpu_time_user_delta[i].value -= process_cpu_time_user_delta[i-1].value;
+                        }
+                        process_cpu_time_user_delta.shift();
+
+                        chart_processCPU_time.update(process_cpu_time_user_delta, process_cpu_time_sys_delta);
+                    }
+
+                    // --------------------------------------------
+                    // Process: file descriptors
+
+                    var open_file_descriptors = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.node.process.timestamp,
+                            value: +snapshot.node.process.open_file_descriptors
+                        }
+                    });
+                    var max_file_descriptors = open_file_descriptors.slice(0).map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.timestamp,
+                            value: +selectedNodeInfo.nodes[selectedNodeId].process.max_file_descriptors
+                        }
+                    });
+                    chart_fileDescriptors.update(open_file_descriptors, max_file_descriptors);
+
+                    if (open_file_descriptors.length > 0) {
+                        $("#open_file_descriptors").text(open_file_descriptors[open_file_descriptors.length-1].value);
+                    }
+
+                    // --------------------------------------------
+                    // Process: CPU percentage
+
+                    var process_cpu_pct = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.node.process.timestamp,
+                            value: +snapshot.node.process.cpu.percent
+                        }
+                    });
+                    var process_cpu_100 = process_cpu_pct.map(function(item){
+                        return {
+                            timestamp: item.timestamp,
+                            value: 100
+                        }
+                    });
+                    chart_processCPU_pct.update(process_cpu_pct, process_cpu_100);
+
+                    // --------------------------------------------
+                    // Process: Mem
+
+                    var process_mem_share = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.node.process.timestamp,
+                            value: +snapshot.node.process.mem.share_in_bytes
+                        }
+                    });
+                    var process_mem_resident = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.node.process.timestamp,
+                            value: +snapshot.node.process.mem.resident_in_bytes
+                        }
+                    });
+                    var process_mem_total_virtual = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.node.process.timestamp,
+                            value: +snapshot.node.process.mem.total_virtual_in_bytes
+                        }
+                    });
+                    chart_processMem.update(process_mem_share, process_mem_resident, process_mem_total_virtual);
+
                 };
 
                 // add custom listener for the collection to update UI and charts on changes
@@ -683,7 +787,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
     ].join("<br>"),
 
     fileDescriptorsTemplate: [
-        "<svg width='100%' height='90'><svg id='svg_fileDescriptors' clip_id='clip_fileDescriptors' x='0' y='0' preserveAspectRatio='xMinYMid' viewBox='0 0 270 110'/></svg>",
+//        "<svg width='100%' height='90'><svg id='svg_fileDescriptors' clip_id='clip_fileDescriptors' x='0' y='0' preserveAspectRatio='xMinYMid' viewBox='0 0 270 110'/></svg>",
         "<div>Max: {{process.max_file_descriptors}}</div>",
         "<div>Open: <span id='open_file_descriptors'>na</span></div>",
         "<div>Refresh interval: {{process.refresh_interval}}ms</div>"
@@ -875,9 +979,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
         var osTitleP = this.make("p", {}, "<h2>OS</h2>");
         var osTitleCol = this.make("div", {"class":"twelvecol last"});
-        var rawOsTitle = this.make("div", {"class":"row nodeDetail newSection"});
+        var rowOsTitle = this.make("div", {"class":"row nodeDetail newSection"});
 
-        $(rawOsTitle).append(osTitleCol);
+        $(rowOsTitle).append(osTitleCol);
         $(osTitleCol).append(osTitleP);
 
         // OS detail row
@@ -920,13 +1024,45 @@ var SelectedClusterNodeView = Backbone.View.extend({
         $(osColCharts1).append(osCharts1);
         $(osColCharts2).append(osCharts2);
 
+        // Process title
+
+        var processTitleP = this.make("p", {}, "<h2>Process</h2>");
+        var processTitleCol = this.make("div", {"class":"twelvecol last"});
+        var rowProcessTitle = this.make("div", {"class":"row nodeDetail newSection"});
+
+        $(rowProcessTitle).append(processTitleCol);
+        $(processTitleCol).append(processTitleP);
+
+        // Process chart row
+
+        var processCharts1 = this.make("div", {},
+            "<svg width='100%' height='160'>" +
+                "<svg id='svg_fileDescriptors' clip_id='clip_fileDescriptors' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "<svg id='svg_processMem' clip_id='clip_processMem' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+            "</svg>"
+        );
+        var processCharts2 = this.make("div", {},
+            "<svg width='100%' height='160'>" +
+                "<svg id='svg_processCPU_time' clip_id='clip_processCPU_time' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "<svg id='svg_processCPU_pct' clip_id='clip_processCPU_pct' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+            "</svg>"
+        );
+
+        var processColCharts1 = this.make("div", {"class":"sixcol"});
+        var processColCharts2 = this.make("div", {"class":"sixcol last"});
+        var rowProcessCharts = this.make("div", {"class":"row nodeDetail"});
+
+        $(rowProcessCharts).append(processColCharts1, processColCharts2);
+        $(processColCharts1).append(processCharts1);
+        $(processColCharts2).append(processCharts2);
+
         // Indices title
 
         var indicesTitleP = this.make("p", {}, "<h2>Indices</h2>");
         var indicesTitleCol = this.make("div", {"class":"twelvecol last"});
-        var rawIndicesTitle = this.make("div", {"class":"row nodeDetail newSection"});
+        var rowIndicesTitle = this.make("div", {"class":"row nodeDetail newSection"});
 
-        $(rawIndicesTitle).append(indicesTitleCol);
+        $(rowIndicesTitle).append(indicesTitleCol);
         $(indicesTitleCol).append(indicesTitleP);
 
         // Indices detail row #1
@@ -991,13 +1127,16 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
 //            rowJvmMemPools,
 
-            rawOsTitle,
+            rowOsTitle,
             rowOS,
             rowOsCharts,
 
+            rowProcessTitle,
+            rowProcessCharts,
+
             rowDes,
 
-            rawIndicesTitle,
+            rowIndicesTitle,
             rowIndices,
             rowIndices_2//,
 //            "<div class='row nodeDetail'>" +
