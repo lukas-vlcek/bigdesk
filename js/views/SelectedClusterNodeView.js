@@ -58,7 +58,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     .svg(d3.select("#svg_fileDescriptors"));
 
                 var chart_channels = timeSeriesChart()
-                    .width(270).height(110)
+                    .width(270).height(160)
                     .legend({
                         caption: "Channels",
                         series1: "HTTP",
@@ -258,6 +258,17 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         margin_bottom: 6,
                         width: 100})
                     .svg(d3.select("#svg_processMem"));
+
+                var chart_transport_txrx = timeSeriesChart()
+                    .width(270).height(160)
+                    .legend({
+                        caption: "Transport size",
+                        series1: "tx",
+                        series2: "rx",
+                        margin_left: 5,
+                        margin_bottom: 6,
+                        width: 65})
+                    .svg(d3.select("#svg_transport_txrx"));
 
                 var nodesStatsCollection = _view.model.get("nodesStats");
 
@@ -752,6 +763,37 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     });
                     chart_processMem.update(process_mem_share, process_mem_resident, process_mem_total_virtual);
 
+                    // --------------------------------------------
+                    // Transport: txrx
+
+                    var transport_tx_delta = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.id,
+                            value: +snapshot.node.transport.tx_size_in_bytes
+                        }
+                    });
+                    var transport_rx_delta = stats.map(function(snapshot){
+                        return {
+                            timestamp: +snapshot.id,
+                            value: +snapshot.node.transport.rx_size_in_bytes
+                        }
+                    });
+                    if (transport_tx_delta.length > 1 && transport_rx_delta.length > 1) {
+
+                        for (var i=(transport_tx_delta.length - 1); i > 0 ; i--) {
+                            transport_tx_delta[i].value -= transport_tx_delta[i-1].value;
+                        }
+                        transport_tx_delta.shift();
+
+                        for (var i=(transport_rx_delta.length - 1); i > 0 ; i--) {
+                            transport_rx_delta[i].value -= transport_rx_delta[i-1].value;
+                        }
+                        transport_rx_delta.shift();
+
+                        chart_transport_txrx.update(transport_tx_delta, transport_rx_delta);
+                    }
+
+
                 };
 
                 // add custom listener for the collection to update UI and charts on changes
@@ -788,17 +830,14 @@ var SelectedClusterNodeView = Backbone.View.extend({
     ].join("<br>"),
 
     fileDescriptorsTemplate: [
-//        "<svg width='100%' height='90'><svg id='svg_fileDescriptors' clip_id='clip_fileDescriptors' x='0' y='0' preserveAspectRatio='xMinYMid' viewBox='0 0 270 110'/></svg>",
         "<div>Max: {{process.max_file_descriptors}}</div>",
         "<div>Open: <span id='open_file_descriptors'>na</span></div>",
         "<div>Refresh interval: {{process.refresh_interval}}ms</div>"
     ].join(""),
 
     channelsTemplate: [
-        "<svg width='100%' height='90'><svg id='svg_channels' clip_id='clip_channels' x='0' y='0' preserveAspectRatio='xMinYMid' viewBox='0 0 270 110'/></svg>",
         "<div>Transport: <span id='open_transport_channels'>na</span></div>",
-        "<div>HTTP: <span id='open_http_channels'>na</span>, Total opened: <span id='total_opened_http_channels'>na</span></div>",
-        "<div>TX, RX: ***</div>"
+        "<div>HTTP: <span id='open_http_channels'>na</span>, Total opened: <span id='total_opened_http_channels'>na</span></div>"
     ].join(""),
 
     TDBTemplate: [
@@ -873,28 +912,30 @@ var SelectedClusterNodeView = Backbone.View.extend({
         $(col2).append(p2);
         $(col3).append(p3);
 
-        // Descriptors (file, channels)
+        // HTTP & Transport
 
         var fileDescriptors = Mustache.render(this.fileDescriptorsTemplate, jsonModel);
         var channels = Mustache.render(this.channelsTemplate, {});
-        var _tbd = Mustache.render(this.TDBTemplate, {});
+//        var _tbd = Mustache.render(this.TDBTemplate, {});
 
         var desp1 = this.make("p", {}, fileDescriptors);
         var desp2 = this.make("p", {}, channels);
-        var desp3 = this.make("p", {}, _tbd);
-        var desp4 = this.make("p", {}, _tbd);
+        var desp3 = this.make("p", {},
+            "<svg width='100%' height='160'>" +
+                "<svg id='svg_channels' clip_id='clip_channels' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "<svg id='svg_transport_txrx' clip_id='clip_transport_txrx' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+            "</svg>"
+        );
 
         var desCol1 = this.make("div", {"class":"threecol"});
         var desCol2 = this.make("div", {"class":"threecol"});
-        var desCol3 = this.make("div", {"class":"threecol"});
-        var desCol4 = this.make("div", {"class":"threecol last"});
+        var desCol3 = this.make("div", {"class":"sixcol last"});
 
         var rowDes = this.make("div", {"class":"row nodeDetail newSection"});
-        $(rowDes).append(desCol1, desCol2, desCol3, desCol4);
+        $(rowDes).append(desCol1, desCol2, desCol3);
         $(desCol1).append(desp1);
         $(desCol2).append(desp2);
         $(desCol3).append(desp3);
-        $(desCol4).append(desp4);
 
         // JVM title
 
