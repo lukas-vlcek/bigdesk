@@ -233,7 +233,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         series2: "Sys",
                         margin_left: 5,
                         margin_bottom: 6,
-                        width: 65})
+                        width: 45})
                     .svg(d3.select("#svg_processCPU_time"));
 
                 var chart_processCPU_pct = timeAreaChart()
@@ -263,11 +263,11 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     .width(270).height(160)
                     .legend({
                         caption: "Transport size",
-                        series1: "tx",
-                        series2: "rx",
+                        series1: "Tx",
+                        series2: "Rx",
                         margin_left: 5,
                         margin_bottom: 6,
-                        width: 65})
+                        width: 40})
                     .svg(d3.select("#svg_transport_txrx"));
 
                 var nodesStatsCollection = _view.model.get("nodesStats");
@@ -298,9 +298,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             value: +snapshot.node.transport.server_open
                         }
                     });
-                    var theLatestTotalOpened = undefined;
+                    var theLatestTotalOpened = stats[stats.length-1].node.http.total_opened;
                     var opened_http_channels = stats.map(function(snapshot){
-                        theLatestTotalOpened = snapshot.node.http.total_opened;
                         return {
                             timestamp: +snapshot.id,
                             value: +snapshot.node.http.current_open
@@ -816,16 +815,18 @@ var SelectedClusterNodeView = Backbone.View.extend({
     ].join("<br>"),
 
     selectedNodeHTTPTemplate: [
-        "<h2>HTTP:</h2>" +
-            "HTTP address: {{http_address}}",
+        "HTTP address: {{http_address}}",
+        "",
         "Bound address: {{http.bound_address}}",
+        "",
         "Publish address: {{http.publish_address}}"
     ].join("<br>"),
 
     selectedNodeTransportTemplate: [
-        "<h2>Transport:</h2>" +
-            "Transport address: {{transport_address}}",
+        "Transport address: {{transport_address}}",
+        "",
         "Bound address: {{transport.bound_address}}",
+        "",
         "Publish address: {{transport.publish_address}}"
     ].join("<br>"),
 
@@ -894,45 +895,49 @@ var SelectedClusterNodeView = Backbone.View.extend({
         var jsonModel = model.toJSON();
 
         var selectedNodeInfo = Mustache.render(this.selectedNodeInfoTemplate, jsonModel);
-        var selectedNodeHTTP = Mustache.render(this.selectedNodeHTTPTemplate, jsonModel);
-        var selectedNodeTransport = Mustache.render(this.selectedNodeTransportTemplate, jsonModel);
 
-        var p1 = this.make("p",{},selectedNodeInfo);
-        var p2 = this.make("p",{},selectedNodeHTTP);
-        var p3 = this.make("p",{},selectedNodeTransport);
-
-        var col1 = this.make("div", {"class":"fourcol"});
-        var col2 = this.make("div", {"class":"fourcol"});
-        var col3 = this.make("div", {"class":"fourcol last"});
-
+        var p1 = this.make("p", {}, selectedNodeInfo);
+        var col1 = this.make("div", {"class":"twelvecol last"});
         var rowSelectedNode = this.make("div", {"class":"row nodeDetail"});
 
-        $(rowSelectedNode).append(col1, col2, col3);
+        $(rowSelectedNode).append(col1);
         $(col1).append(p1);
-        $(col2).append(p2);
-        $(col3).append(p3);
+
+        // HTTP & Transport Title
+
+        var transportTitleP = this.make("p", {}, "<h2>HTTP & Transport</h2>");
+        var transportTitleCol = this.make("div", {"class":"twelvecol last"});
+        var rowTransportTitle = this.make("div", {"class":"row nodeDetail newSection"});
+
+        $(rowTransportTitle).append(transportTitleCol);
+        $(transportTitleCol).append(transportTitleP);
 
         // HTTP & Transport
 
-        var fileDescriptors = Mustache.render(this.fileDescriptorsTemplate, jsonModel);
         var channels = Mustache.render(this.channelsTemplate, {});
+        var selectedNodeHTTP = Mustache.render(this.selectedNodeHTTPTemplate, jsonModel);
+        var selectedNodeTransport = Mustache.render(this.selectedNodeTransportTemplate, jsonModel);
 //        var _tbd = Mustache.render(this.TDBTemplate, {});
 
-        var desp1 = this.make("p", {}, fileDescriptors);
-        var desp2 = this.make("p", {}, channels);
+        var desp1 = this.make("p", {}, selectedNodeHTTP);
+        var desp2 = this.make("p", {}, selectedNodeTransport);
         var desp3 = this.make("p", {},
-            "<svg width='100%' height='160'>" +
-                "<svg id='svg_channels' clip_id='clip_channels' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-                "<svg id='svg_transport_txrx' clip_id='clip_transport_txrx' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-            "</svg>"
+            "<div>" +
+                "<svg width='100%' height='160'>" +
+                    "<svg id='svg_channels' clip_id='clip_channels' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                    "<svg id='svg_transport_txrx' clip_id='clip_transport_txrx' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "</svg>" +
+                "<div width='46.5%' style='margin-left: 0%; float: left;'>"+channels+"</div>" +
+                "<div width='46.5%' style='margin-left: 54%;'></div>" +
+            "</div>"
         );
 
         var desCol1 = this.make("div", {"class":"threecol"});
         var desCol2 = this.make("div", {"class":"threecol"});
         var desCol3 = this.make("div", {"class":"sixcol last"});
 
-        var rowDes = this.make("div", {"class":"row nodeDetail newSection"});
-        $(rowDes).append(desCol1, desCol2, desCol3);
+        var rowTransportCharts = this.make("div", {"class":"row nodeDetail"});
+        $(rowTransportCharts).append(desCol1, desCol2, desCol3);
         $(desCol1).append(desp1);
         $(desCol2).append(desp2);
         $(desCol3).append(desp3);
@@ -1077,17 +1082,25 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
         // Process chart row
 
-        var processCharts1 = this.make("div", {},
-            "<svg width='100%' height='160'>" +
-                "<svg id='svg_fileDescriptors' clip_id='clip_fileDescriptors' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-                "<svg id='svg_processMem' clip_id='clip_processMem' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-            "</svg>"
+        var fileDescriptors = Mustache.render(this.fileDescriptorsTemplate, jsonModel);
+
+        var processCharts1 = this.make("p", {},
+            "<div>" +
+                "<svg width='100%' height='160'>" +
+                    "<svg id='svg_fileDescriptors' clip_id='clip_fileDescriptors' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                    "<svg id='svg_processMem' clip_id='clip_processMem' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "</svg>" +
+                "<div width='46.5%' style='margin-left: 0%; float: left;'>"+fileDescriptors+"</div>" +
+                "<div width='46.5%' style='margin-left: 54%;'></div>" +
+            "</div>"
         );
-        var processCharts2 = this.make("div", {},
-            "<svg width='100%' height='160'>" +
-                "<svg id='svg_processCPU_time' clip_id='clip_processCPU_time' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-                "<svg id='svg_processCPU_pct' clip_id='clip_processCPU_pct' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-            "</svg>"
+        var processCharts2 = this.make("p", {},
+            "<div>" +
+                "<svg width='100%' height='160'>" +
+                    "<svg id='svg_processCPU_time' clip_id='clip_processCPU_time' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                    "<svg id='svg_processCPU_pct' clip_id='clip_processCPU_pct' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "</svg>" +
+            "</div>"
         );
 
         var processColCharts1 = this.make("div", {"class":"sixcol"});
@@ -1122,7 +1135,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
             "<svg width='100%' height='160'>" +
                 "<svg id='svg_indicesGetReqs' clip_id='clip_indicesGetReqs' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
                 "<svg id='svg_indicesGetTime' clip_id='clip_indicesGetTime' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-                "</svg>"
+            "</svg>"
         );
 
         var indicesCol1 = this.make("div", {"class":"twocol"});
@@ -1176,7 +1189,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
             rowProcessTitle,
             rowProcessCharts,
 
-            rowDes,
+            rowTransportTitle,
+            rowTransportCharts,
 
             rowIndicesTitle,
             rowIndices,
