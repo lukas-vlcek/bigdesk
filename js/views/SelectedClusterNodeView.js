@@ -343,6 +343,14 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     });
                     chart_jvmThreads.update(jvm_threads_count, jvm_threads_peak_count);
 
+                    if (stats_the_latest && stats_the_latest.node) {
+                        $("#jvm_threads_peak").text(stats_the_latest.node.jvm.threads.peak_count);
+                        $("#jvm_threads_count").text(stats_the_latest.node.jvm.threads.count);
+                    } else {
+                        $("#jvm_threads_peak").text("n/a");
+                        $("#jvm_threads_count").text("n/a");
+                    }
+
                     // --------------------------------------------
                     // JVM GC
 
@@ -373,6 +381,14 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         chart_jvmGC.update(jvm_gc_collection_count_delta, jvm_gc_collection_time_delta);
                     }
 
+                    if (stats_the_latest && stats_the_latest.node) {
+                        $("#jvm_gc_time").text(stats_the_latest.node.jvm.gc.collection_time_in_millis + "ms");
+                        $("#jvm_gc_count").text(stats_the_latest.node.jvm.gc.collection_count);
+                    } else {
+                        $("#jvm_gc_time").text("n/a");
+                        $("#jvm_gc_count").text("n/a");
+                    }
+
                     // --------------------------------------------
                     // JVM Heap Mem
 
@@ -389,6 +405,14 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         }
                     });
                     chart_jvmHeapMem.update(jvm_heap_used_mem, jvm_heap_committed_mem);
+
+                    if (stats_the_latest && stats_the_latest.node) {
+                        $("#jvm_heap_mem_committed").text(stats_the_latest.node.jvm.mem.heap_committed);
+                        $("#jvm_heap_mem_used").text(stats_the_latest.node.jvm.mem.heap_used);
+                    } else {
+                        $("#jvm_heap_mem_committed").text("n/a");
+                        $("#jvm_heap_mem_used").text("n/a");
+                    }
 
                     // --------------------------------------------
                     // JVM Non Heap Mem
@@ -407,6 +431,13 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     });
                     chart_jvmNonHeapMem.update(jvm_non_heap_used_mem, jvm_non_heap_committed_mem);
 
+                    if (stats_the_latest && stats_the_latest.node) {
+                        $("#jvm_non_heap_mem_committed").text(stats_the_latest.node.jvm.mem.non_heap_committed);
+                        $("#jvm_non_heap_mem_used").text(stats_the_latest.node.jvm.mem.non_heap_used);
+                    } else {
+                        $("#jvm_non_heap_mem_committed").text("n/a");
+                        $("#jvm_non_heap_mem_used").text("n/a");
+                    }
 
                     // --------------------------------------------
                     // OS Info
@@ -898,6 +929,26 @@ var SelectedClusterNodeView = Backbone.View.extend({
         "Publish address: {{transport.publish_address}}"
     ].join("<br>"),
 
+    jvmHeapMem: [
+        "<div>Committed: <span id='jvm_heap_mem_committed'>n/a</span></div>",
+        "<div>Used: <span id='jvm_heap_mem_used'>n/a</span></div>"
+    ].join(""),
+
+    jvmNonHeapMem: [
+        "<div>Committed: <span id='jvm_non_heap_mem_committed'>n/a</span></div>",
+        "<div>Used: <span id='jvm_non_heap_mem_used'>n/a</span></div>"
+    ].join(""),
+
+    jvmThreads: [
+        "<div>Peak: <span id='jvm_threads_peak'>n/a</span></div>",
+        "<div>Count: <span id='jvm_threads_count'>n/a</span></div>"
+    ].join(""),
+
+    jvmGC: [
+        "<div>Total time: <span id='jvm_gc_time'>n/a</span></div>",
+        "<div>Total count: <span id='jvm_gc_count'>n/a</span></div>"
+    ].join(""),
+
     fileDescriptorsTemplate: [
         "<div>Max: {{process.max_file_descriptors}}</div>",
         "<div>Open: <span id='open_file_descriptors'>n/a</span></div>"
@@ -911,8 +962,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
     ].join(""),
 
     process_CPU_timeTemplate: [
-        "<div>Sys: <span id='process_cpu_time_sys'>n/a</span></div>",
-        "<div>User: <span id='process_cpu_time_user'>n/a</span></div>"
+        "<div>Sys total: <span id='process_cpu_time_sys'>n/a</span></div>",
+        "<div>User total: <span id='process_cpu_time_user'>n/a</span></div>"
     ].join(""),
 
     process_CPU_pctTemplate: [
@@ -1076,17 +1127,33 @@ var SelectedClusterNodeView = Backbone.View.extend({
         $(jvmCol2).append(jvmp2);
 
         // JVM row for charts
-        var jvmpCharts1 = this.make("div", {},
-            "<svg width='100%' height='160'>" +
-                "<svg id='svg_jvmHeapMem' clip_id='clip_jvmHeapMem' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-                "<svg id='svg_jvmNonHeapMem' clip_id='clip_jvmNonHeapMem' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-            "</svg>"
+
+        var jvmHeapMem = Mustache.render(this.jvmHeapMem, jsonModel);
+        var jvmNonHeapMem = Mustache.render(this.jvmNonHeapMem, jsonModel);
+
+        var jvmpCharts1 = this.make("p", {},
+            "<div style='overflow: auto;'>" +
+                "<svg width='100%' height='160'>" +
+                    "<svg id='svg_jvmHeapMem' clip_id='clip_jvmHeapMem' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                    "<svg id='svg_jvmNonHeapMem' clip_id='clip_jvmNonHeapMem' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "</svg>" +
+                "<div width='46.5%' style='margin-left: 0%; float: left;'>" + jvmHeapMem + "</div>" +
+                "<div width='46.5%' style='margin-left: 54%;'>" + jvmNonHeapMem + "</div>" +
+            "</div>"
         );
-        var jvmpCharts2 = this.make("div", {},
-            "<svg width='100%' height='160'>" +
-                "<svg id='svg_jvmThreads' clip_id='clip_jvmThreads' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-                "<svg id='svg_jvmGC' clip_id='clip_jvmGC' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-            "</svg>"
+
+        var jvmThreads = Mustache.render(this.jvmThreads, jsonModel);
+        var jvmGC = Mustache.render(this.jvmGC, jsonModel);
+
+        var jvmpCharts2 = this.make("p", {},
+            "<div style='overflow: auto;'>" +
+                "<svg width='100%' height='160'>" +
+                    "<svg id='svg_jvmThreads' clip_id='clip_jvmThreads' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                    "<svg id='svg_jvmGC' clip_id='clip_jvmGC' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "</svg>" +
+                "<div width='46.5%' style='margin-left: 0%; float: left;'>" + jvmThreads + "</div>" +
+                "<div width='46.5%' style='margin-left: 54%;'>" + jvmGC + "</div>" +
+            "</div>"
         );
 
         var jvmColCharts1 = this.make("div", {"class":"sixcol"});
