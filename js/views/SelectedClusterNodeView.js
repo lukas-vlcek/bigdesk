@@ -1040,12 +1040,6 @@ var SelectedClusterNodeView = Backbone.View.extend({
         "Refresh: <span id='indices_refresh_total'>n/a</span>"
     ].join("<br>"),
 
-//    jvmMemPoolTemplate: [
-//        "<svg id='{{pool_id}}'></svg>",
-//        "max: <span>n/a</span>",
-//        "used: <span>n/a</span>"
-//    ].join("<br>"),
-
     renderNodeDetail: function(model) {
 
         // NODE info row
@@ -1120,9 +1114,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
         var jvmCol1 = this.make("div", {"class":"fourcol"});
         var jvmCol2 = this.make("div", {"class":"eightcol last"});
 
-        var rowJvm = this.make("div", {"class":"row nodeDetail", "id":"jvmInfo"});
+        var rowJvmInfo = this.make("div", {"class":"row nodeDetail", "id":"jvmInfo"});
 
-        $(rowJvm).append(jvmCol1, jvmCol2);
+        $(rowJvmInfo).append(jvmCol1, jvmCol2);
         $(jvmCol1).append(jvmp1);
         $(jvmCol2).append(jvmp2);
 
@@ -1165,37 +1159,6 @@ var SelectedClusterNodeView = Backbone.View.extend({
         $(jvmColCharts1).append(jvmpCharts1);
         $(jvmColCharts2).append(jvmpCharts2);
 
-        // JVM Mem Pools
-
-//        var jvmMemPool_CMS_Old_Gen = Mustache.render(this.jvmMemPoolTemplate, { pool_id: "CMS Old Gen" });
-//
-//        console.log(jsonModel);
-//        console.log(jvmMemPool_CMS_Old_Gen);
-//
-//        var jvmPoolp1 = this.make("p", {});
-//        var jvmPoolp2 = this.make("p", {});
-//        var jvmPoolp3 = this.make("p", {});
-//        var jvmPoolp4 = this.make("p", {});
-//        var jvmPoolp5 = this.make("p", {});
-//        var jvmPoolp6 = this.make("p", {});
-//
-//        var jvmPoolCol1 = this.make("div", {"class":"twocol"});
-//        var jvmPoolCol2 = this.make("div", {"class":"twocol"});
-//        var jvmPoolCol3 = this.make("div", {"class":"twocol"});
-//        var jvmPoolCol4 = this.make("div", {"class":"twocol"});
-//        var jvmPoolCol5 = this.make("div", {"class":"twocol"});
-//        var jvmPoolCol6 = this.make("div", {"class":"twocol last"});
-//
-//        var rowJvmMemPools = this.make("div", {"class":"row nodeDetail"});
-//
-//        $(rowJvmMemPools).append(jvmPoolCol1,jvmPoolCol2,jvmPoolCol3,jvmPoolCol4,jvmPoolCol5,jvmPoolCol6);
-//        $(jvmPoolCol1).append(jvmPoolp1);
-//        $(jvmPoolCol2).append(jvmPoolp2);
-//        $(jvmPoolCol3).append(jvmPoolp3);
-//        $(jvmPoolCol4).append(jvmPoolp4);
-//        $(jvmPoolCol5).append(jvmPoolp5);
-//        $(jvmPoolCol6).append(jvmPoolp6);
-
         // OS title
 
         var osTitleP = this.make("p", {}, "<h2>OS</h2>");
@@ -1216,9 +1179,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
         var osCol1 = this.make("div", {"class":"fourcol"});
         var osCol2 = this.make("div", {"class":"eightcol last"});
 
-        var rowOS = this.make("div", {"class":"row nodeDetail", "id":"osInfo"});
+        var rowOSInfo = this.make("div", {"class":"row nodeDetail", "id":"osInfo"});
 
-        $(rowOS).append(osCol1, osCol2);
+        $(rowOSInfo).append(osCol1, osCol2);
         $(osCol1).append(osp1);
         $(osCol2).append(osp2);
 
@@ -1371,16 +1334,15 @@ var SelectedClusterNodeView = Backbone.View.extend({
         $(indicesCol3_2).append(indicesp3_2);
 
         this.$el.parent().append(
+
             rowSelectedNode,
 
             rowJvmTitle,
-            rowJvm,
+            rowJvmInfo,
             rowJvmCharts,
 
-//            rowJvmMemPools,
-
             rowOsTitle,
-            rowOS,
+            rowOSInfo,
             rowOsCharts,
 
             rowProcessTitle,
@@ -1391,30 +1353,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
             rowIndicesTitle,
             rowIndices,
-            rowIndices_2//,
-//            "<div class='row nodeDetail'>" +
-//                "<div class='threecol'><p>Network info</p></div>" +
-//                "<div class='ninecol last'><p>Network stats</p></div>" +
-//            "</div>",
-//            "<div class='row nodeDetail'>" +
-//                "<div class='twocol'><p>Thread-pool info</p></div>" +
-//                "<div class='onecol'><p>Bulk</p></div>" +
-//                "<div class='onecol'><p>Cached</p></div>" +
-//                "<div class='onecol'><p>Flush</p></div>" +
-//                "<div class='onecol'><p>Index</p></div>" +
-//                "<div class='onecol'><p>Management</p></div>" +
-//                "<div class='onecol'><p>Merge</p></div>" +
-//                "<div class='onecol'><p>Percolate</p></div>" +
-//                "<div class='onecol'><p>Refresh</p></div>" +
-//                "<div class='onecol'><p>Search</p></div>" +
-//                "<div class='onecol last'><p>Snapshot</p></div>" +
-//            "</div>",
-//            "<div class='row nodeDetail'>" +
-//                "<div class='twelvecol last'><p>Process...</p></div>" +
-//            "</div>",
-//            "<div class='row nodeDetail'>" +
-//                "<div class='twelvecol last'><p>Settings...</p></div>" +
-//            "</div>"
+            rowIndices_2
+
         );
     },
 
