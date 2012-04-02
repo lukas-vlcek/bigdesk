@@ -29,6 +29,13 @@ var SelectedClusterNodeView = Backbone.View.extend({
             items.shift();
         };
 
+        var delta = function(items) {
+            for (var i=(items.length - 1); i > 0 ; i--) {
+                items[i].value -= items[i-1].value;
+            }
+            items.shift();
+        };
+
         var _view = this;
         var nodeInfoModel = this.model.get("nodeInfo");
 
@@ -46,233 +53,34 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                 // Create all charts
 
-                var chart_fileDescriptors = timeSeriesChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "File Descriptors",
-                        series1: "Open",
-                        series2: "Max",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 60})
-                    .svg(d3.select("#svg_fileDescriptors"));
+                var chart_fileDescriptors = bigdesk_charts.fileDescriptors.chart(d3.select("#svg_fileDescriptors"));
+                var chart_channels = bigdesk_charts.channels.chart(d3.select("#svg_channels"));
+                var chart_jvmThreads = bigdesk_charts.jvmThreads.chart(d3.select("#svg_jvmThreads"));
+                var chart_jvmHeapMem = bigdesk_charts.jvmHeapMem.chart(d3.select("#svg_jvmHeapMem"));
+                var chart_jvmNonHeapMem = bigdesk_charts.jvmNonHeapMem.chart(d3.select("#svg_jvmNonHeapMem"));
+                var chart_jvmGC = bigdesk_charts.jvmGC.chart(d3.select("#svg_jvmGC"));
+                var chart_osCpu = bigdesk_charts.osCpu.chart(d3.select("#svg_osCpu"));
+                var chart_osMem = bigdesk_charts.osMem.chart(d3.select("#svg_osMem"));
+                var chart_osSwap = bigdesk_charts.osSwap.chart(d3.select("#svg_osSwap"));
+                var chart_osLoadAvg = bigdesk_charts.osLoadAvg.chart(d3.select("#svg_osLoadAvg"));
+                var chart_indicesSearchReqs = bigdesk_charts.indicesSearchReqs.chart(d3.select("#svg_indicesSearchReqs"));
+                var chart_indicesSearchTime = bigdesk_charts.indicesSearchTime.chart(d3.select("#svg_indicesSearchTime"));
+                var chart_indicesGetReqs = bigdesk_charts.indicesGetReqs.chart(d3.select("#svg_indicesGetReqs"));
+                var chart_indicesGetTime = bigdesk_charts.indicesGetTime.chart(d3.select("#svg_indicesGetTime"));
+                var chart_indicesIndexingReqs = bigdesk_charts.indicesIndexingReqs.chart(d3.select("#svg_indicesIndexingReqs"));
+                var chart_indicesIndexingTime = bigdesk_charts.indicesIndexingTime.chart(d3.select("#svg_indicesIndexingTime"));
+                var chart_processCPU_time = bigdesk_charts.processCPU_time.chart(d3.select("#svg_processCPU_time"));
+                var chart_processCPU_pct = bigdesk_charts.processCPU_pct.chart(d3.select("#svg_processCPU_pct"),
+                    ( +selectedNodeInfo.nodes[selectedNodeId].os.cpu.total_cores * 100 )+ "%" );
+                var chart_processMem = bigdesk_charts.processMem.chart(d3.select("#svg_processMem"));
+                var chart_transport_txrx = bigdesk_charts.transport_txrx.chart(d3.select("#svg_transport_txrx"));
+                var charts_disk_reads_writes_cnt = {};
+                var charts_disk_reads_writes_size = {};
 
-                var chart_channels = timeSeriesChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "Channels",
-                        series1: "HTTP",
-                        series2: "Transport",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 80})
-                    .svg(d3.select("#svg_channels"));
-
-                var chart_jvmThreads = timeSeriesChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "Threads",
-                        series1: "Count",
-                        series2: "Peak",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 60})
-                    .svg(d3.select("#svg_jvmThreads"));
-
-                var chart_jvmHeapMem = timeAreaChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "Heap Mem",
-                        series1: "Used",
-                        series2: "Committed",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 85})
-                    .svg(d3.select("#svg_jvmHeapMem"));
-
-                var chart_jvmNonHeapMem = timeAreaChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "Non-Heap Mem",
-                        series1: "Used",
-                        series2: "Committed",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 85})
-                    .svg(d3.select("#svg_jvmNonHeapMem"));
-
-                var chart_jvmGC = timeSeriesChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "GC (delta)",
-                        series1: "Count",
-                        series2: "Time (sec)",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 85})
-                    .svg(d3.select("#svg_jvmGC"));
-
-                var chart_osCpu = timeAreaChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "CPU (%)",
-                        series1: "Sys",
-                        series2: "User",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 55})
-                    .svg(d3.select("#svg_osCpu"));
-
-                var chart_osMem = timeAreaChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "Mem",
-                        series1: "Used",
-                        series2: "Free",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 55})
-                    .svg(d3.select("#svg_osMem"));
-
-                var chart_osSwap = timeAreaChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "Swap",
-                        series1: "Used",
-                        series2: "Free",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 55})
-                    .svg(d3.select("#svg_osSwap"));
-
-                var chart_osLoadAvg = timeSeriesChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "Load Average",
-                        series1: "0",
-                        series2: "1",
-                        series3: "2",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 40})
-                    .svg(d3.select("#svg_osLoadAvg"));
-
-                var chart_indicesSearchReqs = timeSeriesChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "Search requests per second",
-                        series1: "Fetch",
-                        series2: "Query",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 60})
-                    .svg(d3.select("#svg_indicesSearchReqs"));
-
-                var chart_indicesSearchTime = timeSeriesChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "Search time per second",
-                        series1: "Fetch",
-                        series2: "Query",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 60})
-                    .svg(d3.select("#svg_indicesSearchTime"));
-
-                var chart_indicesGetReqs = timeSeriesChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "Get requests per second",
-                        series1: "Missing",
-                        series2: "Exists",
-                        series3: "Get",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 65})
-                    .svg(d3.select("#svg_indicesGetReqs"));
-
-                var chart_indicesGetTime = timeSeriesChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "Get time per second",
-                        series1: "Missing",
-                        series2: "Exists",
-                        series3: "Get",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 65})
-                    .svg(d3.select("#svg_indicesGetTime"));
-
-                var chart_indicesIndexingReqs = timeSeriesChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "Indexing requests per second",
-                        series1: "Index",
-                        series2: "Delete",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 65})
-                    .svg(d3.select("#svg_indicesIndexingReqs"));
-
-                var chart_indicesIndexingTime = timeSeriesChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "Indexing time per second",
-                        series1: "Index",
-                        series2: "Delete",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 65})
-                    .svg(d3.select("#svg_indicesIndexingTime"));
-
-                var chart_processCPU_time = timeSeriesChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "CPU time",
-                        series1: "User",
-                        series2: "Sys",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 45})
-                    .svg(d3.select("#svg_processCPU_time"));
-
-                var chart_processCPU_pct = timeAreaChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "CPU (%)",
-                        series1: "process",
-                        series2: ( +selectedNodeInfo.nodes[selectedNodeId].os.cpu.total_cores * 100 )+ "%",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 65})
-                    .svg(d3.select("#svg_processCPU_pct"));
-
-                var chart_processMem = timeAreaChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "Mem",
-                        series1: "share",
-                        series2: "resident",
-                        series3: "total virtual",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 100})
-                    .svg(d3.select("#svg_processMem"));
-
-                var chart_transport_txrx = timeSeriesChart()
-                    .width(270).height(160)
-                    .legend({
-                        caption: "Transport size",
-                        series1: "Tx",
-                        series2: "Rx",
-                        margin_left: 5,
-                        margin_bottom: 6,
-                        width: 40})
-                    .svg(d3.select("#svg_transport_txrx"));
 
                 var nodesStatsCollection = _view.model.get("nodesStats");
 
-                // function to update all charts
+                // function to update all node stats charts
                 var updateCharts = function() {
 
                     // get stats for selected node
@@ -292,19 +100,11 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // Channels
 
-                    var opened_transport_server_channels = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.transport.server_open
-                        }
-                    });
+                    var opened_http_channels = bigdesk_charts.channels.series1(stats);
+                    var opened_transport_server_channels = bigdesk_charts.channels.series2(stats);
+
                     var theLatestTotalOpened = stats[stats.length-1].node.http.total_opened;
-                    var opened_http_channels = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.http.current_open
-                        }
-                    });
+
                     chart_channels.update(opened_http_channels, opened_transport_server_channels);
 
                     if (opened_http_channels.length > 0) {
@@ -329,18 +129,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // JVM Threads
 
-                    var jvm_threads_count = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.jvm.timestamp,
-                            value: +snapshot.node.jvm.threads.count
-                        }
-                    });
-                    var jvm_threads_peak_count = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.jvm.timestamp,
-                            value: +snapshot.node.jvm.threads.peak_count
-                        }
-                    });
+                    var jvm_threads_count = bigdesk_charts.jvmThreads.series1(stats);
+                    var jvm_threads_peak_count = bigdesk_charts.jvmThreads.series2(stats);
+
                     chart_jvmThreads.update(jvm_threads_count, jvm_threads_peak_count);
 
                     if (stats_the_latest && stats_the_latest.node) {
@@ -354,29 +145,12 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // JVM GC
 
-                    var jvm_gc_collection_count_delta = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.jvm.timestamp,
-                            value: +snapshot.node.jvm.gc.collection_count
-                        }
-                    });
-                    var jvm_gc_collection_time_delta = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.jvm.timestamp,
-                            value: +snapshot.node.jvm.gc.collection_time_in_millis / 1000
-                        }
-                    });
+                    var jvm_gc_collection_count_delta = bigdesk_charts.jvmGC.series1(stats);
+                    var jvm_gc_collection_time_delta = bigdesk_charts.jvmGC.series2(stats);
                     if (jvm_gc_collection_count_delta.length > 1 && jvm_gc_collection_time_delta.length > 1) {
 
-                        for (var i=(jvm_gc_collection_count_delta.length - 1); i > 0 ; i--) {
-                            jvm_gc_collection_count_delta[i].value -= jvm_gc_collection_count_delta[i-1].value;
-                        }
-                        jvm_gc_collection_count_delta.shift();
-
-                        for (var i=(jvm_gc_collection_time_delta.length - 1); i > 0 ; i--) {
-                            jvm_gc_collection_time_delta[i].value -= jvm_gc_collection_time_delta[i-1].value;
-                        }
-                        jvm_gc_collection_time_delta.shift();
+                        delta(jvm_gc_collection_count_delta);
+                        delta(jvm_gc_collection_time_delta);
 
                         chart_jvmGC.update(jvm_gc_collection_count_delta, jvm_gc_collection_time_delta);
                     }
@@ -392,18 +166,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // JVM Heap Mem
 
-                    var jvm_heap_used_mem= stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.jvm.timestamp,
-                            value: +snapshot.node.jvm.mem.heap_used_in_bytes
-                        }
-                    });
-                    var jvm_heap_committed_mem= stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.jvm.timestamp,
-                            value: +snapshot.node.jvm.mem.heap_committed_in_bytes
-                        }
-                    });
+                    var jvm_heap_used_mem= bigdesk_charts.jvmHeapMem.series1(stats);
+                    var jvm_heap_committed_mem= bigdesk_charts.jvmHeapMem.series2(stats);
+
                     chart_jvmHeapMem.update(jvm_heap_used_mem, jvm_heap_committed_mem);
 
                     if (stats_the_latest && stats_the_latest.node) {
@@ -417,18 +182,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // JVM Non Heap Mem
 
-                    var jvm_non_heap_used_mem= stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.jvm.timestamp,
-                            value: +snapshot.node.jvm.mem.non_heap_used_in_bytes
-                        }
-                    });
-                    var jvm_non_heap_committed_mem= stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.jvm.timestamp,
-                            value: +snapshot.node.jvm.mem.non_heap_committed_in_bytes
-                        }
-                    });
+                    var jvm_non_heap_used_mem= bigdesk_charts.jvmNonHeapMem.series1(stats);
+                    var jvm_non_heap_committed_mem= bigdesk_charts.jvmNonHeapMem.series2(stats);
+
                     chart_jvmNonHeapMem.update(jvm_non_heap_used_mem, jvm_non_heap_committed_mem);
 
                     if (stats_the_latest && stats_the_latest.node) {
@@ -451,24 +207,10 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // OS CPU
 
-                    var os_cpu_sys = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.os.timestamp,
-                            value: +snapshot.node.os.cpu.sys
-                        }
-                    });
-                    var os_cpu_user = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.os.timestamp,
-                            value: (+snapshot.node.os.cpu.user + +snapshot.node.os.cpu.sys)
-                        }
-                    });
-                    var os_cpu_idle = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.os.timestamp,
-                            value: 100
-                        }
-                    });
+                    var os_cpu_sys = bigdesk_charts.osCpu.series1(stats);
+                    var os_cpu_user = bigdesk_charts.osCpu.series2(stats);
+                    var os_cpu_idle = bigdesk_charts.osCpu.series3(stats);
+
                     chart_osCpu.update(os_cpu_sys, os_cpu_user, os_cpu_idle);
 
                     if (stats_the_latest && stats_the_latest.node) {
@@ -482,18 +224,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // OS Mem
 
-                    var os_mem_actual_used = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.os.timestamp,
-                            value: +snapshot.node.os.mem.actual_used_in_bytes
-                        }
-                    });
-                    var os_mem_actual_free = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.os.timestamp,
-                            value: ((+snapshot.node.os.mem.actual_free_in_bytes) + (+snapshot.node.os.mem.actual_used_in_bytes))
-                        }
-                    });
+                    var os_mem_actual_used = bigdesk_charts.osMem.series1(stats);
+                    var os_mem_actual_free = bigdesk_charts.osMem.series2(stats);
+
                     chart_osMem.update(os_mem_actual_used, os_mem_actual_free);
 
                     if (stats_the_latest && stats_the_latest.node) {
@@ -507,21 +240,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // OS swap
 
-                    var os_swap_free = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.os.timestamp,
-                            value: +snapshot.node.os.swap.free_in_bytes
-                        }
-                    });
-                    var os_swap_used = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.os.timestamp,
-                            value:
-                                // https://github.com/elasticsearch/elasticsearch/issues/1804
-                                stats_the_latest.node.os.swap.used_in_bytes == undefined ? 0 :
-                                    +stats_the_latest.node.os.swap.used_in_bytes
-                        }
-                    });
+                    var os_swap_used = bigdesk_charts.osSwap.series1(stats);
+                    var os_swap_free = bigdesk_charts.osSwap.series2(stats);
+
                     chart_osSwap.update(os_swap_used, os_swap_free);
 
                     if (stats_the_latest && stats_the_latest.node) {
@@ -539,24 +260,10 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // OS load average
 
-                    var os_loadAvg_0 = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.os.timestamp,
-                            value: + snapshot.node.os.load_average["0"]
-                        }
-                    });
-                    var os_loadAvg_1 = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.os.timestamp,
-                            value: + snapshot.node.os.load_average["1"]
-                        }
-                    });
-                    var os_loadAvg_2 = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.os.timestamp,
-                            value: + snapshot.node.os.load_average["2"]
-                        }
-                    });
+                    var os_loadAvg_0 = bigdesk_charts.osLoadAvg.series1(stats);
+                    var os_loadAvg_1 = bigdesk_charts.osLoadAvg.series2(stats);
+                    var os_loadAvg_2 = bigdesk_charts.osLoadAvg.series3(stats);
+
                     chart_osLoadAvg.update(os_loadAvg_0, os_loadAvg_1, os_loadAvg_2);
 
                     if (stats_the_latest && stats_the_latest.node) {
@@ -589,18 +296,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // Indices: search requests
 
-                    var indices_fetch_reqs = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.indices.search.fetch_total
-                        }
-                    });
-                    var indices_query_reqs = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.indices.search.query_total
-                        }
-                    });
+                    var indices_fetch_reqs = bigdesk_charts.indicesSearchReqs.series1(stats);
+                    var indices_query_reqs = bigdesk_charts.indicesSearchReqs.series2(stats);
+
                     if (indices_fetch_reqs.length > 1 && indices_query_reqs.length > 1) {
 
                         normalizedDeltaToSeconds(indices_fetch_reqs);
@@ -612,18 +310,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // Indices: search time
 
-                    var indices_fetch_time = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.indices.search.fetch_time_in_millis
-                        }
-                    });
-                    var indices_query_time = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.indices.search.query_time_in_millis
-                        }
-                    });
+                    var indices_fetch_time = bigdesk_charts.indicesSearchTime.series1(stats);
+                    var indices_query_time = bigdesk_charts.indicesSearchTime.series2(stats);
 
                     if (indices_fetch_time.length > 1 && indices_query_time.length > 1) {
 
@@ -636,24 +324,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // Indices: get requests
 
-                    var indices_get_reqs = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.indices.get.total
-                        }
-                    });
-                    var indices_missing_reqs = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.indices.get.missing_total
-                        }
-                    });
-                    var indices_exists_reqs = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.indices.get.exists_total
-                        }
-                    });
+                    var indices_get_reqs = bigdesk_charts.indicesGetReqs.series1(stats);
+                    var indices_missing_reqs = bigdesk_charts.indicesGetReqs.series2(stats);
+                    var indices_exists_reqs = bigdesk_charts.indicesGetReqs.series3(stats);
 
                     if (indices_get_reqs.length > 1 && indices_missing_reqs.length > 1 && indices_exists_reqs.length > 1) {
 
@@ -667,24 +340,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // Indices: get time
 
-                    var indices_get_time = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.indices.get.time_in_millis
-                        }
-                    });
-                    var indices_missing_time = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.indices.get.missing_time_in_millis
-                        }
-                    });
-                    var indices_exists_time = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.indices.get.exists_time_in_millis
-                        }
-                    });
+                    var indices_get_time = bigdesk_charts.indicesGetTime.series1(stats);
+                    var indices_missing_time = bigdesk_charts.indicesGetTime.series2(stats);
+                    var indices_exists_time = bigdesk_charts.indicesGetTime.series3(stats);
 
                     if (indices_get_time.length > 1 && indices_missing_time.length > 1 && indices_exists_time.length > 1) {
 
@@ -698,18 +356,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // Indices: indexing requests
 
-                    var indices_indexing_index_reqs = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.indices.indexing.index_total
-                        }
-                    });
-                    var indices_indexing_delete_reqs = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.indices.indexing.delete_total
-                        }
-                    });
+                    var indices_indexing_index_reqs = bigdesk_charts.indicesIndexingReqs.series1(stats);
+                    var indices_indexing_delete_reqs = bigdesk_charts.indicesIndexingReqs.series2(stats);
 
                     if (indices_indexing_index_reqs.length > 1 && indices_indexing_delete_reqs.length > 1) {
 
@@ -722,18 +370,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // Indices: indexing time
 
-                    var indices_indexing_index_time = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.indices.indexing.index_time_in_millis
-                        }
-                    });
-                    var indices_indexing_delete_time = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.indices.indexing.delete_time_in_millis
-                        }
-                    });
+                    var indices_indexing_index_time = bigdesk_charts.indicesIndexingTime.series1(stats);
+                    var indices_indexing_delete_time = bigdesk_charts.indicesIndexingTime.series2(stats);
 
                     if (indices_indexing_index_time.length > 1 && indices_indexing_delete_time.length > 1) {
 
@@ -746,29 +384,13 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // Process: CPU time (in millis)
 
-                    var process_cpu_time_sys_delta = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.process.timestamp,
-                            value: +snapshot.node.process.cpu.sys_in_millis
-                        }
-                    });
-                    var process_cpu_time_user_delta = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.process.timestamp,
-                            value: +snapshot.node.process.cpu.user_in_millis
-                        }
-                    });
+                    var process_cpu_time_user_delta = bigdesk_charts.processCPU_time.series1(stats);
+                    var process_cpu_time_sys_delta = bigdesk_charts.processCPU_time.series2(stats);
+
                     if (process_cpu_time_sys_delta.length > 1 && process_cpu_time_user_delta.length > 1) {
 
-                        for (var i=(process_cpu_time_sys_delta.length - 1); i > 0 ; i--) {
-                            process_cpu_time_sys_delta[i].value -= process_cpu_time_sys_delta[i-1].value;
-                        }
-                        process_cpu_time_sys_delta.shift();
-
-                        for (var i=(process_cpu_time_user_delta.length - 1); i > 0 ; i--) {
-                            process_cpu_time_user_delta[i].value -= process_cpu_time_user_delta[i-1].value;
-                        }
-                        process_cpu_time_user_delta.shift();
+                        delta(process_cpu_time_user_delta);
+                        delta(process_cpu_time_sys_delta);
 
                         chart_processCPU_time.update(process_cpu_time_user_delta, process_cpu_time_sys_delta);
                     }
@@ -784,12 +406,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // Process: file descriptors
 
-                    var open_file_descriptors = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.process.timestamp,
-                            value: +snapshot.node.process.open_file_descriptors
-                        }
-                    });
+                    var open_file_descriptors = bigdesk_charts.fileDescriptors.series1(stats);
                     var max_file_descriptors = open_file_descriptors.slice(0).map(function(snapshot){
                         return {
                             timestamp: +snapshot.timestamp,
@@ -805,12 +422,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // Process: CPU percentage
 
-                    var process_cpu_pct = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.process.timestamp,
-                            value: +snapshot.node.process.cpu.percent
-                        }
-                    });
+                    var process_cpu_pct = bigdesk_charts.processCPU_pct.series1(stats);
                     var _total_cores = selectedNodeInfo.nodes[selectedNodeId].os.cpu.total_cores;
                     var process_cpu_max = process_cpu_pct.map(function(item){
                         return {
@@ -818,6 +430,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             value: ( 100 * _total_cores )
                         }
                     });
+
                     chart_processCPU_pct.update(process_cpu_pct, process_cpu_max);
 
                     if (stats_the_latest && stats_the_latest.node) {
@@ -831,24 +444,10 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // Process: Mem
 
-                    var process_mem_share = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.process.timestamp,
-                            value: +snapshot.node.process.mem.share_in_bytes
-                        }
-                    });
-                    var process_mem_resident = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.process.timestamp,
-                            value: +snapshot.node.process.mem.resident_in_bytes
-                        }
-                    });
-                    var process_mem_total_virtual = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.node.process.timestamp,
-                            value: +snapshot.node.process.mem.total_virtual_in_bytes
-                        }
-                    });
+                    var process_mem_share = bigdesk_charts.processMem.series1(stats);
+                    var process_mem_resident = bigdesk_charts.processMem.series2(stats);
+                    var process_mem_total_virtual = bigdesk_charts.processMem.series3(stats);
+
                     chart_processMem.update(process_mem_share, process_mem_resident, process_mem_total_virtual);
 
                     if (stats_the_latest && stats_the_latest.node) {
@@ -862,36 +461,112 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     }
 
                     // --------------------------------------------
-                    // Transport: txrx
+                    // Transport: Tx Rx
 
-                    var transport_tx_delta = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.transport.tx_size_in_bytes
-                        }
-                    });
-                    var transport_rx_delta = stats.map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.id,
-                            value: +snapshot.node.transport.rx_size_in_bytes
-                        }
-                    });
+                    var transport_tx_delta = bigdesk_charts.transport_txrx.series1(stats);
+                    var transport_rx_delta = bigdesk_charts.transport_txrx.series2(stats);
+
                     if (transport_tx_delta.length > 1 && transport_rx_delta.length > 1) {
 
-                        for (var i=(transport_tx_delta.length - 1); i > 0 ; i--) {
-                            transport_tx_delta[i].value -= transport_tx_delta[i-1].value;
-                        }
-                        transport_tx_delta.shift();
-
-                        for (var i=(transport_rx_delta.length - 1); i > 0 ; i--) {
-                            transport_rx_delta[i].value -= transport_rx_delta[i-1].value;
-                        }
-                        transport_rx_delta.shift();
+                        delta(transport_tx_delta);
+                        delta(transport_rx_delta);
 
                         chart_transport_txrx.update(transport_tx_delta, transport_rx_delta);
                     }
 
+                    // --------------------------------------------
+                    // File system:
 
+                    if (stats_the_latest && stats_the_latest.node && stats_the_latest.node.fs && stats_the_latest.node.fs.data && stats_the_latest.node.fs.data.length > 0) {
+
+                        var fs_section = $("#FileSystemSection");
+                        var _fs_data_info = $("#fs_data_info");
+                        _fs_data_info.empty();
+
+                        var keys = _.keys(stats_the_latest.node.fs.data).sort();
+
+                        if (keys.length > 0) {
+                            for (var i = 0; i < keys.length; i++) {
+
+                                var fs_data = stats_the_latest.node.fs.data[keys[i]];
+                                // we need to keep key value for mustache processing
+                                fs_data.key = [keys[i]];
+                                var _fd_element = $("#fd_data_"+keys[i]);
+
+                                if (_fd_element.length == 0) {
+
+                                    // render the row
+                                    var fsInfo = Mustache.render(templates.selectedClusterNode.fsDataInfoTemplate, fs_data);
+                                    var fsInfo_cnt = Mustache.render(templates.selectedClusterNode.fsDataInfo_cntTemplate, fs_data);
+                                    var fsInfo_size = Mustache.render(templates.selectedClusterNode.fsDataInfo_sizeTemplate, fs_data);
+
+                                    var fsp_data = _view.make("p", {}, fsInfo);
+                                    var fsp_charts = _view.make("p", {},
+                                        "<div style='overflow: auto;'>" +
+                                            "<svg width='100%' height='160'>" +
+                                                "<svg id='svg_fsChart_cnt_"+keys[i]+"' clip_id='clip_fsChart_cnt_"+keys[i]+"' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                                                "<svg id='svg_fsChart_size_"+keys[i]+"' clip_id='clip_fsChart_size_"+keys[i]+"' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                                            "</svg>" +
+                                            "<div width='46.5%' style='margin-left: 0%; float: left;'>" + fsInfo_cnt + "</div>" +
+                                            "<div width='46.5%' style='margin-left: 54%;'>" + fsInfo_size + "</div>" +
+                                        "</div>"
+                                    );
+
+                                    var fsCol_data = _view.make("div", {"class":"sixcol"});
+                                    var fsCol_charts = _view.make("div", {"class":"sixcol last"});
+
+                                    var rowFsInfo = _view.make("div", {"class":"row nodeDetail", "id":"fd_data_" + keys[i]});
+
+                                    $(rowFsInfo).append(fsCol_data, fsCol_charts);
+                                    $(fsCol_data).append(fsp_data);
+                                    $(fsCol_charts).append(fsp_charts);
+
+                                    fs_section.after(rowFsInfo);
+
+                                    charts_disk_reads_writes_cnt[keys[i]] = bigdesk_charts.disk_reads_writes_cnt.chart(d3.select("#svg_fsChart_cnt_"+keys[i]));
+                                    charts_disk_reads_writes_size[keys[i]] = bigdesk_charts.disk_reads_writes_size.chart(d3.select("#svg_fsChart_size_"+keys[i]));
+                                }
+
+                                $("#fs_disk_free_"+keys[i]).text(fs_data.free);
+                                $("#fs_disk_available_"+keys[i]).text(fs_data.available);
+
+                                var read_cnt_delta = bigdesk_charts.disk_reads_writes_cnt.series1(stats, keys[i]);
+                                var write_cnt_delta = bigdesk_charts.disk_reads_writes_cnt.series2(stats, keys[i]);
+
+                                if ( read_cnt_delta.length > 1 && write_cnt_delta.length > 1 ) {
+
+                                    delta(read_cnt_delta);
+                                    delta(write_cnt_delta);
+
+                                    charts_disk_reads_writes_cnt[keys[i]].update(read_cnt_delta, write_cnt_delta);
+                                }
+
+                                $("#fs_disk_writes_"+keys[i]).text(fs_data.disk_writes);
+                                $("#fs_disk_reads_"+keys[i]).text(fs_data.disk_reads);
+
+
+                                var read_size_delta = bigdesk_charts.disk_reads_writes_size.series1(stats, keys[i]);
+                                var write_size_delta = bigdesk_charts.disk_reads_writes_size.series2(stats, keys[i]);
+
+                                if ( read_size_delta.length > 1 && write_size_delta.length > 1 ) {
+
+                                    delta(read_size_delta);
+                                    delta(write_size_delta);
+
+                                    charts_disk_reads_writes_size[keys[i]].update(read_size_delta, write_size_delta);
+                                }
+
+                                $("#fs_disk_write_size_"+keys[i]).text(fs_data.disk_write_size);
+                                $("#fs_disk_read_size_"+keys[i]).text(fs_data.disk_read_size);
+
+                            }
+                        } else {
+                            // delete all fs info
+                        }
+
+                    } else {
+                        $("#fs_data_info").text("No data info available");
+                    }
                 };
 
                 // add custom listener for the collection to update UI and charts on changes
@@ -906,147 +581,12 @@ var SelectedClusterNodeView = Backbone.View.extend({
         });
     },
 
-    selectedNodeInfoTemplate: [
-        "<h2>Selected node:</h2>" +
-            "Name: {{name}}",
-        "ID: \"{{id}}\"",
-        "Hostname: {{hostname}}"
-    ].join("<br>"),
-
-    selectedNodeHTTPTemplate: [
-        "HTTP address: {{http_address}}",
-        "",
-        "Bound address: {{http.bound_address}}",
-        "",
-        "Publish address: {{http.publish_address}}"
-    ].join("<br>"),
-
-    selectedNodeTransportTemplate: [
-        "Transport address: {{transport_address}}",
-        "",
-        "Bound address: {{transport.bound_address}}",
-        "",
-        "Publish address: {{transport.publish_address}}"
-    ].join("<br>"),
-
-    jvmHeapMem: [
-        "<div>Committed: <span id='jvm_heap_mem_committed'>n/a</span></div>",
-        "<div>Used: <span id='jvm_heap_mem_used'>n/a</span></div>"
-    ].join(""),
-
-    jvmNonHeapMem: [
-        "<div>Committed: <span id='jvm_non_heap_mem_committed'>n/a</span></div>",
-        "<div>Used: <span id='jvm_non_heap_mem_used'>n/a</span></div>"
-    ].join(""),
-
-    jvmThreads: [
-        "<div>Peak: <span id='jvm_threads_peak'>n/a</span></div>",
-        "<div>Count: <span id='jvm_threads_count'>n/a</span></div>"
-    ].join(""),
-
-    jvmGC: [
-        "<div>Total time: <span id='jvm_gc_time'>n/a</span></div>",
-        "<div>Total count: <span id='jvm_gc_count'>n/a</span></div>"
-    ].join(""),
-
-    fileDescriptorsTemplate: [
-        "<div>Max: {{process.max_file_descriptors}}</div>",
-        "<div>Open: <span id='open_file_descriptors'>n/a</span></div>"
-//        "<div>Refresh interval: {{process.refresh_interval}}ms</div>"
-    ].join(""),
-
-    process_MemTemplate: [
-        "<div>Total virtual: <span id='process_mem_total_virtual'>n/a</span></div>",
-        "<div>Resident: <span id='process_mem_resident'>n/a</span></div>",
-        "<div>Share: <span id='process_mem_share'>n/a</span></div>"
-    ].join(""),
-
-    process_CPU_timeTemplate: [
-        "<div>Sys total: <span id='process_cpu_time_sys'>n/a</span></div>",
-        "<div>User total: <span id='process_cpu_time_user'>n/a</span></div>"
-    ].join(""),
-
-    process_CPU_pctTemplate: [
-        "<div>Total: <span id='process_cpu_pct_total'>n/a</span></div>",
-        "<div>Process: <span id='process_cpu_pct_process'>n/a</span></div>"
-    ].join(""),
-
-    osCpu: [
-        "<div>Total: 100%</div>",
-        "<div>User: <span id='os_cpu_user'>n/a</span></div>",
-        "<div>Sys: <span id='os_cpu_sys'>n/a</span></div>"
-    ].join(""),
-
-    osMem: [
-        "<div>Free: <span id='os_mem_free'>n/a</span></div>",
-        "<div>Used: <span id='os_mem_used'>n/a</span></div>"
-    ].join(""),
-
-    osSwap: [
-        "<div>Free: <span id='os_swap_free'>n/a</span></div>",
-        "<div>Used: <span id='os_swap_used'>n/a</span></div>"
-    ].join(""),
-
-    osLoad: [
-        "<div>2: <span id='os_load_2'>n/a</span></div>",
-        "<div>1: <span id='os_load_1'>n/a</span></div>",
-        "<div>0: <span id='os_load_0'>n/a</span></div>"
-    ].join(""),
-
-    channelsTemplate: [
-        "<div>Transport: <span id='open_transport_channels'>na</span></div>",
-        "<div>HTTP: <span id='open_http_channels'>na</span></div>",
-        "<div>HTTP total opened: <span id='total_opened_http_channels'>na</span></div>"
-    ].join(""),
-
-    TDBTemplate: [
-        "<svg width='100%' height='90'>" +
-            "<rect x='0' y='0' width='100%' height='100%' fill='#eee' stroke-width='1' />" +
-        "</svg>"
-    ].join(""),
-
-    jvmInfoTemplate1: [
-        "VM name: {{vm_name}}",
-        "VM vendor: {{vm_vendor}}",
-        "VM version: {{vm_version}}"
-    ].join("<br>"),
-
-    jvmInfoTemplate2: [
-        "Uptime: <span id='jvm_uptime'>n/a</span>",
-        "Java version: {{version}}",
-        "PID: {{pid}}"
-    ].join("<br>"),
-
-    osInfoTemplate1: [
-        "CPU vendor: {{cpu.vendor}}",
-        "CPU model: {{cpu.model}} ({{cpu.mhz}} MHz)",
-        "CPU total cores: {{cpu.total_cores}}",
-        "CPU sockets: {{cpu.total_sockets}} with {{cpu.cores_per_socket}} cores each",
-        "CPU cache: {{cpu.cache_size}}"
-    ].join("<br>"),
-
-    osInfoTemplate2: [
-        "Uptime: <span id='os_uptime'>n/a</span>",
-        "Refresh interval: {{refresh_interval}}ms",
-        "Total mem: {{mem.total}} ({{mem.total_in_bytes}}&nbsp;b)",
-        "Total swap: {{swap.total}} ({{swap.total_in_bytes}}&nbsp;b)"
-    ].join("<br>"),
-
-    indices1Template: [
-        "Size: <span id='indices_store_size'>n/a</span>",
-        "Docs count: <span id='indices_docs_count'>n/a</span>",
-        "Docs deleted: <span id='indices_docs_deleted'>n/a</span>",
-        "Flush: <span id='indices_flush_total'>n/a</span>",
-        "Refresh: <span id='indices_refresh_total'>n/a</span>"
-    ].join("<br>"),
-
     renderNodeDetail: function(model) {
 
-        // NODE info row
-
+        // Node info
         var jsonModel = model.toJSON();
 
-        var selectedNodeInfo = Mustache.render(this.selectedNodeInfoTemplate, jsonModel);
+        var selectedNodeInfo = Mustache.render(templates.selectedClusterNode.selectedNodeInfoTemplate, jsonModel);
 
         var p1 = this.make("p", {}, selectedNodeInfo);
         var col1 = this.make("div", {"class":"twelvecol last"});
@@ -1066,10 +606,10 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
         // HTTP & Transport
 
-        var channels = Mustache.render(this.channelsTemplate, {});
-        var selectedNodeHTTP = Mustache.render(this.selectedNodeHTTPTemplate, jsonModel);
-        var selectedNodeTransport = Mustache.render(this.selectedNodeTransportTemplate, jsonModel);
-//        var _tbd = Mustache.render(this.TDBTemplate, {});
+        var channels = Mustache.render(templates.selectedClusterNode.channelsTemplate, {});
+        var selectedNodeHTTP = Mustache.render(templates.selectedClusterNode.selectedNodeHTTPTemplate, jsonModel);
+        var selectedNodeTransport = Mustache.render(templates.selectedClusterNode.selectedNodeTransportTemplate, jsonModel);
+//        var _tbd = Mustache.render(templates.selectedClusterNode.TDBTemplate, {});
 
         var desp1 = this.make("p", {}, selectedNodeHTTP);
         var desp2 = this.make("p", {}, selectedNodeTransport);
@@ -1105,8 +645,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
         // JVM detail row
 
-        var jvmInfo1 = Mustache.render(this.jvmInfoTemplate1, jsonModel.jvm);
-        var jvmInfo2 = Mustache.render(this.jvmInfoTemplate2, jsonModel.jvm);
+        var jvmInfo1 = Mustache.render(templates.selectedClusterNode.jvmInfoTemplate1, jsonModel.jvm);
+        var jvmInfo2 = Mustache.render(templates.selectedClusterNode.jvmInfoTemplate2, jsonModel.jvm);
 
         var jvmp1 = this.make("p", {}, jvmInfo1);
         var jvmp2 = this.make("p", {}, jvmInfo2);
@@ -1122,8 +662,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
         // JVM row for charts
 
-        var jvmHeapMem = Mustache.render(this.jvmHeapMem, jsonModel);
-        var jvmNonHeapMem = Mustache.render(this.jvmNonHeapMem, jsonModel);
+        var jvmHeapMem = Mustache.render(templates.selectedClusterNode.jvmHeapMem, jsonModel);
+        var jvmNonHeapMem = Mustache.render(templates.selectedClusterNode.jvmNonHeapMem, jsonModel);
 
         var jvmpCharts1 = this.make("p", {},
             "<div style='overflow: auto;'>" +
@@ -1136,8 +676,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
             "</div>"
         );
 
-        var jvmThreads = Mustache.render(this.jvmThreads, jsonModel);
-        var jvmGC = Mustache.render(this.jvmGC, jsonModel);
+        var jvmThreads = Mustache.render(templates.selectedClusterNode.jvmThreads, jsonModel);
+        var jvmGC = Mustache.render(templates.selectedClusterNode.jvmGC, jsonModel);
 
         var jvmpCharts2 = this.make("p", {},
             "<div style='overflow: auto;'>" +
@@ -1170,8 +710,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
         // OS detail row
 
-        var osInfo1 = Mustache.render(this.osInfoTemplate1, jsonModel.os);
-        var osInfo2 = Mustache.render(this.osInfoTemplate2, jsonModel.os);
+        var osInfo1 = Mustache.render(templates.selectedClusterNode.osInfoTemplate1, jsonModel.os);
+        var osInfo2 = Mustache.render(templates.selectedClusterNode.osInfoTemplate2, jsonModel.os);
 
         var osp1 = this.make("p", {}, osInfo1);
         var osp2 = this.make("p", {}, osInfo2 );
@@ -1187,8 +727,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
         // OS row for charts
 
-        var osCpu = Mustache.render(this.osCpu, jsonModel);
-        var osMem = Mustache.render(this.osMem, jsonModel);
+        var osCpu = Mustache.render(templates.selectedClusterNode.osCpu, jsonModel);
+        var osMem = Mustache.render(templates.selectedClusterNode.osMem, jsonModel);
 
         var osCharts1 = this.make("p", {},
             "<div style='overflow: auto;'>" +
@@ -1201,8 +741,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
             "</div>"
         );
 
-        var osSwap = Mustache.render(this.osSwap, jsonModel);
-        var osLoad = Mustache.render(this.osLoad, jsonModel);
+        var osSwap = Mustache.render(templates.selectedClusterNode.osSwap, jsonModel);
+        var osLoad = Mustache.render(templates.selectedClusterNode.osLoad, jsonModel);
 
         var osCharts2 = this.make("p", {},
             "<div style='overflow: auto;'>" +
@@ -1235,8 +775,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
         // Process chart row
 
-        var fileDescriptors = Mustache.render(this.fileDescriptorsTemplate, jsonModel);
-        var processMem = Mustache.render(this.process_MemTemplate, jsonModel);
+        var fileDescriptors = Mustache.render(templates.selectedClusterNode.fileDescriptorsTemplate, jsonModel);
+        var processMem = Mustache.render(templates.selectedClusterNode.process_MemTemplate, jsonModel);
 
         var processCharts1 = this.make("p", {},
             "<div style='overflow: auto;'>" +
@@ -1249,8 +789,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
             "</div>"
         );
 
-        var processCPU_time = Mustache.render(this.process_CPU_timeTemplate, jsonModel);
-        var processCPU_pct = Mustache.render(this.process_CPU_pctTemplate, jsonModel);
+        var processCPU_time = Mustache.render(templates.selectedClusterNode.process_CPU_timeTemplate, jsonModel);
+        var processCPU_pct = Mustache.render(templates.selectedClusterNode.process_CPU_pctTemplate, jsonModel);
 
         var processCharts2 = this.make("p", {},
             "<div style='overflow: auto;'>" +
@@ -1282,7 +822,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
         // Indices detail row #1
 
-        var indices1Info = Mustache.render(this.indices1Template, {});
+        var indices1Info = Mustache.render(templates.selectedClusterNode.indices1Template, {});
 
         var indicesp1 = this.make("p", {}, indices1Info);
         var indicesp2 = this.make("p", {},
@@ -1333,6 +873,15 @@ var SelectedClusterNodeView = Backbone.View.extend({
         $(indicesCol2_2).append(indicesp2_2);
         $(indicesCol3_2).append(indicesp3_2);
 
+        // File system title
+
+        var fsTitleP = this.make("p", {}, "<h2>File system</h2>");
+        var fsTitleCol = this.make("div", {"class":"twelvecol last"});
+        var rowFsTitle = this.make("div", {"class":"row nodeDetail newSection", "id":"FileSystemSection"});
+
+        $(rowFsTitle).append(fsTitleCol);
+        $(fsTitleCol).append(fsTitleP);
+
         this.$el.parent().append(
 
             rowSelectedNode,
@@ -1353,7 +902,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
             rowIndicesTitle,
             rowIndices,
-            rowIndices_2
+            rowIndices_2,
+
+            rowFsTitle
 
         );
     },
