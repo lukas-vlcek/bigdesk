@@ -83,490 +83,546 @@ var SelectedClusterNodeView = Backbone.View.extend({
                 // function to update all node stats charts
                 var updateCharts = function() {
 
+                    // should the charts be animated?
+                    var animatedCharts = $("#animatedCharts").prop("checked");
+                    if (!animatedCharts) { animatedCharts = false; }
+
                     // get stats for selected node
-                    var stats = nodesStatsCollection.map(function(snapshot){
-                        if (snapshot.get("nodes").get(_view.nodeId()))
-                        return {
-                            id: snapshot.id, // this is timestamp
-                            node: snapshot.get("nodes").get(_view.nodeId()).toJSON()
-                        }
+                    var stats = [];
+                    var stats_the_latest = undefined;
+
+                    _.defer(function(){
+                        stats = nodesStatsCollection.map(function(snapshot){
+                            if (snapshot.get("nodes").get(_view.nodeId()))
+                                return {
+                                    id: snapshot.id, // this is timestamp
+                                    node: snapshot.get("nodes").get(_view.nodeId()).toJSON()
+                                }
+                        });
+
+                        stats = _.filter(stats, function(item){ return (item!=undefined)});
+
+                        stats_the_latest = stats[stats.length - 1];
+//                        console.log("the latest stats snapshot", stats_the_latest);
                     });
-
-                    stats = _.filter(stats, function(item){ return (item!=undefined)});
-
-                    var stats_the_latest = stats[stats.length - 1];
-//                    console.log("the latest stats snapshot", stats_the_latest);
 
                     // --------------------------------------------
                     // Channels
 
-                    var opened_http_channels = bigdesk_charts.channels.series1(stats);
-                    var opened_transport_server_channels = bigdesk_charts.channels.series2(stats);
+                    _.defer(function(){
+                        var opened_http_channels = bigdesk_charts.channels.series1(stats);
+                        var opened_transport_server_channels = bigdesk_charts.channels.series2(stats);
 
-                    var theLatestTotalOpened = stats[stats.length-1].node.http.total_opened;
+                        var theLatestTotalOpened = stats[stats.length-1].node.http.total_opened;
 
-                    chart_channels.update(opened_http_channels, opened_transport_server_channels);
+                        chart_channels.animate(animatedCharts).update(opened_http_channels, opened_transport_server_channels);
 
-                    if (opened_http_channels.length > 0) {
-                        $("#open_http_channels").text(opened_http_channels[opened_http_channels.length-1].value);
-                    }
-                    if (opened_transport_server_channels.length > 0) {
-                        $("#open_transport_channels").text(opened_transport_server_channels[opened_transport_server_channels.length-1].value);
-                    }
-                    if (theLatestTotalOpened) {
-                        $("#total_opened_http_channels").text(theLatestTotalOpened);
-                    }
+                        if (opened_http_channels.length > 0) {
+                            $("#open_http_channels").text(opened_http_channels[opened_http_channels.length-1].value);
+                        }
+                        if (opened_transport_server_channels.length > 0) {
+                            $("#open_transport_channels").text(opened_transport_server_channels[opened_transport_server_channels.length-1].value);
+                        }
+                        if (theLatestTotalOpened) {
+                            $("#total_opened_http_channels").text(theLatestTotalOpened);
+                        }
+                    });
 
                     // --------------------------------------------
                     // JVM Info
 
-                    if (stats_the_latest && stats_the_latest.node) {
-                        $("#jvm_uptime").text(stats_the_latest.node.jvm.uptime);
-                    } else {
-                        $("#jvm_uptime").text("n/a");
-                    }
+                    _.defer(function(){
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#jvm_uptime").text(stats_the_latest.node.jvm.uptime);
+                        } else {
+                            $("#jvm_uptime").text("n/a");
+                        }
+                    });
 
                     // --------------------------------------------
                     // JVM Threads
 
-                    var jvm_threads_count = bigdesk_charts.jvmThreads.series1(stats);
-                    var jvm_threads_peak_count = bigdesk_charts.jvmThreads.series2(stats);
+                    _.defer(function(){
+                        var jvm_threads_count = bigdesk_charts.jvmThreads.series1(stats);
+                        var jvm_threads_peak_count = bigdesk_charts.jvmThreads.series2(stats);
 
-                    chart_jvmThreads.update(jvm_threads_count, jvm_threads_peak_count);
+                        chart_jvmThreads.animate(animatedCharts).update(jvm_threads_count, jvm_threads_peak_count);
 
-                    if (stats_the_latest && stats_the_latest.node) {
-                        $("#jvm_threads_peak").text(stats_the_latest.node.jvm.threads.peak_count);
-                        $("#jvm_threads_count").text(stats_the_latest.node.jvm.threads.count);
-                    } else {
-                        $("#jvm_threads_peak").text("n/a");
-                        $("#jvm_threads_count").text("n/a");
-                    }
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#jvm_threads_peak").text(stats_the_latest.node.jvm.threads.peak_count);
+                            $("#jvm_threads_count").text(stats_the_latest.node.jvm.threads.count);
+                        } else {
+                            $("#jvm_threads_peak").text("n/a");
+                            $("#jvm_threads_count").text("n/a");
+                        }
+                    });
 
                     // --------------------------------------------
                     // JVM GC
 
-                    var jvm_gc_collection_count_delta = bigdesk_charts.jvmGC.series1(stats);
-                    var jvm_gc_collection_time_delta = bigdesk_charts.jvmGC.series2(stats);
-                    if (jvm_gc_collection_count_delta.length > 1 && jvm_gc_collection_time_delta.length > 1) {
+                    _.defer(function(){
+                        var jvm_gc_collection_count_delta = bigdesk_charts.jvmGC.series1(stats);
+                        var jvm_gc_collection_time_delta = bigdesk_charts.jvmGC.series2(stats);
+                        if (jvm_gc_collection_count_delta.length > 1 && jvm_gc_collection_time_delta.length > 1) {
 
-                        delta(jvm_gc_collection_count_delta);
-                        delta(jvm_gc_collection_time_delta);
+                            delta(jvm_gc_collection_count_delta);
+                            delta(jvm_gc_collection_time_delta);
 
-                        chart_jvmGC.update(jvm_gc_collection_count_delta, jvm_gc_collection_time_delta);
-                    }
+                            chart_jvmGC.animate(animatedCharts).update(jvm_gc_collection_count_delta, jvm_gc_collection_time_delta);
+                        }
 
-                    if (stats_the_latest && stats_the_latest.node) {
-                        $("#jvm_gc_time").text(stats_the_latest.node.jvm.gc.collection_time_in_millis + "ms");
-                        $("#jvm_gc_count").text(stats_the_latest.node.jvm.gc.collection_count);
-                    } else {
-                        $("#jvm_gc_time").text("n/a");
-                        $("#jvm_gc_count").text("n/a");
-                    }
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#jvm_gc_time").text(stats_the_latest.node.jvm.gc.collection_time_in_millis + "ms");
+                            $("#jvm_gc_count").text(stats_the_latest.node.jvm.gc.collection_count);
+                        } else {
+                            $("#jvm_gc_time").text("n/a");
+                            $("#jvm_gc_count").text("n/a");
+                        }
+                    });
 
                     // --------------------------------------------
                     // JVM Heap Mem
 
-                    var jvm_heap_used_mem= bigdesk_charts.jvmHeapMem.series1(stats);
-                    var jvm_heap_committed_mem= bigdesk_charts.jvmHeapMem.series2(stats);
+                    _.defer(function(){
+                        var jvm_heap_used_mem= bigdesk_charts.jvmHeapMem.series1(stats);
+                        var jvm_heap_committed_mem= bigdesk_charts.jvmHeapMem.series2(stats);
 
-                    chart_jvmHeapMem.update(jvm_heap_used_mem, jvm_heap_committed_mem);
+                        chart_jvmHeapMem.animate(animatedCharts).update(jvm_heap_used_mem, jvm_heap_committed_mem);
 
-                    if (stats_the_latest && stats_the_latest.node) {
-                        $("#jvm_heap_mem_committed").text(stats_the_latest.node.jvm.mem.heap_committed);
-                        $("#jvm_heap_mem_used").text(stats_the_latest.node.jvm.mem.heap_used);
-                    } else {
-                        $("#jvm_heap_mem_committed").text("n/a");
-                        $("#jvm_heap_mem_used").text("n/a");
-                    }
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#jvm_heap_mem_committed").text(stats_the_latest.node.jvm.mem.heap_committed);
+                            $("#jvm_heap_mem_used").text(stats_the_latest.node.jvm.mem.heap_used);
+                        } else {
+                            $("#jvm_heap_mem_committed").text("n/a");
+                            $("#jvm_heap_mem_used").text("n/a");
+                        }
+                    });
 
                     // --------------------------------------------
                     // JVM Non Heap Mem
 
-                    var jvm_non_heap_used_mem= bigdesk_charts.jvmNonHeapMem.series1(stats);
-                    var jvm_non_heap_committed_mem= bigdesk_charts.jvmNonHeapMem.series2(stats);
+                    _.defer(function(){
+                        var jvm_non_heap_used_mem= bigdesk_charts.jvmNonHeapMem.series1(stats);
+                        var jvm_non_heap_committed_mem= bigdesk_charts.jvmNonHeapMem.series2(stats);
 
-                    chart_jvmNonHeapMem.update(jvm_non_heap_used_mem, jvm_non_heap_committed_mem);
+                        chart_jvmNonHeapMem.animate(animatedCharts).update(jvm_non_heap_used_mem, jvm_non_heap_committed_mem);
 
-                    if (stats_the_latest && stats_the_latest.node) {
-                        $("#jvm_non_heap_mem_committed").text(stats_the_latest.node.jvm.mem.non_heap_committed);
-                        $("#jvm_non_heap_mem_used").text(stats_the_latest.node.jvm.mem.non_heap_used);
-                    } else {
-                        $("#jvm_non_heap_mem_committed").text("n/a");
-                        $("#jvm_non_heap_mem_used").text("n/a");
-                    }
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#jvm_non_heap_mem_committed").text(stats_the_latest.node.jvm.mem.non_heap_committed);
+                            $("#jvm_non_heap_mem_used").text(stats_the_latest.node.jvm.mem.non_heap_used);
+                        } else {
+                            $("#jvm_non_heap_mem_committed").text("n/a");
+                            $("#jvm_non_heap_mem_used").text("n/a");
+                        }
+                    });
 
                     // --------------------------------------------
                     // OS Info
 
-                    if (stats_the_latest && stats_the_latest.node) {
-                        $("#os_uptime").text(stats_the_latest.node.os.uptime);
-                    } else {
-                        $("#os_uptime").text("n/a");
-                    }
+                    _.defer(function(){
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#os_uptime").text(stats_the_latest.node.os.uptime);
+                        } else {
+                            $("#os_uptime").text("n/a");
+                        }
+                    });
 
                     // --------------------------------------------
                     // OS CPU
 
-                    var os_cpu_sys = bigdesk_charts.osCpu.series1(stats);
-                    var os_cpu_user = bigdesk_charts.osCpu.series2(stats);
-                    var os_cpu_idle = bigdesk_charts.osCpu.series3(stats);
+                    _.defer(function(){
+                        var os_cpu_sys = bigdesk_charts.osCpu.series1(stats);
+                        var os_cpu_user = bigdesk_charts.osCpu.series2(stats);
+                        var os_cpu_idle = bigdesk_charts.osCpu.series3(stats);
 
-                    chart_osCpu.update(os_cpu_sys, os_cpu_user, os_cpu_idle);
+                        chart_osCpu.animate(animatedCharts).update(os_cpu_sys, os_cpu_user, os_cpu_idle);
 
-                    if (stats_the_latest && stats_the_latest.node) {
-                        $("#os_cpu_user").text(stats_the_latest.node.os.cpu.user);
-                        $("#os_cpu_sys").text(stats_the_latest.node.os.cpu.sys);
-                    } else {
-                        $("#os_cpu_user").text("n/a");
-                        $("#os_cpu_sys").text("n/a");
-                    }
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#os_cpu_user").text(stats_the_latest.node.os.cpu.user);
+                            $("#os_cpu_sys").text(stats_the_latest.node.os.cpu.sys);
+                        } else {
+                            $("#os_cpu_user").text("n/a");
+                            $("#os_cpu_sys").text("n/a");
+                        }
+                    });
 
                     // --------------------------------------------
                     // OS Mem
 
-                    var os_mem_actual_used = bigdesk_charts.osMem.series1(stats);
-                    var os_mem_actual_free = bigdesk_charts.osMem.series2(stats);
+                    _.defer(function(){
+                        var os_mem_actual_used = bigdesk_charts.osMem.series1(stats);
+                        var os_mem_actual_free = bigdesk_charts.osMem.series2(stats);
 
-                    chart_osMem.update(os_mem_actual_used, os_mem_actual_free);
+                        chart_osMem.animate(animatedCharts).update(os_mem_actual_used, os_mem_actual_free);
 
-                    if (stats_the_latest && stats_the_latest.node) {
-                        $("#os_mem_free").text(stats_the_latest.node.os.mem.actual_free);
-                        $("#os_mem_used").text(stats_the_latest.node.os.mem.actual_used);
-                    } else {
-                        $("#os_mem_free").text("n/a");
-                        $("#os_mem_used").text("n/a");
-                    }
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#os_mem_free").text(stats_the_latest.node.os.mem.actual_free);
+                            $("#os_mem_used").text(stats_the_latest.node.os.mem.actual_used);
+                        } else {
+                            $("#os_mem_free").text("n/a");
+                            $("#os_mem_used").text("n/a");
+                        }
+                    });
 
                     // --------------------------------------------
                     // OS swap
 
-                    var os_swap_used = bigdesk_charts.osSwap.series1(stats);
-                    var os_swap_free = bigdesk_charts.osSwap.series2(stats);
+                    _.defer(function(){
+                        var os_swap_used = bigdesk_charts.osSwap.series1(stats);
+                        var os_swap_free = bigdesk_charts.osSwap.series2(stats);
 
-                    chart_osSwap.update(os_swap_used, os_swap_free);
+                        chart_osSwap.animate(animatedCharts).update(os_swap_used, os_swap_free);
 
-                    if (stats_the_latest && stats_the_latest.node) {
-                        $("#os_swap_free").text(stats_the_latest.node.os.swap.free);
-                        $("#os_swap_used").text(
-                            // https://github.com/elasticsearch/elasticsearch/issues/1804
-                            stats_the_latest.node.os.swap.used == undefined ? "n/a" :
-                            stats_the_latest.node.os.swap.used
-                        );
-                    } else {
-                        $("#os_swap_free").text("n/a");
-                        $("#os_swap_used").text("n/a");
-                    }
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#os_swap_free").text(stats_the_latest.node.os.swap.free);
+                            $("#os_swap_used").text(
+                                // https://github.com/elasticsearch/elasticsearch/issues/1804
+                                stats_the_latest.node.os.swap.used == undefined ? "n/a" :
+                                stats_the_latest.node.os.swap.used
+                            );
+                        } else {
+                            $("#os_swap_free").text("n/a");
+                            $("#os_swap_used").text("n/a");
+                        }
+                    });
 
                     // --------------------------------------------
                     // OS load average
 
-                    var os_loadAvg_0 = bigdesk_charts.osLoadAvg.series1(stats);
-                    var os_loadAvg_1 = bigdesk_charts.osLoadAvg.series2(stats);
-                    var os_loadAvg_2 = bigdesk_charts.osLoadAvg.series3(stats);
+                    _.defer(function(){
+                        var os_loadAvg_0 = bigdesk_charts.osLoadAvg.series1(stats);
+                        var os_loadAvg_1 = bigdesk_charts.osLoadAvg.series2(stats);
+                        var os_loadAvg_2 = bigdesk_charts.osLoadAvg.series3(stats);
 
-                    chart_osLoadAvg.update(os_loadAvg_0, os_loadAvg_1, os_loadAvg_2);
+                        chart_osLoadAvg.animate(animatedCharts).update(os_loadAvg_0, os_loadAvg_1, os_loadAvg_2);
 
-                    if (stats_the_latest && stats_the_latest.node) {
-                        $("#os_load_0").text(stats_the_latest.node.os.load_average["0"]);
-                        $("#os_load_1").text(stats_the_latest.node.os.load_average["1"]);
-                        $("#os_load_2").text(stats_the_latest.node.os.load_average["2"]);
-                    } else {
-                        $("#os_load_0").text("n/a");
-                        $("#os_load_1").text("n/a");
-                        $("#os_load_2").text("n/a");
-                    }
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#os_load_0").text(stats_the_latest.node.os.load_average["0"]);
+                            $("#os_load_1").text(stats_the_latest.node.os.load_average["1"]);
+                            $("#os_load_2").text(stats_the_latest.node.os.load_average["2"]);
+                        } else {
+                            $("#os_load_0").text("n/a");
+                            $("#os_load_1").text("n/a");
+                            $("#os_load_2").text("n/a");
+                        }
+                    });
 
                     // --------------------------------------------
                     // Indices
 
-                    if (stats_the_latest && stats_the_latest.node) {
-                        $("#indices_docs_count").text(stats_the_latest.node.indices.docs.count);
-                        $("#indices_docs_deleted").text(stats_the_latest.node.indices.docs.deleted);
-                        $("#indices_store_size").text(stats_the_latest.node.indices.store.size);
-                        $("#indices_flush_total").text(stats_the_latest.node.indices.flush.total + ", " + stats_the_latest.node.indices.flush.total_time);
-                        $("#indices_refresh_total").text(stats_the_latest.node.indices.refresh.total + ", " + stats_the_latest.node.indices.refresh.total_time);
-                    } else {
-                        $("#indices_docs_count").text("n/a");
-                        $("#indices_docs_deleted").text("n/a");
-                        $("#indices_store_size").text("n/a");
-                        $("#indices_flush_total").text("n/a");
-                        $("#indices_refresh_total").text("n/a");
-                    }
+                    _.defer(function(){
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#indices_docs_count").text(stats_the_latest.node.indices.docs.count);
+                            $("#indices_docs_deleted").text(stats_the_latest.node.indices.docs.deleted);
+                            $("#indices_store_size").text(stats_the_latest.node.indices.store.size);
+                            $("#indices_flush_total").text(stats_the_latest.node.indices.flush.total + ", " + stats_the_latest.node.indices.flush.total_time);
+                            $("#indices_refresh_total").text(stats_the_latest.node.indices.refresh.total + ", " + stats_the_latest.node.indices.refresh.total_time);
+                        } else {
+                            $("#indices_docs_count").text("n/a");
+                            $("#indices_docs_deleted").text("n/a");
+                            $("#indices_store_size").text("n/a");
+                            $("#indices_flush_total").text("n/a");
+                            $("#indices_refresh_total").text("n/a");
+                        }
+                    });
 
                     // --------------------------------------------
                     // Indices: search requests
 
-                    var indices_fetch_reqs = bigdesk_charts.indicesSearchReqs.series1(stats);
-                    var indices_query_reqs = bigdesk_charts.indicesSearchReqs.series2(stats);
+                    _.defer(function(){
+                        var indices_fetch_reqs = bigdesk_charts.indicesSearchReqs.series1(stats);
+                        var indices_query_reqs = bigdesk_charts.indicesSearchReqs.series2(stats);
 
-                    if (indices_fetch_reqs.length > 1 && indices_query_reqs.length > 1) {
+                        if (indices_fetch_reqs.length > 1 && indices_query_reqs.length > 1) {
 
-                        normalizedDeltaToSeconds(indices_fetch_reqs);
-                        normalizedDeltaToSeconds(indices_query_reqs);
+                            normalizedDeltaToSeconds(indices_fetch_reqs);
+                            normalizedDeltaToSeconds(indices_query_reqs);
 
-                        chart_indicesSearchReqs.update(indices_fetch_reqs, indices_query_reqs);
-                    }
+                            chart_indicesSearchReqs.animate(animatedCharts).update(indices_fetch_reqs, indices_query_reqs);
+                        }
+                    });
 
                     // --------------------------------------------
                     // Indices: search time
 
-                    var indices_fetch_time = bigdesk_charts.indicesSearchTime.series1(stats);
-                    var indices_query_time = bigdesk_charts.indicesSearchTime.series2(stats);
+                    _.defer(function(){
+                        var indices_fetch_time = bigdesk_charts.indicesSearchTime.series1(stats);
+                        var indices_query_time = bigdesk_charts.indicesSearchTime.series2(stats);
 
-                    if (indices_fetch_time.length > 1 && indices_query_time.length > 1) {
+                        if (indices_fetch_time.length > 1 && indices_query_time.length > 1) {
 
-                        normalizedDeltaToSeconds(indices_fetch_time);
-                        normalizedDeltaToSeconds(indices_query_time);
+                            normalizedDeltaToSeconds(indices_fetch_time);
+                            normalizedDeltaToSeconds(indices_query_time);
 
-                        chart_indicesSearchTime.update(indices_fetch_time, indices_query_time);
-                    }
+                            chart_indicesSearchTime.animate(animatedCharts).update(indices_fetch_time, indices_query_time);
+                        }
+                    });
 
                     // --------------------------------------------
                     // Indices: get requests
 
-                    var indices_get_reqs = bigdesk_charts.indicesGetReqs.series1(stats);
-                    var indices_missing_reqs = bigdesk_charts.indicesGetReqs.series2(stats);
-                    var indices_exists_reqs = bigdesk_charts.indicesGetReqs.series3(stats);
+                    _.defer(function(){
+                        var indices_get_reqs = bigdesk_charts.indicesGetReqs.series1(stats);
+                        var indices_missing_reqs = bigdesk_charts.indicesGetReqs.series2(stats);
+                        var indices_exists_reqs = bigdesk_charts.indicesGetReqs.series3(stats);
 
-                    if (indices_get_reqs.length > 1 && indices_missing_reqs.length > 1 && indices_exists_reqs.length > 1) {
+                        if (indices_get_reqs.length > 1 && indices_missing_reqs.length > 1 && indices_exists_reqs.length > 1) {
 
-                        normalizedDeltaToSeconds(indices_get_reqs);
-                        normalizedDeltaToSeconds(indices_missing_reqs);
-                        normalizedDeltaToSeconds(indices_exists_reqs);
+                            normalizedDeltaToSeconds(indices_get_reqs);
+                            normalizedDeltaToSeconds(indices_missing_reqs);
+                            normalizedDeltaToSeconds(indices_exists_reqs);
 
-                        chart_indicesGetReqs.update(indices_get_reqs, indices_missing_reqs, indices_exists_reqs);
-                    }
+                            chart_indicesGetReqs.animate(animatedCharts).update(indices_get_reqs, indices_missing_reqs, indices_exists_reqs);
+                        }
+                    });
 
                     // --------------------------------------------
                     // Indices: get time
 
-                    var indices_get_time = bigdesk_charts.indicesGetTime.series1(stats);
-                    var indices_missing_time = bigdesk_charts.indicesGetTime.series2(stats);
-                    var indices_exists_time = bigdesk_charts.indicesGetTime.series3(stats);
+                    _.defer(function(){
+                        var indices_get_time = bigdesk_charts.indicesGetTime.series1(stats);
+                        var indices_missing_time = bigdesk_charts.indicesGetTime.series2(stats);
+                        var indices_exists_time = bigdesk_charts.indicesGetTime.series3(stats);
 
-                    if (indices_get_time.length > 1 && indices_missing_time.length > 1 && indices_exists_time.length > 1) {
+                        if (indices_get_time.length > 1 && indices_missing_time.length > 1 && indices_exists_time.length > 1) {
 
-                        normalizedDeltaToSeconds(indices_get_time);
-                        normalizedDeltaToSeconds(indices_missing_time);
-                        normalizedDeltaToSeconds(indices_exists_time);
+                            normalizedDeltaToSeconds(indices_get_time);
+                            normalizedDeltaToSeconds(indices_missing_time);
+                            normalizedDeltaToSeconds(indices_exists_time);
 
-                        chart_indicesGetTime.update(indices_get_time, indices_missing_time, indices_exists_time);
-                    }
+                            chart_indicesGetTime.animate(animatedCharts).update(indices_get_time, indices_missing_time, indices_exists_time);
+                        }
+                    });
 
                     // --------------------------------------------
                     // Indices: indexing requests
 
-                    var indices_indexing_index_reqs = bigdesk_charts.indicesIndexingReqs.series1(stats);
-                    var indices_indexing_delete_reqs = bigdesk_charts.indicesIndexingReqs.series2(stats);
+                    _.defer(function(){
+                        var indices_indexing_index_reqs = bigdesk_charts.indicesIndexingReqs.series1(stats);
+                        var indices_indexing_delete_reqs = bigdesk_charts.indicesIndexingReqs.series2(stats);
 
-                    if (indices_indexing_index_reqs.length > 1 && indices_indexing_delete_reqs.length > 1) {
+                        if (indices_indexing_index_reqs.length > 1 && indices_indexing_delete_reqs.length > 1) {
 
-                        normalizedDeltaToSeconds(indices_indexing_index_reqs);
-                        normalizedDeltaToSeconds(indices_indexing_delete_reqs);
+                            normalizedDeltaToSeconds(indices_indexing_index_reqs);
+                            normalizedDeltaToSeconds(indices_indexing_delete_reqs);
 
-                        chart_indicesIndexingReqs.update(indices_indexing_index_reqs, indices_indexing_delete_reqs);
-                    }
+                            chart_indicesIndexingReqs.animate(animatedCharts).update(indices_indexing_index_reqs, indices_indexing_delete_reqs);
+                        }
+                    });
 
                     // --------------------------------------------
                     // Indices: indexing time
 
-                    var indices_indexing_index_time = bigdesk_charts.indicesIndexingTime.series1(stats);
-                    var indices_indexing_delete_time = bigdesk_charts.indicesIndexingTime.series2(stats);
+                    _.defer(function(){
+                        var indices_indexing_index_time = bigdesk_charts.indicesIndexingTime.series1(stats);
+                        var indices_indexing_delete_time = bigdesk_charts.indicesIndexingTime.series2(stats);
 
-                    if (indices_indexing_index_time.length > 1 && indices_indexing_delete_time.length > 1) {
+                        if (indices_indexing_index_time.length > 1 && indices_indexing_delete_time.length > 1) {
 
-                        normalizedDeltaToSeconds(indices_indexing_index_time);
-                        normalizedDeltaToSeconds(indices_indexing_delete_time);
+                            normalizedDeltaToSeconds(indices_indexing_index_time);
+                            normalizedDeltaToSeconds(indices_indexing_delete_time);
 
-                        chart_indicesIndexingTime.update(indices_indexing_index_time, indices_indexing_delete_time);
-                    }
+                            chart_indicesIndexingTime.animate(animatedCharts).update(indices_indexing_index_time, indices_indexing_delete_time);
+                        }
+                    });
 
                     // --------------------------------------------
                     // Process: CPU time (in millis)
 
-                    var process_cpu_time_user_delta = bigdesk_charts.processCPU_time.series1(stats);
-                    var process_cpu_time_sys_delta = bigdesk_charts.processCPU_time.series2(stats);
+                    _.defer(function(){
+                        var process_cpu_time_user_delta = bigdesk_charts.processCPU_time.series1(stats);
+                        var process_cpu_time_sys_delta = bigdesk_charts.processCPU_time.series2(stats);
 
-                    if (process_cpu_time_sys_delta.length > 1 && process_cpu_time_user_delta.length > 1) {
+                        if (process_cpu_time_sys_delta.length > 1 && process_cpu_time_user_delta.length > 1) {
 
-                        delta(process_cpu_time_user_delta);
-                        delta(process_cpu_time_sys_delta);
+                            delta(process_cpu_time_user_delta);
+                            delta(process_cpu_time_sys_delta);
 
-                        chart_processCPU_time.update(process_cpu_time_user_delta, process_cpu_time_sys_delta);
-                    }
+                            chart_processCPU_time.animate(animatedCharts).update(process_cpu_time_user_delta, process_cpu_time_sys_delta);
+                        }
 
-                    if (stats_the_latest && stats_the_latest.node) {
-                        $("#process_cpu_time_sys").text(stats_the_latest.node.process.cpu.sys_in_millis + "ms");
-                        $("#process_cpu_time_user").text(stats_the_latest.node.process.cpu.user_in_millis + "ms");
-                    } else {
-                        $("#process_cpu_time_sys").text("n/a");
-                        $("#process_cpu_time_user").text("n/a");
-                    }
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#process_cpu_time_sys").text(stats_the_latest.node.process.cpu.sys_in_millis + "ms");
+                            $("#process_cpu_time_user").text(stats_the_latest.node.process.cpu.user_in_millis + "ms");
+                        } else {
+                            $("#process_cpu_time_sys").text("n/a");
+                            $("#process_cpu_time_user").text("n/a");
+                        }
+                    });
 
                     // --------------------------------------------
                     // Process: file descriptors
 
-                    var open_file_descriptors = bigdesk_charts.fileDescriptors.series1(stats);
-                    var max_file_descriptors = open_file_descriptors.slice(0).map(function(snapshot){
-                        return {
-                            timestamp: +snapshot.timestamp,
-                            value: +selectedNodeInfo.nodes[selectedNodeId].process.max_file_descriptors
+                    _.defer(function(){
+                        var open_file_descriptors = bigdesk_charts.fileDescriptors.series1(stats);
+                        var max_file_descriptors = open_file_descriptors.slice(0).map(function(snapshot){
+                            return {
+                                timestamp: +snapshot.timestamp,
+                                value: +selectedNodeInfo.nodes[selectedNodeId].process.max_file_descriptors
+                            }
+                        });
+                        chart_fileDescriptors.animate(animatedCharts).update(open_file_descriptors, max_file_descriptors);
+
+                        if (open_file_descriptors.length > 0) {
+                            $("#open_file_descriptors").text(open_file_descriptors[open_file_descriptors.length-1].value);
                         }
                     });
-                    chart_fileDescriptors.update(open_file_descriptors, max_file_descriptors);
-
-                    if (open_file_descriptors.length > 0) {
-                        $("#open_file_descriptors").text(open_file_descriptors[open_file_descriptors.length-1].value);
-                    }
 
                     // --------------------------------------------
                     // Process: CPU percentage
 
-                    var process_cpu_pct = bigdesk_charts.processCPU_pct.series1(stats);
-                    var _total_cores = selectedNodeInfo.nodes[selectedNodeId].os.cpu.total_cores;
-                    var process_cpu_max = process_cpu_pct.map(function(item){
-                        return {
-                            timestamp: item.timestamp,
-                            value: ( 100 * _total_cores )
+                    _.defer(function(){
+                        var process_cpu_pct = bigdesk_charts.processCPU_pct.series1(stats);
+                        var _total_cores = selectedNodeInfo.nodes[selectedNodeId].os.cpu.total_cores;
+                        var process_cpu_max = process_cpu_pct.map(function(item){
+                            return {
+                                timestamp: item.timestamp,
+                                value: ( 100 * _total_cores )
+                            }
+                        });
+
+                        chart_processCPU_pct.animate(animatedCharts).update(process_cpu_pct, process_cpu_max);
+
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#process_cpu_pct_total").text((_total_cores * 100) + "%");
+                            $("#process_cpu_pct_process").text(stats_the_latest.node.process.cpu.percent);
+                        } else {
+                            $("#process_cpu_pct_total").text("n/a");
+                            $("#process_cpu_pct_process").text("n/a");
                         }
                     });
-
-                    chart_processCPU_pct.update(process_cpu_pct, process_cpu_max);
-
-                    if (stats_the_latest && stats_the_latest.node) {
-                        $("#process_cpu_pct_total").text((_total_cores * 100) + "%");
-                        $("#process_cpu_pct_process").text(stats_the_latest.node.process.cpu.percent);
-                    } else {
-                        $("#process_cpu_pct_total").text("n/a");
-                        $("#process_cpu_pct_process").text("n/a");
-                    }
 
                     // --------------------------------------------
                     // Process: Mem
 
-                    var process_mem_share = bigdesk_charts.processMem.series1(stats);
-                    var process_mem_resident = bigdesk_charts.processMem.series2(stats);
-                    var process_mem_total_virtual = bigdesk_charts.processMem.series3(stats);
+                    _.defer(function(){
+                        var process_mem_share = bigdesk_charts.processMem.series1(stats);
+                        var process_mem_resident = bigdesk_charts.processMem.series2(stats);
+                        var process_mem_total_virtual = bigdesk_charts.processMem.series3(stats);
 
-                    chart_processMem.update(process_mem_share, process_mem_resident, process_mem_total_virtual);
+                        chart_processMem.animate(animatedCharts).update(process_mem_share, process_mem_resident, process_mem_total_virtual);
 
-                    if (stats_the_latest && stats_the_latest.node) {
-                        $("#process_mem_total_virtual").text(stats_the_latest.node.process.mem.total_virtual);
-                        $("#process_mem_resident").text(stats_the_latest.node.process.mem.resident);
-                        $("#process_mem_share").text(stats_the_latest.node.process.mem.share);
-                    } else {
-                        $("#process_mem_total_virtual").text("n/a");
-                        $("#process_mem_resident").text("n/a");
-                        $("#process_mem_share").text("n/a");
-                    }
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#process_mem_total_virtual").text(stats_the_latest.node.process.mem.total_virtual);
+                            $("#process_mem_resident").text(stats_the_latest.node.process.mem.resident);
+                            $("#process_mem_share").text(stats_the_latest.node.process.mem.share);
+                        } else {
+                            $("#process_mem_total_virtual").text("n/a");
+                            $("#process_mem_resident").text("n/a");
+                            $("#process_mem_share").text("n/a");
+                        }
+                    });
 
                     // --------------------------------------------
                     // Transport: Tx Rx
 
-                    var transport_tx_delta = bigdesk_charts.transport_txrx.series1(stats);
-                    var transport_rx_delta = bigdesk_charts.transport_txrx.series2(stats);
+                    _.defer(function(){
+                        var transport_tx_delta = bigdesk_charts.transport_txrx.series1(stats);
+                        var transport_rx_delta = bigdesk_charts.transport_txrx.series2(stats);
 
-                    if (transport_tx_delta.length > 1 && transport_rx_delta.length > 1) {
+                        if (transport_tx_delta.length > 1 && transport_rx_delta.length > 1) {
 
-                        delta(transport_tx_delta);
-                        delta(transport_rx_delta);
+                            delta(transport_tx_delta);
+                            delta(transport_rx_delta);
 
-                        chart_transport_txrx.update(transport_tx_delta, transport_rx_delta);
-                    }
+                            chart_transport_txrx.animate(animatedCharts).update(transport_tx_delta, transport_rx_delta);
+                        }
+                    });
 
                     // --------------------------------------------
                     // File system:
 
-                    if (stats_the_latest && stats_the_latest.node && stats_the_latest.node.fs && stats_the_latest.node.fs.data && stats_the_latest.node.fs.data.length > 0) {
+                    _.defer(function(){
+                        if (stats_the_latest && stats_the_latest.node && stats_the_latest.node.fs && stats_the_latest.node.fs.data && stats_the_latest.node.fs.data.length > 0) {
 
-                        var fs_section = $("#FileSystemSection");
-                        var _fs_data_info = $("#fs_data_info");
-                        _fs_data_info.empty();
+                            var fs_section = $("#FileSystemSection");
+                            var _fs_data_info = $("#fs_data_info");
+                            _fs_data_info.empty();
 
-                        var keys = _.keys(stats_the_latest.node.fs.data).sort();
+                            var keys = _.keys(stats_the_latest.node.fs.data).sort();
 
-                        if (keys.length > 0) {
-                            for (var i = 0; i < keys.length; i++) {
+                            if (keys.length > 0) {
+                                for (var i = 0; i < keys.length; i++) {
 
-                                var fs_data = stats_the_latest.node.fs.data[keys[i]];
-                                // we need to keep key value for mustache processing
-                                fs_data.key = [keys[i]];
-                                var _fd_element = $("#fd_data_"+keys[i]);
+                                    var fs_data = stats_the_latest.node.fs.data[keys[i]];
+                                    // we need to keep key value for mustache processing
+                                    fs_data.key = [keys[i]];
+                                    var _fd_element = $("#fd_data_"+keys[i]);
 
-                                if (_fd_element.length == 0) {
+                                    if (_fd_element.length == 0) {
 
-                                    // render the row
-                                    var fsInfo = Mustache.render(templates.selectedClusterNode.fsDataInfoTemplate, fs_data);
-                                    var fsInfo_cnt = Mustache.render(templates.selectedClusterNode.fsDataInfo_cntTemplate, fs_data);
-                                    var fsInfo_size = Mustache.render(templates.selectedClusterNode.fsDataInfo_sizeTemplate, fs_data);
+                                        // render the row
+                                        var fsInfo = Mustache.render(templates.selectedClusterNode.fsDataInfoTemplate, fs_data);
+                                        var fsInfo_cnt = Mustache.render(templates.selectedClusterNode.fsDataInfo_cntTemplate, fs_data);
+                                        var fsInfo_size = Mustache.render(templates.selectedClusterNode.fsDataInfo_sizeTemplate, fs_data);
 
-                                    var fsp_data = _view.make("p", {}, fsInfo);
-                                    var fsp_charts = _view.make("p", {},
-                                        "<div style='overflow: auto;'>" +
-                                            "<svg width='100%' height='160'>" +
-                                                "<svg id='svg_fsChart_cnt_"+keys[i]+"' clip_id='clip_fsChart_cnt_"+keys[i]+"' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-                                                "<svg id='svg_fsChart_size_"+keys[i]+"' clip_id='clip_fsChart_size_"+keys[i]+"' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-                                            "</svg>" +
-                                            "<div width='46.5%' style='margin-left: 0%; float: left;'>" + fsInfo_cnt + "</div>" +
-                                            "<div width='46.5%' style='margin-left: 54%;'>" + fsInfo_size + "</div>" +
-                                        "</div>"
-                                    );
+                                        var fsp_data = _view.make("p", {}, fsInfo);
+                                        var fsp_charts = _view.make("p", {},
+                                            "<div style='overflow: auto;'>" +
+                                                "<svg width='100%' height='160'>" +
+                                                    "<svg id='svg_fsChart_cnt_"+keys[i]+"' clip_id='clip_fsChart_cnt_"+keys[i]+"' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                                                    "<svg id='svg_fsChart_size_"+keys[i]+"' clip_id='clip_fsChart_size_"+keys[i]+"' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                                                "</svg>" +
+                                                "<div width='46.5%' style='margin-left: 0%; float: left;'>" + fsInfo_cnt + "</div>" +
+                                                "<div width='46.5%' style='margin-left: 54%;'>" + fsInfo_size + "</div>" +
+                                            "</div>"
+                                        );
 
-                                    var fsCol_data = _view.make("div", {"class":"sixcol"});
-                                    var fsCol_charts = _view.make("div", {"class":"sixcol last"});
+                                        var fsCol_data = _view.make("div", {"class":"sixcol"});
+                                        var fsCol_charts = _view.make("div", {"class":"sixcol last"});
 
-                                    var rowFsInfo = _view.make("div", {"class":"row nodeDetail", "id":"fd_data_" + keys[i]});
+                                        var rowFsInfo = _view.make("div", {"class":"row nodeDetail", "id":"fd_data_" + keys[i]});
 
-                                    $(rowFsInfo).append(fsCol_data, fsCol_charts);
-                                    $(fsCol_data).append(fsp_data);
-                                    $(fsCol_charts).append(fsp_charts);
+                                        $(rowFsInfo).append(fsCol_data, fsCol_charts);
+                                        $(fsCol_data).append(fsp_data);
+                                        $(fsCol_charts).append(fsp_charts);
 
-                                    fs_section.after(rowFsInfo);
+                                        fs_section.after(rowFsInfo);
 
-                                    charts_disk_reads_writes_cnt[keys[i]] = bigdesk_charts.disk_reads_writes_cnt.chart(d3.select("#svg_fsChart_cnt_"+keys[i]));
-                                    charts_disk_reads_writes_size[keys[i]] = bigdesk_charts.disk_reads_writes_size.chart(d3.select("#svg_fsChart_size_"+keys[i]));
+                                        charts_disk_reads_writes_cnt[keys[i]] = bigdesk_charts.disk_reads_writes_cnt.chart(d3.select("#svg_fsChart_cnt_"+keys[i]));
+                                        charts_disk_reads_writes_size[keys[i]] = bigdesk_charts.disk_reads_writes_size.chart(d3.select("#svg_fsChart_size_"+keys[i]));
+                                    }
+
+                                    $("#fs_disk_free_"+keys[i]).text(fs_data.free);
+                                    $("#fs_disk_available_"+keys[i]).text(fs_data.available);
+
+                                    var read_cnt_delta = bigdesk_charts.disk_reads_writes_cnt.series1(stats, keys[i]);
+                                    var write_cnt_delta = bigdesk_charts.disk_reads_writes_cnt.series2(stats, keys[i]);
+
+                                    if ( read_cnt_delta.length > 1 && write_cnt_delta.length > 1 ) {
+
+                                        delta(read_cnt_delta);
+                                        delta(write_cnt_delta);
+
+                                        charts_disk_reads_writes_cnt[keys[i]].animate(animatedCharts).update(read_cnt_delta, write_cnt_delta);
+                                    }
+
+                                    $("#fs_disk_writes_"+keys[i]).text(fs_data.disk_writes);
+                                    $("#fs_disk_reads_"+keys[i]).text(fs_data.disk_reads);
+
+
+                                    var read_size_delta = bigdesk_charts.disk_reads_writes_size.series1(stats, keys[i]);
+                                    var write_size_delta = bigdesk_charts.disk_reads_writes_size.series2(stats, keys[i]);
+
+                                    if ( read_size_delta.length > 1 && write_size_delta.length > 1 ) {
+
+                                        delta(read_size_delta);
+                                        delta(write_size_delta);
+
+                                        charts_disk_reads_writes_size[keys[i]].animate(animatedCharts).update(read_size_delta, write_size_delta);
+                                    }
+
+                                    $("#fs_disk_write_size_"+keys[i]).text(fs_data.disk_write_size);
+                                    $("#fs_disk_read_size_"+keys[i]).text(fs_data.disk_read_size);
+
                                 }
-
-                                $("#fs_disk_free_"+keys[i]).text(fs_data.free);
-                                $("#fs_disk_available_"+keys[i]).text(fs_data.available);
-
-                                var read_cnt_delta = bigdesk_charts.disk_reads_writes_cnt.series1(stats, keys[i]);
-                                var write_cnt_delta = bigdesk_charts.disk_reads_writes_cnt.series2(stats, keys[i]);
-
-                                if ( read_cnt_delta.length > 1 && write_cnt_delta.length > 1 ) {
-
-                                    delta(read_cnt_delta);
-                                    delta(write_cnt_delta);
-
-                                    charts_disk_reads_writes_cnt[keys[i]].update(read_cnt_delta, write_cnt_delta);
-                                }
-
-                                $("#fs_disk_writes_"+keys[i]).text(fs_data.disk_writes);
-                                $("#fs_disk_reads_"+keys[i]).text(fs_data.disk_reads);
-
-
-                                var read_size_delta = bigdesk_charts.disk_reads_writes_size.series1(stats, keys[i]);
-                                var write_size_delta = bigdesk_charts.disk_reads_writes_size.series2(stats, keys[i]);
-
-                                if ( read_size_delta.length > 1 && write_size_delta.length > 1 ) {
-
-                                    delta(read_size_delta);
-                                    delta(write_size_delta);
-
-                                    charts_disk_reads_writes_size[keys[i]].update(read_size_delta, write_size_delta);
-                                }
-
-                                $("#fs_disk_write_size_"+keys[i]).text(fs_data.disk_write_size);
-                                $("#fs_disk_read_size_"+keys[i]).text(fs_data.disk_read_size);
-
+                            } else {
+                                // delete all fs info
                             }
                         } else {
-                            // delete all fs info
+                            $("#fs_data_info").text("No data info available");
                         }
-
-                    } else {
-                        $("#fs_data_info").text("No data info available");
-                    }
+                    });
                 };
 
                 // add custom listener for the collection to update UI and charts on changes

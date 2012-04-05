@@ -68,8 +68,8 @@
 
 <body>
 <div class="container">
+    <form>
     <div class="row connectionPanel">
-        <form>
         <div class="sixcol">
             <span class="connectionPanelSectionWithoutDecoration">
                 ES node REST endpoint
@@ -108,8 +108,13 @@
             </span>
             <span id="ajaxIndicator">&nbsp;&nbsp;&nbsp;</span>
         </div>
-        </form>
     </div>
+    <div class="row connectionPanel settings">
+        <div class="elevencol last">
+            <input type="checkbox" id="animatedCharts" checked="checked"><label for="animatedCharts"> animated charts</label>
+        </div>
+    </div>
+    </form>
     <div class="row">
         <div class="threecol">
             <p id="clusterHealth"></p>
