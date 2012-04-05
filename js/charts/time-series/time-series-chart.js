@@ -6,6 +6,7 @@ function timeSeriesChart() {
         legend = { caption: "Time series", series1: "series1", series2: "series2", width: 110 },
         svg = undefined,
         initialized = false,
+        animate = true,
 
         line = undefined,
         path1 = undefined,
@@ -211,9 +212,15 @@ function timeSeriesChart() {
             time_scale_axis.domain([
                 data1[1].timestamp,
                 data1[data1.length-1].timestamp
-//            new Date(d3.min(data1, function(d){return d.timestamp})),
-//            new Date(d3.max(data1, function(d){return d.timestamp}))
             ]);
+
+        if (!animate) {
+            if (data1.length > 2)
+                time_scale.domain([
+                    data1[1].timestamp,
+                    data1[data1.length-1].timestamp
+                ]);
+        }
 
         circles1.attr("cx", function(d){return time_scale(new Date(d.timestamp))})
             .attr("cy", function(d){return value_scale(d.value)});
@@ -221,13 +228,27 @@ function timeSeriesChart() {
         circles2.attr("cx", function(d){return time_scale(new Date(d.timestamp))})
             .attr("cy", function(d){return value_scale(d.value)});
 
-        circles1.transition().duration(250).ease("linear")
-            .attr("cx", function(d){return time_scale(new Date(d.timestamp))})
-            .attr("cy", function(d){return value_scale(d.value)});
+        if (animate) {
+            circles1
+                .transition().duration(250).ease("linear")
+                .attr("cx", function(d){return time_scale(new Date(d.timestamp))})
+                .attr("cy", function(d){return value_scale(d.value)});
+        } else {
+            circles1
+                .attr("cx", function(d){return time_scale(new Date(d.timestamp))})
+                .attr("cy", function(d){return value_scale(d.value)});
+        }
 
-        circles2.transition().duration(250).ease("linear")
-            .attr("cx", function(d){return time_scale(new Date(d.timestamp))})
-            .attr("cy", function(d){return value_scale(d.value)});
+        if (animate) {
+            circles2
+                .transition().duration(250).ease("linear")
+                .attr("cx", function(d){return time_scale(new Date(d.timestamp))})
+                .attr("cy", function(d){return value_scale(d.value)});
+        } else {
+            circles2
+                .attr("cx", function(d){return time_scale(new Date(d.timestamp))})
+                .attr("cy", function(d){return value_scale(d.value)});
+        }
 
         path1.data(data1)
             .attr("class", "line1")
@@ -242,9 +263,16 @@ function timeSeriesChart() {
             circles3.attr("cx", function(d){return time_scale(new Date(d.timestamp))})
                 .attr("cy", function(d){return value_scale(d.value)});
 
-            circles3.transition().duration(250).ease("linear")
-                .attr("cx", function(d){return time_scale(new Date(d.timestamp))})
-                .attr("cy", function(d){return value_scale(d.value)});
+            if (animate) {
+                circles3
+                    .transition().duration(250).ease("linear")
+                    .attr("cx", function(d){return time_scale(new Date(d.timestamp))})
+                    .attr("cy", function(d){return value_scale(d.value)});
+            } else {
+                circles3
+                    .attr("cx", function(d){return time_scale(new Date(d.timestamp))})
+                    .attr("cy", function(d){return value_scale(d.value)});
+            }
 
             path3.data(data3)
                 .attr("class", "line3")
@@ -252,26 +280,60 @@ function timeSeriesChart() {
 
         }
 
-        if (data1.length > 2)
-            time_scale.domain([
-                data1[1].timestamp,
-                data1[data1.length-1].timestamp
-//            new Date(d3.min(data1, function(d){return d.timestamp})),
-//            new Date(d3.max(data1, function(d){return d.timestamp}))
-            ]);
+        if (animate) {
+            if (data1.length > 2)
+                time_scale.domain([
+                    data1[1].timestamp,
+                    data1[data1.length-1].timestamp
+//                new Date(d3.min(data1, function(d){return d.timestamp})),
+//                new Date(d3.max(data1, function(d){return d.timestamp}))
+                ]);
+        }
 
-        var t = svg.transition().duration(250).ease("linear");
+        if (animate) {
+            var t = svg.transition()
+                .duration(250)
+                .ease("linear");
 
-        t.select(".x.axis").call(xAxis);
-        t.select(".y.axis").call(yAxis);
-        path1.transition().duration(250).ease("linear").attr("d", line(data1));
-        path2.transition().duration(250).ease("linear").attr("d", line(data2));
+            t.select(".x.axis").call(xAxis);
+            t.select(".y.axis").call(yAxis);
+        } else {
+            svg.select(".x.axis").call(xAxis);
+            svg.select(".y.axis").call(yAxis);
+        }
+
+        if (animate) {
+            path1
+            .transition().duration(250).ease("linear")
+            .attr("d", line(data1));
+        } else {
+            path1
+                .attr("d", line(data1));
+        }
+
+        if (animate) {
+            path2
+                .transition().duration(250).ease("linear")
+                .attr("d", line(data2));
+        } else {
+            path2
+                .attr("d", line(data2));
+        }
 
         circles1.exit().remove();
         circles2.exit().remove();
 
         if (data3) {
-            path3.transition().duration(250).ease("linear").attr("d", line(data3));
+
+            if (animate) {
+                path3
+                .transition().duration(250).ease("linear")
+                .attr("d", line(data3));
+            } else {
+                path3
+                    .attr("d", line(data3));
+            }
+
             circles3.exit().remove();
         }
 
@@ -300,6 +362,12 @@ function timeSeriesChart() {
         legend = _;
         return chart;
     };
+
+    chart.animate = function(_) {
+        if (!arguments.length) return animate;
+        animate = _;
+        return chart;
+    }
 
     return chart;
 }

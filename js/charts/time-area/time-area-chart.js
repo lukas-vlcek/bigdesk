@@ -6,6 +6,7 @@ function timeAreaChart() {
         legend = { caption: "Time area", series1: "series1", series2: "series2", width: 110 },
         svg = undefined,
         initialized = false,
+        animate = true,
 
         time_scale = undefined,
         time_scale_axis = undefined,
@@ -186,9 +187,15 @@ function timeAreaChart() {
             time_scale_axis.domain([
                 data1[1].timestamp,
                 data1[data1.length-1].timestamp
-//            new Date(d3.min(data1, function(d){return d.timestamp})),
-//            new Date(d3.max(data1, function(d){return d.timestamp}))
             ]);
+
+        if (!animate) {
+            if (data1.length > 2)
+                time_scale.domain([
+                    data1[1].timestamp,
+                    data1[data1.length-1].timestamp
+                ]);
+        }
 
         area1.data(data1)
             .attr("class", "area1")
@@ -216,27 +223,60 @@ function timeAreaChart() {
                 .attr("d", line(data3));
         }
 
-        if (data1.length > 2)
-            time_scale.domain([
-                data1[1].timestamp,
-                data1[data1.length-1].timestamp
-//            new Date(d3.min(data1, function(d){return d.timestamp})),
-//            new Date(d3.max(data1, function(d){return d.timestamp}))
-            ]);
+        if (animate) {
+            if (data1.length > 2)
+                time_scale.domain([
+                    data1[1].timestamp,
+                    data1[data1.length-1].timestamp
+                ]);
+        }
 
-        var t = svg.transition().duration(250).ease("linear");
+        if (animate) {
+            var t = svg.transition()
+                .duration(250)
+                .ease("linear");
 
-        t.select(".x.axis").call(xAxis);
-        t.select(".y.axis").call(yAxis);
-        path1.transition().duration(250).ease("linear").attr("d", line(data1));
-        path2.transition().duration(250).ease("linear").attr("d", line(data2));
+            t.select(".x.axis").call(xAxis);
+            t.select(".y.axis").call(yAxis);
 
-        t.select(".area1").attr("d", area(data1));
-        t.select(".area2").attr("d", area(data2));
+            t.select(".area1").attr("d", area(data1));
+            t.select(".area2").attr("d", area(data2));
+            if (data3 && data3.length > 0) {
+                t.select(".area3").attr("d", area(data3));
+            }
+        } else {
+            svg.select(".x.axis").call(xAxis);
+            svg.select(".y.axis").call(yAxis);
+        }
+
+        if (animate) {
+            path1
+                .transition().duration(250).ease("linear")
+                .attr("d", line(data1));
+
+        } else {
+            path1
+                .attr("d", line(data1));
+        }
+
+        if (animate) {
+            path2
+              .transition().duration(250).ease("linear")
+                .attr("d", line(data2));
+        } else {
+            path2
+                .attr("d", line(data2));
+        }
 
         if (data3 && data3.length > 0) {
-            path3.transition().duration(250).ease("linear").attr("d", line(data3));
-            t.select(".area3").attr("d", area(data3));
+            if (animate) {
+                path3
+                    .transition().duration(250).ease("linear")
+                    .attr("d", line(data3));
+            } else {
+                path3
+                    .attr("d", line(data3));
+            }
         }
 
     };
@@ -264,6 +304,12 @@ function timeAreaChart() {
         legend = _;
         return chart;
     };
+
+    chart.animate = function(_) {
+        if (!arguments.length) return animate;
+        animate = _;
+        return chart;
+    }
 
     return chart;
 }

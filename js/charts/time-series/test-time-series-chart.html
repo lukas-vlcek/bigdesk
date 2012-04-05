@@ -22,11 +22,13 @@
 
 <div id="chart1" class="chart"></div>
 Click at least 3 times: <input type="button" id="updateChart1" value="update" onclick="updateChart1()">
+<input type="checkbox" id="animatedChart1" checked='checked'> animated
 <br>
 Chart holds series up to 20 data points.
 
 <div id="chart2" class="chart"></div>
 Click at least 3 times: <input type="button" id="updateChart2" value="update" onclick="updateChart2()">
+<input type="checkbox" id="animatedChart2" checked='checked'> animated
 <br>
 Chart holds series up to 20 data points.
 
@@ -94,6 +96,8 @@ Chart holds series up to 20 data points.
 
     var updateChart1 = function() {
 
+        var animate1 = d3.select("#animatedChart1").property("checked");
+
         if (data1Chart1.length > 19) {
             data1Chart1.shift();
             data2Chart1.shift();
@@ -102,10 +106,12 @@ Chart holds series up to 20 data points.
         data1Chart1.push({ timestamp: now, value: random1() });
         data2Chart1.push({ timestamp: now, value: random2() });
 
-        chart1.update(data1Chart1, data2Chart1);
+        chart1.animate(animate1).update(data1Chart1, data2Chart1);
     }
 
     var updateChart2 = function() {
+
+        var animate2 = d3.select("#animatedChart2").property("checked");
 
         if (data1Chart2.length > 19) {
             data1Chart2.shift();
@@ -117,7 +123,7 @@ Chart holds series up to 20 data points.
         data2Chart2.push({ timestamp: now, value: random2() });
         data3Chart2.push({ timestamp: now, value: random3() });
 
-        chart2.update(data1Chart2, data2Chart2, data3Chart2);
+        chart2.animate(animate2).update(data1Chart2, data2Chart2, data3Chart2);
     }
 
 </script>
