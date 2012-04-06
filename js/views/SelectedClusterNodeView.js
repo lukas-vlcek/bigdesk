@@ -522,8 +522,10 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                         if (transport_tx_delta.length > 1 && transport_rx_delta.length > 1) {
 
-                            delta(transport_tx_delta);
-                            delta(transport_rx_delta);
+//                            delta(transport_tx_delta);
+//                            delta(transport_rx_delta);
+                            normalizedDeltaToSeconds(transport_tx_delta);
+                            normalizedDeltaToSeconds(transport_rx_delta);
 
                             chart_transport_txrx.animate(animatedCharts).update(transport_tx_delta, transport_rx_delta);
                         }
@@ -591,8 +593,10 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                                     if ( read_cnt_delta.length > 1 && write_cnt_delta.length > 1 ) {
 
-                                        delta(read_cnt_delta);
-                                        delta(write_cnt_delta);
+//                                        delta(read_cnt_delta);
+//                                        delta(write_cnt_delta);
+                                        normalizedDeltaToSeconds(read_cnt_delta);
+                                        normalizedDeltaToSeconds(write_cnt_delta);
 
                                         charts_disk_reads_writes_cnt[keys[i]].animate(animatedCharts).update(read_cnt_delta, write_cnt_delta);
                                     }
@@ -606,8 +610,10 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                                     if ( read_size_delta.length > 1 && write_size_delta.length > 1 ) {
 
-                                        delta(read_size_delta);
-                                        delta(write_size_delta);
+//                                        delta(read_size_delta);
+//                                        delta(write_size_delta);
+                                        normalizedDeltaToSeconds(read_size_delta);
+                                        normalizedDeltaToSeconds(write_size_delta);
 
                                         charts_disk_reads_writes_size[keys[i]].animate(animatedCharts).update(read_size_delta, write_size_delta);
                                     }
