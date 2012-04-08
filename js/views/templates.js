@@ -116,8 +116,8 @@ var templates = {
         osInfoTemplate1: [
             "CPU vendor: {{cpu.vendor}}",
             "CPU model: {{cpu.model}} ({{cpu.mhz}} MHz)",
-            "CPU total cores: {{cpu.total_cores}}",
-            "CPU sockets: {{cpu.total_sockets}} with {{cpu.cores_per_socket}} cores each",
+            "CPU total logical cores: {{cpu.total_cores}}",
+//            "CPU sockets: {{cpu.total_sockets}} with {{cpu.cores_per_socket}} cores each", // seems like there is a sigar bug?
             "CPU cache: {{cpu.cache_size}}"
         ].join("<br>"),
 
