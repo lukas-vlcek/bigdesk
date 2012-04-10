@@ -114,18 +114,18 @@ var templates = {
         ].join("<br>"),
 
         osInfoTemplate1: [
-            "CPU vendor: {{cpu.vendor}}",
-            "CPU model: {{cpu.model}} ({{cpu.mhz}} MHz)",
-            "CPU total logical cores: {{cpu.total_cores}}",
+            "CPU vendor: {{#cpu.vendor}}{{cpu.vendor}}{{/cpu.vendor}}{{^cpu.vendor}}n/a{{/cpu.vendor}}",
+            "CPU model: {{#cpu.model}}{{cpu.model}} ({{cpu.mhz}} MHz){{/cpu.model}}{{^cpu.model}}n/a{{/cpu.model}}",
+            "CPU total logical cores: {{#cpu.total_cores}}{{cpu.total_cores}}{{/cpu.total_cores}}{{^cpu.total_cores}}n/a{{/cpu.total_cores}}",
 //            "CPU sockets: {{cpu.total_sockets}} with {{cpu.cores_per_socket}} cores each", // seems like there is a sigar bug?
-            "CPU cache: {{cpu.cache_size}}"
+            "CPU cache: {{#cpu.cache_size}}{{cpu.cache_size}}{{/cpu.cache_size}}{{^cpu.cache_size}}n/a{{/cpu.cache_size}}"
         ].join("<br>"),
 
         osInfoTemplate2: [
             "Uptime: <span id='os_uptime'>n/a</span>",
             "Refresh interval: {{refresh_interval}}ms",
-            "Total mem: {{mem.total}} ({{mem.total_in_bytes}}&nbsp;b)",
-            "Total swap: {{swap.total}} ({{swap.total_in_bytes}}&nbsp;b)"
+            "Total mem: {{#mem.total}}{{mem.total}} ({{mem.total_in_bytes}}&nbsp;b){{/mem.total}}{{^mem.total}}n/a{{/mem.total}}",
+            "Total swap: {{#swap.total}}{{swap.total}} ({{swap.total_in_bytes}}&nbsp;b){{/swap.total}}{{^swap.total}}n/a{{/swap.total}}"
         ].join("<br>"),
 
         indices1Template: [
@@ -137,8 +137,8 @@ var templates = {
         ].join("<br>"),
 
         fsDataInfoTemplate: [
-            "<div>Device: <span class='pre'>{{dev}}</span></div>",
-            "<div>Mount: <span class='pre'>{{mount}}</span></div>",
+            "<div>Device: {{#dev}}<span class='pre'>{{dev}}</span></div>{{/dev}}{{^dev}}n/a{{/dev}}",
+            "<div>Mount: {{#mount}}<span class='pre'>{{mount}}</span></div>{{/mount}}{{^mount}}n/a{{/mount}}",
             "<div>Path: <span class='pre'>{{path}}</span></div>",
             "<div>Free: <span id='fs_disk_free_{{key}}'>{{free}}</span></div>",
             "<div>Available: <span id='fs_disk_available_{{key}}'>{{available}}</span></div>",
