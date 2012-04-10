@@ -5,6 +5,15 @@ var bigdesk_charts = {
     }
 };
 
+bigdesk_charts.not_available = {
+
+    chart: function(element) {
+        return chartNotAvailable()
+            .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
+            .svg(element).show();
+    }
+};
+
 bigdesk_charts.fileDescriptors = {
 
     chart: function(element) {
