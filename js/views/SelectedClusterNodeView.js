@@ -262,7 +262,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                     _.defer(function(){
                         // sigar & AWS check
-                        if (stats_the_latest && stats_the_latest.node && stats_the_latest.node.os && stats_the_latest.node.mem) {
+                        if (stats_the_latest && stats_the_latest.node && stats_the_latest.node.os && stats_the_latest.node.os.mem) {
 
                             var os_mem_actual_used = bigdesk_charts.osMem.series1(stats);
                             var os_mem_actual_free = bigdesk_charts.osMem.series2(stats);
