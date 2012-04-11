@@ -58,7 +58,6 @@ var NodesStats = Backbone.Collection.extend({
             if (rejected.length > 0) {
                 this.remove(rejected, options);
             }
-
         }
         var parentCall = Backbone.Collection.prototype.add.call(this, models, options);
 
@@ -66,6 +65,11 @@ var NodesStats = Backbone.Collection.extend({
         this.trigger("nodesStatsUpdated", {});
 
         return parentCall;
+    },
+
+    // make sure model are ordered by time (in case AJAX responses are returned in wrong order)
+    comparator: function(model) {
+        return model.id;
     }
 });
 
