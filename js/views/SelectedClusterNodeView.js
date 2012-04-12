@@ -359,6 +359,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             normalizedDeltaToSeconds(indices_query_reqs);
 
                             chart_indicesSearchReqs.animate(animatedCharts).update(indices_fetch_reqs, indices_query_reqs);
+
+                            $("#indices_search_query_reqs").text(stats_the_latest.node.indices.search.query_total);
+                            $("#indices_search_fetch_reqs").text(stats_the_latest.node.indices.search.fetch_total);
                         }
                     });
 
@@ -375,6 +378,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             normalizedDeltaToSeconds(indices_query_time);
 
                             chart_indicesSearchTime.animate(animatedCharts).update(indices_fetch_time, indices_query_time);
+
+                            $("#indices_search_query_time").text(stats_the_latest.node.indices.search.query_time);
+                            $("#indices_search_fetch_time").text(stats_the_latest.node.indices.search.fetch_time);
                         }
                     });
 
@@ -393,6 +399,10 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             normalizedDeltaToSeconds(indices_exists_reqs);
 
                             chart_indicesGetReqs.animate(animatedCharts).update(indices_get_reqs, indices_missing_reqs, indices_exists_reqs);
+
+                            $("#indices_get_reqs").text(stats_the_latest.node.indices.get.total);
+                            $("#indices_exists_reqs").text(stats_the_latest.node.indices.get.exists_total);
+                            $("#indices_missing_reqs").text(stats_the_latest.node.indices.get.missing_total);
                         }
                     });
 
@@ -411,6 +421,10 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             normalizedDeltaToSeconds(indices_exists_time);
 
                             chart_indicesGetTime.animate(animatedCharts).update(indices_get_time, indices_missing_time, indices_exists_time);
+
+                            $("#indices_get_time").text(stats_the_latest.node.indices.get.time);
+                            $("#indices_exists_time").text(stats_the_latest.node.indices.get.exists_time);
+                            $("#indices_missing_time").text(stats_the_latest.node.indices.get.missing_time);
                         }
                     });
 
@@ -427,6 +441,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             normalizedDeltaToSeconds(indices_indexing_delete_reqs);
 
                             chart_indicesIndexingReqs.animate(animatedCharts).update(indices_indexing_index_reqs, indices_indexing_delete_reqs);
+
+                            $("#indices_indexing_delete_reqs").text(stats_the_latest.node.indices.indexing.delete_total);
+                            $("#indices_indexing_index_reqs").text(stats_the_latest.node.indices.indexing.index_total);
                         }
                     });
 
@@ -443,6 +460,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             normalizedDeltaToSeconds(indices_indexing_delete_time);
 
                             chart_indicesIndexingTime.animate(animatedCharts).update(indices_indexing_index_time, indices_indexing_delete_time);
+
+                            $("#indices_indexing_delete_time").text(stats_the_latest.node.indices.indexing.delete_time);
+                            $("#indices_indexing_index_time").text(stats_the_latest.node.indices.indexing.index_time);
                         }
                     });
 
@@ -934,58 +954,92 @@ var SelectedClusterNodeView = Backbone.View.extend({
         $(rowIndicesTitle).append(indicesTitleCol);
         $(indicesTitleCol).append(indicesTitleP);
 
-        // Indices detail row #1
+        // Indices info row
 
-        var indices1Info = Mustache.render(templates.selectedClusterNode.indices1Template, {});
+        var indicesInfo1 = Mustache.render(templates.selectedClusterNode.indices1Template1, {});
+        var indicesInfo2 = Mustache.render(templates.selectedClusterNode.indices1Template2, {});
+        var indicesInfo3 = Mustache.render(templates.selectedClusterNode.indices1Template3, {});
+        var indicesInfoP1 = this.make("p", {}, indicesInfo1);
+        var indicesInfoP2 = this.make("p", {}, indicesInfo2);
+        var indicesInfoP3 = this.make("p", {}, indicesInfo3);
 
-        var indicesp1 = this.make("p", {}, indices1Info);
-        var indicesp2 = this.make("p", {},
-            "<svg width='100%' height='160'>" +
-                "<svg id='svg_indicesSearchReqs' clip_id='clip_indicesSearchReqs' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-                "<svg id='svg_indicesSearchTime' clip_id='clip_indicesSearchTime' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-            "</svg>"
+        var indicesInfoCol1 = this.make("div", {"class":"threecol"});
+        var indicesInfoCol2 = this.make("div", {"class":"threecol"});
+        var indicesInfoCol3 = this.make("div", {"class":"sixcol last"});
+
+        var rowIndicesInfo = this.make("div", {"class":"row nodeDetail"});
+
+        $(rowIndicesInfo).append(indicesInfoCol1, indicesInfoCol2, indicesInfoCol3);
+        $(indicesInfoCol1).append(indicesInfoP1);
+        $(indicesInfoCol2).append(indicesInfoP2);
+        $(indicesInfoCol3).append(indicesInfoP3);
+
+        // Indices charts row #1
+
+        var indicesSearchReqs = Mustache.render(templates.selectedClusterNode.indicesSearchReqsTemplate, jsonModel);
+        var indicesSearchTime = Mustache.render(templates.selectedClusterNode.indicesSearchTimeTemplate, jsonModel);
+
+        var indicesCharts1p1 = this.make("p", {},
+            "<div style='overflow: auto;'>" +
+                "<svg width='100%' height='160'>" +
+                    "<svg id='svg_indicesSearchReqs' clip_id='clip_indicesSearchReqs' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                    "<svg id='svg_indicesSearchTime' clip_id='clip_indicesSearchTime' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "</svg>" +
+                "<div width='46.5%' style='margin-left: 0%; float: left;'>" + indicesSearchReqs + "</div>" +
+                "<div width='46.5%' style='margin-left: 54%;'>" + indicesSearchTime + "</div>" +
+            "</div>"
         );
-        var indicesp3 = this.make("p", {},
-            "<svg width='100%' height='160'>" +
-                "<svg id='svg_indicesGetReqs' clip_id='clip_indicesGetReqs' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-                "<svg id='svg_indicesGetTime' clip_id='clip_indicesGetTime' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-            "</svg>"
+
+        var indicesGetReqs = Mustache.render(templates.selectedClusterNode.indicesGetReqsTemplate, jsonModel);
+        var indicesGetTime = Mustache.render(templates.selectedClusterNode.indicesGetTimeTemplate, jsonModel);
+
+        var indicesCharts1p2 = this.make("p", {},
+            "<div style='overflow: auto;'>" +
+                "<svg width='100%' height='160'>" +
+                    "<svg id='svg_indicesGetReqs' clip_id='clip_indicesGetReqs' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                    "<svg id='svg_indicesGetTime' clip_id='clip_indicesGetTime' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "</svg>" +
+                "<div width='46.5%' style='margin-left: 0%; float: left;'>" + indicesGetReqs + "</div>" +
+                "<div width='46.5%' style='margin-left: 54%;'>" + indicesGetTime + "</div>" +
+            "</div>"
         );
 
-        var indicesCol1 = this.make("div", {"class":"twocol"});
-        var indicesCol2 = this.make("div", {"class":"fivecol"});
-        var indicesCol3 = this.make("div", {"class":"fivecol last"});
+        var indicesCharts1Col1 = this.make("div", {"class":"sixcol"});
+        var indicesCharts1Col2 = this.make("div", {"class":"sixcol last"});
 
-        var rowIndices = this.make("div", {"class":"row nodeDetail"});
-        $(rowIndices).append(indicesCol1, indicesCol2, indicesCol3);
-        $(indicesCol1).append(indicesp1);
-        $(indicesCol2).append(indicesp2);
-        $(indicesCol3).append(indicesp3);
+        var rowIndicesCharts1 = this.make("div", {"class":"row nodeDetail"});
+        $(rowIndicesCharts1).append(indicesCharts1Col1, indicesCharts1Col2);
+        $(indicesCharts1Col1).append(indicesCharts1p1);
+        $(indicesCharts1Col2).append(indicesCharts1p2);
 
-        // Indices detail row #2
+        // Indices charts row #2
 
-        var indicesp1_2 = this.make("p", {}, "");
-        var indicesp2_2 = this.make("p", {},
+        var indicesIndexingReqs = Mustache.render(templates.selectedClusterNode.indicesIndexingReqsTemplate, jsonModel);
+        var indicesIndexingTime = Mustache.render(templates.selectedClusterNode.indicesIndexingTimeTemplate, jsonModel);
+
+        var indicesCharts2p1 = this.make("p", {},
             "<svg width='100%' height='160'>" +
                 "<rect x='0' y='0' width='100%' height='100%' fill='#eee' stroke-width='1' />" +
             "</svg>"
         );
-        var indicesp3_2 = this.make("p", {},
-            "<svg width='100%' height='160'>" +
-                "<svg id='svg_indicesIndexingReqs' clip_id='clip_indicesIndexingReqs' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-                "<svg id='svg_indicesIndexingTime' clip_id='clip_indicesIndexingTime' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
-            "</svg>"
+        var indicesCharts2p2 = this.make("p", {},
+            "<div style='overflow: auto;'>" +
+                "<svg width='100%' height='160'>" +
+                    "<svg id='svg_indicesIndexingReqs' clip_id='clip_indicesIndexingReqs' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                    "<svg id='svg_indicesIndexingTime' clip_id='clip_indicesIndexingTime' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMin' viewBox='0 0 250 160'/>" +
+                "</svg>" +
+                "<div width='46.5%' style='margin-left: 0%; float: left;'>" + indicesIndexingReqs + "</div>" +
+                "<div width='46.5%' style='margin-left: 54%;'>" + indicesIndexingTime + "</div>" +
+            "</div>"
         );
 
-        var indicesCol1_2 = this.make("div", {"class":"twocol"});
-        var indicesCol2_2 = this.make("div", {"class":"fivecol"});
-        var indicesCol3_2 = this.make("div", {"class":"fivecol last"});
+        var indicesCharts2Col1 = this.make("div", {"class":"sixcol"});
+        var indicesCharts2Col2 = this.make("div", {"class":"sixcol last"});
 
-        var rowIndices_2 = this.make("div", {"class":"row nodeDetail"});
-        $(rowIndices_2).append(indicesCol1_2, indicesCol2_2, indicesCol3_2);
-        $(indicesCol1_2).append(indicesp1_2);
-        $(indicesCol2_2).append(indicesp2_2);
-        $(indicesCol3_2).append(indicesp3_2);
+        var rowIndicesCharts2 = this.make("div", {"class":"row nodeDetail"});
+        $(rowIndicesCharts2).append(indicesCharts2Col1, indicesCharts2Col2);
+        $(indicesCharts2Col1).append(indicesCharts2p1);
+        $(indicesCharts2Col2).append(indicesCharts2p2);
 
         // File system title
 
@@ -1015,8 +1069,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
             rowTransportCharts,
 
             rowIndicesTitle,
-            rowIndices,
-            rowIndices_2,
+            rowIndicesInfo,
+            rowIndicesCharts1,
+            rowIndicesCharts2,
 
             rowFsTitle
 

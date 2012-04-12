@@ -128,12 +128,50 @@ var templates = {
             "Total swap: {{#swap.total}}{{swap.total}} ({{swap.total_in_bytes}}&nbsp;b){{/swap.total}}{{^swap.total}}n/a{{/swap.total}}"
         ].join("<br>"),
 
-        indices1Template: [
-            "Size: <span id='indices_store_size'>n/a</span>",
+        indices1Template1: [
             "Docs count: <span id='indices_docs_count'>n/a</span>",
-            "Docs deleted: <span id='indices_docs_deleted'>n/a</span>",
+            "Docs deleted: <span id='indices_docs_deleted'>n/a</span>"
+        ].join("<br>"),
+
+        indices1Template2: [
             "Flush: <span id='indices_flush_total'>n/a</span>",
             "Refresh: <span id='indices_refresh_total'>n/a</span>"
+        ].join("<br>"),
+
+        indices1Template3: [
+            "Size: <span id='indices_store_size'>n/a</span>"
+        ].join("<br>"),
+
+        indicesSearchReqsTemplate: [
+            "Query: <span id='indices_search_query_reqs'>n/a</span>",
+            "Fetch: <span id='indices_search_fetch_reqs'>n/a</span>"
+        ].join("<br>"),
+
+        indicesSearchTimeTemplate: [
+            "Query: <span id='indices_search_query_time'>n/a</span>",
+            "Fetch: <span id='indices_search_fetch_time'>n/a</span>"
+        ].join("<br>"),
+
+        indicesGetReqsTemplate: [
+            "Get: <span id='indices_get_reqs'>n/a</span>",
+            "Exists: <span id='indices_exists_reqs'>n/a</span>",
+            "Missing: <span id='indices_missing_reqs'>n/a</span>"
+        ].join("<br>"),
+
+        indicesGetTimeTemplate: [
+            "Get: <span id='indices_get_time'>n/a</span>",
+            "Exists: <span id='indices_exists_time'>n/a</span>",
+            "Missing: <span id='indices_missing_time'>n/a</span>"
+        ].join("<br>"),
+
+        indicesIndexingReqsTemplate: [
+            "Delete: <span id='indices_indexing_delete_reqs'>n/a</span>",
+            "Index: <span id='indices_indexing_index_reqs'>n/a</span>"
+        ].join("<br>"),
+
+        indicesIndexingTimeTemplate: [
+            "Delete: <span id='indices_indexing_delete_time'>n/a</span>",
+            "Index: <span id='indices_indexing_index_time'>n/a</span>"
         ].join("<br>"),
 
         fsDataInfoTemplate: [
