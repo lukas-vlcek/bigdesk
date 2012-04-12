@@ -248,8 +248,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                             chart_osCpu.animate(animatedCharts).update(os_cpu_sys, os_cpu_user, os_cpu_idle);
 
-                            $("#os_cpu_user").text(stats_the_latest.node.os.cpu.user);
-                            $("#os_cpu_sys").text(stats_the_latest.node.os.cpu.sys);
+                            $("#os_cpu_user").text(stats_the_latest.node.os.cpu.user + "%");
+                            $("#os_cpu_sys").text(stats_the_latest.node.os.cpu.sys + "%");
                         } else {
                             chart_osCpu = bigdesk_charts.not_available.chart(chart_osCpu.svg());
                             $("#os_cpu_user").text("n/a");
@@ -541,7 +541,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             chart_processCPU_pct.animate(animatedCharts).update(process_cpu_pct, process_cpu_max);
 
                             $("#process_cpu_pct_total").text((_total_cores * 100) + "%");
-                            $("#process_cpu_pct_process").text(stats_the_latest.node.process.cpu.percent);
+                            $("#process_cpu_pct_process").text(stats_the_latest.node.process.cpu.percent + "%");
                         } else {
                             chart_processCPU_pct = bigdesk_charts.not_available.chart(chart_processCPU_pct.svg());
                             $("#process_cpu_pct_total").text("n/a");
