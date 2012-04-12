@@ -137,8 +137,8 @@ var templates = {
         ].join("<br>"),
 
         fsDataInfoTemplate: [
-            "<div>Device: {{#dev}}<span class='pre'>{{dev}}</span></div>{{/dev}}{{^dev}}n/a{{/dev}}",
-            "<div>Mount: {{#mount}}<span class='pre'>{{mount}}</span></div>{{/mount}}{{^mount}}n/a{{/mount}}",
+            "<div>Device: {{#dev}}<span class='pre'>{{dev}}</span>{{/dev}}{{^dev}}n/a{{/dev}}</div>",
+            "<div>Mount: {{#mount}}<span class='pre'>{{mount}}</span>{{/mount}}{{^mount}}n/a{{/mount}}</div>",
             "<div>Path: <span class='pre'>{{path}}</span></div>",
             "<div>Free: <span id='fs_disk_free_{{key}}'>{{free}}</span></div>",
             "<div>Available: <span id='fs_disk_available_{{key}}'>{{available}}</span></div>",
