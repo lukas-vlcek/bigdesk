@@ -649,7 +649,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                                     $("#fs_disk_available_"+keys[i]).text(fs_data.available);
 
                                     // sigar & AWS check
-                                    if (fs_data.disk_writes && fs_data.disk_reads) {
+                                    if (fs_data.disk_writes != undefined && fs_data.disk_reads != undefined) {
                                         var read_cnt_delta = bigdesk_charts.disk_reads_writes_cnt.series1(stats, keys[i]);
                                         var write_cnt_delta = bigdesk_charts.disk_reads_writes_cnt.series2(stats, keys[i]);
 

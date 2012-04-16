@@ -67,7 +67,7 @@ var NodesStats = Backbone.Collection.extend({
         return parentCall;
     },
 
-    // make sure model are ordered by time (in case AJAX responses are returned in wrong order)
+    // make sure models are ordered by time (in case AJAX responses are returned in wrong order)
     comparator: function(model) {
         return model.id;
     }
