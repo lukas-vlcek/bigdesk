@@ -35,21 +35,24 @@ var Cluster = Backbone.Model.extend({
         nodeInfo: undefined,
         storeSize: 60000, // 1min
         intervals: {},
-        refreshIntervalCallback: undefined
+        dispatcher: undefined
     },
     // id: "cluster_name"
     // baseUrl: "complete URL for REST API including port number"
     // refreshInterval: _some_number_ [optional, defaults to 2000ms]
-    // refreshIntervalCallback: function [optional]. If provided, it is called every time new data is pushed into store.
+    // dispatcher: function [optional].
     initialize: function(attrs){
         var _model = this;
         var _conn = _model.get("connectionVerified");
         if (_conn == false) {
-            // ensure default callback (in case user explicitly provided "undefined" value instead of function)
-            if (this.get("refreshIntervalCallback") == undefined) {
-                this.set({refreshIntervalCallback: function(clusterName, restApiName, response) {
+            // ensure default dispatcher (in case user explicitly provided "undefined" value instead of function)
+            if (this.get("dispatcher") == undefined /*|| typeof this.get("dispatcher") != "function"*/) {
+                console.log("using default dispatcher");
+                var _dispatcher = _.clone(Backbone.Events);
+                _dispatcher.on("ajaxResponse", function(clusterName, restApiName, response) {
                     console.log("["+clusterName+"] ["+restApiName+"]", response)
-                }});
+                });
+                this.set({dispatcher: _dispatcher});
             }
             var connection = {
                 baseUrl: attrs.baseUrl,
@@ -91,9 +94,9 @@ var Cluster = Backbone.Model.extend({
                         "baseUrl: \"_ES_REST_end_point_\" " +
                     "}";
             }
-            if (attrs.refreshIntervalCallback != undefined) {
-                if (typeof attrs.refreshIntervalCallback != "function") {
-                    return "refreshIntervalCallback must be function.";
+            if (attrs.dispatcher != undefined) {
+                if (typeof attrs.dispatcher != "function") {
+                    return "dispatcher must be a function.";
                 }
             }
         }
@@ -178,7 +181,7 @@ var Cluster = Backbone.Model.extend({
     //  baseUrl [optional] can override baseUrl that was passed into Cluster constructor
     startFetch: function(refreshInterval, baseUrl) {
         var _cluster = this;
-        var _clientCallback = _cluster.get("refreshIntervalCallback");
+        var _dispatcher = _cluster.get("dispatcher");
         var _clusterName = _cluster.get("id");
 
         if (baseUrl && typeof baseUrl == "string") {
@@ -191,7 +194,7 @@ var Cluster = Backbone.Model.extend({
         var healthRefreshFunction = function(){
             _cluster.get("health").fetch({
                 success:function(model, response){
-                    _clientCallback.call(_cluster, _clusterName, "cluster > Health", response);
+                    _dispatcher.trigger("ajaxResponse", _clusterName, "cluster > Health", response);
                 }
             });
         };
@@ -203,7 +206,7 @@ var Cluster = Backbone.Model.extend({
                 now: new Date().getTime(),
                 silent: true,
                 success:function(model, response){
-                    _clientCallback.call(_cluster, _clusterName, "cluster > NodesStats", response);
+                    _dispatcher.trigger("ajaxResponse", _clusterName, "cluster > NodesStats", response);
                 }
             });
         };
@@ -213,7 +216,7 @@ var Cluster = Backbone.Model.extend({
                 add: true,
                 silent: true,
                 success:function(model, response){
-                    _clientCallback.call(_cluster, _clusterName, "cluster > NodesState", response);
+                    _dispatcher.trigger("ajaxResponse", _clusterName, "cluster > NodesState", response);
                 }
             });
         };

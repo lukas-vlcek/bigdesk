@@ -5,7 +5,7 @@ var bigdeskStore = new BigdeskStore();
 var clusterHealthView = undefined;
 var clusterNodesListView = undefined;
 
-var connectTo = function(url, refreshInterval, storeSize, refreshIntervalCallback, callback) {
+var connectTo = function(url, refreshInterval, storeSize, dispatcher, callback) {
 
     var connectionConfig = { baseUrl: url };
     var clusterHealth = new ClusterHealth({},connectionConfig);
@@ -37,7 +37,7 @@ var connectTo = function(url, refreshInterval, storeSize, refreshIntervalCallbac
                         baseUrl: connectionConfig.baseUrl,
                         storeSize: storeSize,
                         refreshInterval: refreshInterval,
-                        refreshIntervalCallback: refreshIntervalCallback
+                        dispatcher: dispatcher
                     })
                 );
 
@@ -180,7 +180,7 @@ $(document).ready(
            }
         });
 
-        var clientCallback = function(clusterName, restApiName, response) {
+        var ajaxResponseCallback = function(clusterName, restApiName, response) {
 //            console.log("["+clusterName+"] ["+restApiName+"]", response);
 //            var iterator = function(nodeStats) {return nodeStats.id; };
 //            if (restApiName == "cluster > Health") {
@@ -193,11 +193,19 @@ $(document).ready(
             ajaxIndicator.show().css("background-color", "lightgreen").fadeOut("slow");
         };
 
+        var newDataCallback = function(description, data) {
+//            console.log(description, data);
+        };
+
+        var bigdeskEventDispatcher = _.clone(Backbone.Events);
+        bigdeskEventDispatcher.on("ajaxResponse", ajaxResponseCallback);
+        bigdeskEventDispatcher.on("onNewData", newDataCallback);
+
         button.click(function(){
             if (isConnected()) {
                 disconnectFrom(restEndPoint.val(), switchButtonText);
             } else {
-                connectTo(restEndPoint.val(), getRefreshInterval(), storeSize.val(), clientCallback, switchButtonText);
+                connectTo(restEndPoint.val(), getRefreshInterval(), storeSize.val(), bigdeskEventDispatcher, switchButtonText);
             }
         });
     }

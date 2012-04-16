@@ -38,8 +38,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
         var _view = this;
         var nodeInfoModel = this.model.get("nodeInfo");
+        var dispatcher = this.model.get("dispatcher");
 
-        // TODO: this fetch needs to be able to output to custom log!
         nodeInfoModel.fetch({
 
             nodeId: this.options.nodeId,
@@ -47,7 +47,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                 var selectedNodeInfo = response;
                 var selectedNodeId = _view.options.nodeId;
-                console.log("node info", selectedNodeInfo);
+
+                dispatcher.trigger("ajaxResponse", response.cluster_name, "Node > Info", response);
 
                 _view.renderNodeDetail(model);
 
@@ -111,7 +112,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         stats = _.filter(stats, function(item){ return (item!=undefined)});
 
                         stats_the_latest = stats[stats.length - 1];
-//                        console.log("the latest stats snapshot", stats_the_latest);
+
+                        dispatcher.trigger("onNewData", "the latest node stats:", stats_the_latest);
+
                     });
 
                     // --------------------------------------------
