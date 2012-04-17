@@ -49,7 +49,7 @@ var Cluster = Backbone.Model.extend({
             if (this.get("dispatcher") == undefined /*|| typeof this.get("dispatcher") != "function"*/) {
                 console.log("using default dispatcher");
                 var _dispatcher = _.clone(Backbone.Events);
-                _dispatcher.on("ajaxResponse", function(clusterName, restApiName, response) {
+                _dispatcher.on("onAjaxResponse", function(clusterName, restApiName, response) {
                     console.log("["+clusterName+"] ["+restApiName+"]", response)
                 });
                 this.set({dispatcher: _dispatcher});
@@ -194,7 +194,7 @@ var Cluster = Backbone.Model.extend({
         var healthRefreshFunction = function(){
             _cluster.get("health").fetch({
                 success:function(model, response){
-                    _dispatcher.trigger("ajaxResponse", _clusterName, "cluster > Health", response);
+                    _dispatcher.trigger("onAjaxResponse", _clusterName, "cluster > Health", response);
                 }
             });
         };
@@ -206,7 +206,7 @@ var Cluster = Backbone.Model.extend({
                 now: new Date().getTime(),
                 silent: true,
                 success:function(model, response){
-                    _dispatcher.trigger("ajaxResponse", _clusterName, "cluster > NodesStats", response);
+                    _dispatcher.trigger("onAjaxResponse", _clusterName, "cluster > NodesStats", response);
                 }
             });
         };
@@ -216,7 +216,7 @@ var Cluster = Backbone.Model.extend({
                 add: true,
                 silent: true,
                 success:function(model, response){
-                    _dispatcher.trigger("ajaxResponse", _clusterName, "cluster > NodesState", response);
+                    _dispatcher.trigger("onAjaxResponse", _clusterName, "cluster > NodesState", response);
                 }
             });
         };
