@@ -48,7 +48,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                 var selectedNodeInfo = response;
                 var selectedNodeId = _view.options.nodeId;
 
-                dispatcher.trigger("ajaxResponse", response.cluster_name, "Node > Info", response);
+                dispatcher.trigger("onAjaxResponse", response.cluster_name, "Node > Info", response);
 
                 _view.renderNodeDetail(model);
 

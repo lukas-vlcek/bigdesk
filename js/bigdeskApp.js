@@ -198,7 +198,7 @@ $(document).ready(
         };
 
         var bigdeskEventDispatcher = _.clone(Backbone.Events);
-        bigdeskEventDispatcher.on("ajaxResponse", ajaxResponseCallback);
+        bigdeskEventDispatcher.on("onAjaxResponse", ajaxResponseCallback);
         bigdeskEventDispatcher.on("onNewData", newDataCallback);
 
         button.click(function(){
