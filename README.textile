@@ -24,9 +24,21 @@ Now you should see cluster name and list of its nodes. You can switch between no
 
 You can change the bigdesk <b>refresh interval</b> and <b>amount of data</b> that is displayed by charts.
 
-If you are using bigdesk 1.0.0 you can immediately connect to a particular host, add the <code>host</code>, <code>port</code>, and <code>go</code> parameters to the query string: <code>index.html?host=search.example.com&port=9200&go</code>
+h3. URL parameters
 
-h3. Screenshot
+If you are using <b>bigdesk 1.0.0</b> you can immediately connect to a particular host, add the <code>host</code>, <code>port</code>, and <code>go</code> parameters to the query string: <code>index.html?host=search.example.com&port=9200&go</code>
+
+If you are using <b>bigdesk master</b> you can use any of the following URL parameters to immediately connect to a particular host or set history or refresh interval:
+* <code>endpoint</code> = URL of ES node REST endpoint (you might want to use URL encoded value). Defaults to <code>http://localhost:9200</code>.
+* <code>refresh</code> = refresh interval in milliseconds. Defaults to <code>2000</code> (2 sec).
+* <code>history</code> = number of milliseconds to keep in history. Defaults to <code>300000</code> (5 min).
+* <code>connect</code> = if set to <code>true</code> bigdesk will try to connect immediately to the endpoint. Defaults to <code>false</code>.
+
+Example connecting to <code>http://127.0.0.1:9201</code> with 3 sec refresh interval:
+
+<code>index.html?endpoint=http%3A%2F%2F127.0.0.1%3A9201&refresh=3000&connect=true</code>
+
+h3. Screenshots
 
 bigdesk <b>1.0.0</b>
 
