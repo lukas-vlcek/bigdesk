@@ -208,5 +208,53 @@ $(document).ready(
                 connectTo(restEndPoint.val(), getRefreshInterval(), storeSize.val(), bigdeskEventDispatcher, switchButtonText);
             }
         });
+
+        var getSearchUrlVar = function(key) {
+            var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search);
+            return decodeURIComponent(result && result[1] || "");
+        };
+
+        var getUrlParams = function() {
+            return {
+                endpoint: getSearchUrlVar("endpoint") || "http://localhost:9200",
+                refresh: getSearchUrlVar("refresh") || 2000,
+                history: getSearchUrlVar("history") || 300000,
+                connect: getSearchUrlVar("connect") || false
+            }
+        };
+
+        var useUrlParams = function() {
+            var params = getUrlParams();
+            restEndPoint.val(params.endpoint);
+            refreshInterval.val(params.refresh);
+            storeSize.val(params.history);
+            return params;
+        };
+
+        var BigdeskRouter = Backbone.Router.extend({
+
+            routes: {
+//                "nodes" : "nodes",
+//                "nodes/:nodeId" : "nodes",
+                "*other" : "defaultRoute"
+            },
+
+//            nodes: function(nodeId) {
+//                useUrlParams();
+//            },
+
+            defaultRoute: function(other) {
+                var params = useUrlParams();
+                if (params.connect == true || params.connect == "true") {
+                    button.click();
+                }
+            }
+
+        });
+
+        var bigdeskRouter = new BigdeskRouter();
+
+        Backbone.history.start();
+
     }
 );
