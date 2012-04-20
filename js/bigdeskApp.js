@@ -209,6 +209,19 @@ $(document).ready(
             }
         });
 
+        restEndPoint.bind("keypress",function(event){
+            if (typeof event == 'undefined' && window.event) { event = window.event; }
+            if(event.keyCode == 13){
+                if (event.cancelable && event.preventDefault) {
+                    event.preventDefault();
+                    button.click();
+                } else {
+                    button.click();
+                    return false;
+                }
+            }
+        });
+
         var getSearchUrlVar = function(key) {
             var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search);
             return decodeURIComponent(result && result[1] || "");
