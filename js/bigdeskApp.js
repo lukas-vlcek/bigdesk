@@ -5,13 +5,51 @@ var bigdeskStore = new BigdeskStore();
 var clusterHealthView = undefined;
 var clusterNodesListView = undefined;
 
+var connectionNotEstablishedTimeout = undefined;
+
+var setupConnectionCheck = function(url) {
+    if (connectionNotEstablishedTimeout == undefined) {
+        connectionNotEstablishedTimeout = setTimeout(function(){
+            alert("Can not connect to endpoint ["+url+"]\nMake sure endpoint is defined correctly.");
+        }, 2000);
+    }
+};
+
+var clearConnectionCheck = function() {
+    if (connectionNotEstablishedTimeout != undefined) {
+        clearTimeout(connectionNotEstablishedTimeout);
+        connectionNotEstablishedTimeout = undefined;
+    }
+};
+
+var disconnectionNotSuccessfulTimeout = undefined;
+
+var setupFallbackDisconnectStrategy = function(fallbackStrategy) {
+    if (disconnectionNotSuccessfulTimeout == undefined) {
+        disconnectionNotSuccessfulTimeout = setTimeout(fallbackStrategy, 2000);
+    }
+};
+
+var clearFallbackDisconnectStrategy = function() {
+    if (disconnectionNotSuccessfulTimeout != undefined) {
+        clearTimeout(disconnectionNotSuccessfulTimeout);
+        disconnectionNotSuccessfulTimeout = undefined;
+    }
+};
+
 var connectTo = function(url, refreshInterval, storeSize, dispatcher, callback) {
+
+    clearConnectionCheck();
+    setupConnectionCheck(url);
 
     var connectionConfig = { baseUrl: url };
     var clusterHealth = new ClusterHealth({},connectionConfig);
 
     clusterHealth.fetch({
+
         success: function(model, response) {
+
+            clearConnectionCheck();
 
             var clusterName = model.get("cluster_name");
             var cluster = bigdeskStore.getCluster(clusterName);
@@ -59,40 +97,76 @@ var connectTo = function(url, refreshInterval, storeSize, dispatcher, callback) 
                 callback();
             }
         },
+
         error: function(model, response) {
+
+            clearConnectionCheck();
             alert("Cannot connect to the cluster!");
+
         }
     });
 };
 
 var disconnectFrom = function(url, callback) {
 
+    var disconnectFromCluster = function(cluster) {
+        cluster.clearIntervals();
+        if (clusterHealthView != undefined) {
+            clusterHealthView.clear();
+        }
+        if (clusterNodesListView != undefined) {
+            clusterNodesListView.clear();
+            clusterNodesListView.undelegateEvents();
+        }
+    };
+
+    // Iterate through all clusters having baseUrl == url and disconnect from them.
+    var fallbackStrategy = function(url) {
+        _.each(bigdeskStore.get("cluster")
+            .filter(function(cluster){
+                return cluster.get("health").get("baseUrl") == url;
+            }),
+            function(cluster){
+                console.log("Disconnecting from ["+cluster.id+"] using fallback strategy");
+                disconnectFromCluster(cluster);
+            });
+        if (callback) {
+            callback();
+        }
+    };
+
+    clearFallbackDisconnectStrategy();
+    setupFallbackDisconnectStrategy(function(){fallbackStrategy(url)});
+
     var connectionConfig = { baseUrl: url };
     var clusterHealth = new ClusterHealth({},connectionConfig);
 
     // we need to do the health.fetch to get cluster name.
     clusterHealth.fetch({
+
         success: function(model, response) {
+
+            clearFallbackDisconnectStrategy();
+
             var clusterName = model.get("cluster_name");
             var cluster = bigdeskStore.getCluster(clusterName);
             if (cluster) {
-                cluster.clearIntervals();
-                if (clusterHealthView != undefined) {
-                    clusterHealthView.clear();
-                }
-                if (clusterNodesListView != undefined) {
-                    clusterNodesListView.clear();
-                    clusterNodesListView.undelegateEvents();
-                }
+                disconnectFromCluster(cluster);
                 console.log("Disconnected from ["+clusterName+"]");
                 if (callback) {
                     callback();
                 }
+            } else {
+                fallbackStrategy(url);
             }
+        },
+
+        error: function(model, response) {
+
+            clearFallbackDisconnectStrategy();
+            fallbackStrategy(url);
+
         }
-//        ,error: function(model, response) {
-//            /*TODO fall back strategy*/
-//        }
     });
 };
 
