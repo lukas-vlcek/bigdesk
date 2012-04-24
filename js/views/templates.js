@@ -1,5 +1,15 @@
 var templates = {
 
+    avgCalculationType: [
+        "<form>",
+            "Series: ",
+            "<select id='{{id}}'>",
+                "<option value='avg'>average</option>",
+                "<option value='weighted' selected='selected'>weighted avg</option>",
+            "</select>",
+        "</form>"
+    ].join(""),
+
     selectedClusterNode : {
 
         selectedNodeInfoTemplate: [
@@ -96,6 +106,7 @@ var templates = {
         ].join(""),
 
         transportRxTx: [
+            "<!--#-->",
             "<div>Rx size/cnt: <span id='transport_rx_size'>n/a</span> / <span id='transport_rx_count'>n/a</span></div>",
             "<div>Tx size/cnt: <span id='transport_tx_size'>n/a</span> / <span id='transport_tx_count'>n/a</span></div>"
         ].join(""),

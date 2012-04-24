@@ -580,15 +580,21 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // Transport: Tx Rx
 
                     _.defer(function(){
+
+                        var calcType = $("#transport_avg_calc_type").find(":selected").val();
+
                         var transport_tx_delta = bigdesk_charts.transport_txrx.series1(stats);
                         var transport_rx_delta = bigdesk_charts.transport_txrx.series2(stats);
 
                         if (transport_tx_delta.length > 1 && transport_rx_delta.length > 1) {
 
-//                            delta(transport_tx_delta);
-//                            delta(transport_rx_delta);
-                            normalizedDeltaToSeconds(transport_tx_delta);
-                            normalizedDeltaToSeconds(transport_rx_delta);
+                            if (calcType == "weighted") {
+                                normalizedDeltaToSeconds(transport_tx_delta);
+                                normalizedDeltaToSeconds(transport_rx_delta);
+                            } else {
+                                delta(transport_tx_delta);
+                                delta(transport_rx_delta);
+                            }
 
                             chart_transport_txrx.animate(animatedCharts).update(transport_tx_delta, transport_rx_delta);
                         }
@@ -758,6 +764,10 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
         var channels = Mustache.render(templates.selectedClusterNode.channelsTemplate, {});
         var transportRxTx = Mustache.render(templates.selectedClusterNode.transportRxTx, {});
+
+        var avgCalcType = Mustache.render(templates.avgCalculationType, { id: "transport_avg_calc_type" });
+        transportRxTx = transportRxTx.replace("<!--#-->",avgCalcType);
+
         var selectedNodeHTTP = Mustache.render(templates.selectedClusterNode.selectedNodeHTTPTemplate, jsonModel);
         var selectedNodeTransport = Mustache.render(templates.selectedClusterNode.selectedNodeTransportTemplate, jsonModel);
 
