@@ -5,42 +5,7 @@ var bigdeskStore = new BigdeskStore();
 var clusterHealthView = undefined;
 var clusterNodesListView = undefined;
 
-var connectionNotEstablishedTimeout = undefined;
-
-var setupConnectionCheck = function(url) {
-    if (connectionNotEstablishedTimeout == undefined) {
-        connectionNotEstablishedTimeout = setTimeout(function(){
-            alert("Can not connect to endpoint ["+url+"]\nMake sure endpoint is defined correctly.");
-        }, 2000);
-    }
-};
-
-var clearConnectionCheck = function() {
-    if (connectionNotEstablishedTimeout != undefined) {
-        clearTimeout(connectionNotEstablishedTimeout);
-        connectionNotEstablishedTimeout = undefined;
-    }
-};
-
-var disconnectionNotSuccessfulTimeout = undefined;
-
-var setupFallbackDisconnectStrategy = function(fallbackStrategy) {
-    if (disconnectionNotSuccessfulTimeout == undefined) {
-        disconnectionNotSuccessfulTimeout = setTimeout(fallbackStrategy, 2000);
-    }
-};
-
-var clearFallbackDisconnectStrategy = function() {
-    if (disconnectionNotSuccessfulTimeout != undefined) {
-        clearTimeout(disconnectionNotSuccessfulTimeout);
-        disconnectionNotSuccessfulTimeout = undefined;
-    }
-};
-
 var connectTo = function(url, refreshInterval, storeSize, dispatcher, callback) {
-
-    clearConnectionCheck();
-    setupConnectionCheck(url);
 
     var connectionConfig = { baseUrl: url };
     var clusterHealth = new ClusterHealth({},connectionConfig);
@@ -48,8 +13,6 @@ var connectTo = function(url, refreshInterval, storeSize, dispatcher, callback) 
     clusterHealth.fetch({
 
         success: function(model, response) {
-
-            clearConnectionCheck();
 
             var clusterName = model.get("cluster_name");
             var cluster = bigdeskStore.getCluster(clusterName);
@@ -98,12 +61,8 @@ var connectTo = function(url, refreshInterval, storeSize, dispatcher, callback) 
             }
         },
 
-        error: function(model, response) {
+        error: function(model, response) { /* can not handle in JSONP */ }
 
-            clearConnectionCheck();
-            alert("Cannot connect to the cluster!");
-
-        }
     });
 };
 
@@ -121,13 +80,13 @@ var disconnectFrom = function(url, callback) {
     };
 
     // Iterate through all clusters having baseUrl == url and disconnect from them.
-    var fallbackStrategy = function(url) {
+    var disconnectFromURL = function(url) {
         _.each(bigdeskStore.get("cluster")
             .filter(function(cluster){
                 return cluster.get("health").get("baseUrl") == url;
             }),
             function(cluster){
-                console.log("Disconnecting from ["+cluster.id+"] using fallback strategy");
+                console.log("Disconnecting from ["+cluster.id+"]");
                 disconnectFromCluster(cluster);
             });
         if (callback) {
@@ -135,39 +94,33 @@ var disconnectFrom = function(url, callback) {
         }
     };
 
-    clearFallbackDisconnectStrategy();
-    setupFallbackDisconnectStrategy(function(){fallbackStrategy(url)});
+    disconnectFromURL(url);
 
-    var connectionConfig = { baseUrl: url };
-    var clusterHealth = new ClusterHealth({},connectionConfig);
+//    var connectionConfig = { baseUrl: url };
+//    var clusterHealth = new ClusterHealth({},connectionConfig);
+//
+//    // we need to do the health.fetch to get cluster name.
+//    clusterHealth.fetch({
+//
+//        success: function(model, response) {
+//
+//            var clusterName = model.get("cluster_name");
+//            var cluster = bigdeskStore.getCluster(clusterName);
+//            if (cluster) {
+//                disconnectFromCluster(cluster);
+//                console.log("Disconnected from ["+clusterName+"]");
+//                if (callback) {
+//                    callback();
+//                }
+//            } else {
+//                disconnectFromURL(url);
+//            }
+//        },
+//
+//        error: function(model, response) { /* can not handle in JSONP */ }
+//
+//    });
 
-    // we need to do the health.fetch to get cluster name.
-    clusterHealth.fetch({
-
-        success: function(model, response) {
-
-            clearFallbackDisconnectStrategy();
-
-            var clusterName = model.get("cluster_name");
-            var cluster = bigdeskStore.getCluster(clusterName);
-            if (cluster) {
-                disconnectFromCluster(cluster);
-                console.log("Disconnected from ["+clusterName+"]");
-                if (callback) {
-                    callback();
-                }
-            } else {
-                fallbackStrategy(url);
-            }
-        },
-
-        error: function(model, response) {
-
-            clearFallbackDisconnectStrategy();
-            fallbackStrategy(url);
-
-        }
-    });
 };
 
 var changeRefreshInterval = function(url, newRefreshInterval) {
@@ -177,6 +130,7 @@ var changeRefreshInterval = function(url, newRefreshInterval) {
 
     // we need to do the health.fetch to get cluster name.
     clusterHealth.fetch({
+
         success: function(model, response) {
             var clusterName = model.get("cluster_name");
             var cluster = bigdeskStore.getCluster(clusterName);
@@ -185,9 +139,9 @@ var changeRefreshInterval = function(url, newRefreshInterval) {
                 cluster.startFetch(newRefreshInterval/*, connectionConfig.baseUrl*/);
             }
         },
-        error: function(model, response) {
-            // TODO do not allow change refresh select element (select original value)
-        }
+
+        error: function(model, response) { /* can not handle in JSONP */ }
+
     });
 };
 
@@ -198,6 +152,7 @@ var changeStoreSize = function(url, newStoreSize) {
 
     // we need to do the health.fetch to get cluster name.
     clusterHealth.fetch({
+
         success: function(model, response) {
             var clusterName = model.get("cluster_name");
             var cluster = bigdeskStore.getCluster(clusterName);
@@ -205,9 +160,9 @@ var changeStoreSize = function(url, newStoreSize) {
                 cluster.setStoreSize(newStoreSize);
             }
         },
-        error: function(model, response) {
-            // TODO do not allow change store size element (select original value)
-        }
+
+        error: function(model, response) { /* can not handle in JSONP */ }
+
     });
 };
 
