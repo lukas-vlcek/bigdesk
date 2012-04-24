@@ -68,6 +68,7 @@ var templates = {
         ].join(""),
 
         process_CPU_timeTemplate: [
+            "<!--#-->",
             "<div>Sys total: <span id='process_cpu_time_sys'>n/a</span></div>",
             "<div>User total: <span id='process_cpu_time_user'>n/a</span></div>"
         ].join(""),
@@ -107,8 +108,8 @@ var templates = {
 
         transportRxTx: [
             "<!--#-->",
-            "<div>Rx size/cnt: <span id='transport_rx_size'>n/a</span> / <span id='transport_rx_count'>n/a</span></div>",
-            "<div>Tx size/cnt: <span id='transport_tx_size'>n/a</span> / <span id='transport_tx_count'>n/a</span></div>"
+            "<div>Rx: <span id='transport_rx_size'>n/a</span>, #<span id='transport_rx_count'>n/a</span></div>",
+            "<div>Tx: <span id='transport_tx_size'>n/a</span>, #<span id='transport_tx_count'>n/a</span></div>"
         ].join(""),
 
         TDBTemplate: [

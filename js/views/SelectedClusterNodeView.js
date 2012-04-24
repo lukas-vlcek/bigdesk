@@ -476,13 +476,20 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         // sigar & AWS check
                         if (stats_the_latest && stats_the_latest.node && stats_the_latest.node.process && stats_the_latest.node.process.cpu) {
 
+                            var calcType = $("#process_time_avg_calc_type").find(":selected").val();
+
                             var process_cpu_time_user_delta = bigdesk_charts.processCPU_time.series1(stats);
                             var process_cpu_time_sys_delta = bigdesk_charts.processCPU_time.series2(stats);
 
                             if (process_cpu_time_sys_delta.length > 1 && process_cpu_time_user_delta.length > 1) {
 
-                                delta(process_cpu_time_user_delta);
-                                delta(process_cpu_time_sys_delta);
+                                if (calcType == "weighted") {
+                                    normalizedDeltaToSeconds(process_cpu_time_user_delta);
+                                    normalizedDeltaToSeconds(process_cpu_time_sys_delta);
+                                } else {
+                                    delta(process_cpu_time_user_delta);
+                                    delta(process_cpu_time_sys_delta);
+                                }
 
                                 chart_processCPU_time.animate(animatedCharts).update(process_cpu_time_user_delta, process_cpu_time_sys_delta);
                             }
@@ -765,8 +772,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
         var channels = Mustache.render(templates.selectedClusterNode.channelsTemplate, {});
         var transportRxTx = Mustache.render(templates.selectedClusterNode.transportRxTx, {});
 
-        var avgCalcType = Mustache.render(templates.avgCalculationType, { id: "transport_avg_calc_type" });
-        transportRxTx = transportRxTx.replace("<!--#-->",avgCalcType);
+        var avgTransportCalcType = Mustache.render(templates.avgCalculationType, { id: "transport_avg_calc_type" });
+        transportRxTx = transportRxTx.replace("<!--#-->", avgTransportCalcType);
 
         var selectedNodeHTTP = Mustache.render(templates.selectedClusterNode.selectedNodeHTTPTemplate, jsonModel);
         var selectedNodeTransport = Mustache.render(templates.selectedClusterNode.selectedNodeTransportTemplate, jsonModel);
@@ -951,6 +958,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
         var processCPU_time = Mustache.render(templates.selectedClusterNode.process_CPU_timeTemplate, jsonModel);
         var processCPU_pct = Mustache.render(templates.selectedClusterNode.process_CPU_pctTemplate, jsonModel);
+
+        var avgProcessTimeCalcType = Mustache.render(templates.avgCalculationType, { id: "process_time_avg_calc_type" });
+        processCPU_time = processCPU_time.replace("<!--#-->", avgProcessTimeCalcType);
 
         var processCharts2 = this.make("p", {},
             "<div style='overflow: auto;'>" +

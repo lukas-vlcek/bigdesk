@@ -599,7 +599,7 @@ bigdesk_charts.processCPU_time = {
         return timeSeriesChart()
             .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
             .legend({
-                caption: "CPU time",
+                caption: "CPU time (delta)",
                 series1: "User",
                 series2: "Sys",
                 margin_left: 5,
