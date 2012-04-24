@@ -181,7 +181,7 @@ bigdesk_charts.jvmGC = {
         return timeSeriesChart()
             .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
             .legend({
-                caption: "GC (delta)",
+                caption: "GC (Δ)",
                 series1: "Count",
                 series2: "Time (sec)",
                 margin_left: 5,
@@ -599,7 +599,7 @@ bigdesk_charts.processCPU_time = {
         return timeSeriesChart()
             .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
             .legend({
-                caption: "CPU time (delta)",
+                caption: "CPU time (Δ)",
                 series1: "User",
                 series2: "Sys",
                 margin_left: 5,
@@ -703,7 +703,7 @@ bigdesk_charts.transport_txrx = {
         return timeSeriesChart()
             .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
             .legend({
-                caption: "Transport size (delta)",
+                caption: "Transport size (Δ)",
                 series1: "Tx",
                 series2: "Rx",
                 margin_left: 5,
@@ -737,7 +737,7 @@ bigdesk_charts.disk_reads_writes_cnt = {
         return timeSeriesChart()
             .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
             .legend({
-                caption: "# of Reads & Writes (delta)",
+                caption: "# of Reads & Writes (Δ)",
                 series1: "Reads",
                 series2: "Writes",
                 margin_left: 5,
@@ -771,7 +771,7 @@ bigdesk_charts.disk_reads_writes_size = {
         return timeSeriesChart()
             .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
             .legend({
-                caption: "Read & Write size (delta)",
+                caption: "Read & Write size (Δ)",
                 series1: "Read",
                 series2: "Write",
                 margin_left: 5,
