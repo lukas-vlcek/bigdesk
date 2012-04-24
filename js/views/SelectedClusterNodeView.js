@@ -599,7 +599,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             chart_transport_txrx.animate(animatedCharts).update(transport_tx_delta, transport_rx_delta);
                         }
                         var _t = stats_the_latest.node.transport;
-                        if (_t && _t.rx_size && _t.tx_size && _t.rx_count && _t.tx_count) {
+                        if (_t && _t.rx_size && _t.tx_size && _t.rx_count != undefined && _t.tx_count != undefined) {
                             $("#transport_rx_size").text(stats_the_latest.node.transport.rx_size);
                             $("#transport_tx_size").text(stats_the_latest.node.transport.tx_size);
                             $("#transport_rx_count").text(stats_the_latest.node.transport.rx_count);
