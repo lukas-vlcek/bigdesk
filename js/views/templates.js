@@ -90,15 +90,20 @@ var templates = {
         ].join(""),
 
         channelsTemplate: [
-            "<div>Transport: <span id='open_transport_channels'>na</span></div>",
-            "<div>HTTP: <span id='open_http_channels'>na</span></div>",
+            "<div>Transport: <span id='open_transport_channels'>n/a</span></div>",
+            "<div>HTTP: <span id='open_http_channels'>n/a</span></div>",
             "<div>HTTP total opened: <span id='total_opened_http_channels'>na</span></div>"
+        ].join(""),
+
+        transportRxTx: [
+            "<div>Rx size/cnt: <span id='transport_rx_size'>n/a</span> / <span id='transport_rx_count'>n/a</span></div>",
+            "<div>Tx size/cnt: <span id='transport_tx_size'>n/a</span> / <span id='transport_tx_count'>n/a</span></div>"
         ].join(""),
 
         TDBTemplate: [
             "<svg width='100%' height='90'>" +
                 "<rect x='0' y='0' width='100%' height='100%' fill='#eee' stroke-width='1' />" +
-                "</svg>"
+            "</svg>"
         ].join(""),
 
         jvmInfoTemplate1: [

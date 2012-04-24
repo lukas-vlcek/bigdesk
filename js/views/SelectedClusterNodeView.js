@@ -592,6 +592,19 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                             chart_transport_txrx.animate(animatedCharts).update(transport_tx_delta, transport_rx_delta);
                         }
+                        var _t = stats_the_latest.node.transport;
+                        if (_t && _t.rx_size && _t.tx_size && _t.rx_count && _t.tx_count) {
+                            $("#transport_rx_size").text(stats_the_latest.node.transport.rx_size);
+                            $("#transport_tx_size").text(stats_the_latest.node.transport.tx_size);
+                            $("#transport_rx_count").text(stats_the_latest.node.transport.rx_count);
+                            $("#transport_tx_count").text(stats_the_latest.node.transport.tx_count);
+                        } else {
+                            chart_transport_txrx = bigdesk_charts.not_available.chart(chart_transport_txrx.svg());
+                            $("#transport_rx_size").text("n/a");
+                            $("#transport_tx_size").text("n/a");
+                            $("#transport_rx_count").text("n/a");
+                            $("#transport_tx_count").text("n/a");
+                        }
                     });
 
                     // --------------------------------------------
@@ -744,9 +757,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
         // HTTP & Transport
 
         var channels = Mustache.render(templates.selectedClusterNode.channelsTemplate, {});
+        var transportRxTx = Mustache.render(templates.selectedClusterNode.transportRxTx, {});
         var selectedNodeHTTP = Mustache.render(templates.selectedClusterNode.selectedNodeHTTPTemplate, jsonModel);
         var selectedNodeTransport = Mustache.render(templates.selectedClusterNode.selectedNodeTransportTemplate, jsonModel);
-//        var _tbd = Mustache.render(templates.selectedClusterNode.TDBTemplate, {});
 
         var desp1 = this.make("p", {}, selectedNodeHTTP);
         var desp2 = this.make("p", {}, selectedNodeTransport);
@@ -757,7 +770,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     "<svg id='svg_transport_txrx' clip_id='clip_transport_txrx' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMid' viewBox='0 0 250 160'/>" +
                 "</svg>" +
                 "<div width='46.5%' style='margin-left: 0%; float: left;'>"+channels+"</div>" +
-                "<div width='46.5%' style='margin-left: 54%;'></div>" +
+                "<div width='46.5%' style='margin-left: 54%;'>"+transportRxTx+"</div>" +
             "</div>"
         );
 

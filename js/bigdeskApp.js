@@ -212,7 +212,7 @@ $(document).ready(
         var ajaxResponseCallback = function(clusterName, restApiName, response) {
 //            console.log("["+clusterName+"] ["+restApiName+"]", response);
 //            var iterator = function(nodeStats) {return nodeStats.id; };
-//            if (restApiName == "cluster > Health") {
+//            if (restApiName == "cluster > NodesStats") {
 //                console.log(response);
 //                var nodesCollection = this.get("nodesStats");
 //                console.log("collection length",nodesCollection.length);

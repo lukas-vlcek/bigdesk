@@ -703,7 +703,7 @@ bigdesk_charts.transport_txrx = {
         return timeSeriesChart()
             .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
             .legend({
-                caption: "Transport size",
+                caption: "Transport size (delta)",
                 series1: "Tx",
                 series2: "Rx",
                 margin_left: 5,
