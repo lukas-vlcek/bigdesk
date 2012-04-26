@@ -131,9 +131,9 @@
 </div>
 <script type="text/javascript">
 $(function() {
-  var l = location, h = l.href, p = l.pathname;
-  if (h.indexOf("/_plugin/") != -1) {
-    document.forms[0].restEndPoint.value = h.substr(0, h.length-p.length);
+  var l = location;
+  if (l.href.indexOf("/_plugin/") != -1) {
+    document.forms[0].restEndPoint.value = l.protocol + "//" + l.host
     $("#connectButton").click();
   }
 });
