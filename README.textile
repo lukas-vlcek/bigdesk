@@ -12,6 +12,8 @@ In order to install the plugin, simply run: <code>bin/plugin -install lukas-vlce
 
 To get specific version of bigdesk use:  <code>bin/plugin -install lukas-vlcek/bigdesk/1.0.0</code>
 
+For example, if you are running ES node on <code>localhost:9200</code> then you can navigate your browser to <code>http://localhost:9200/_plugin/bigdesk/</code> and bigdesk will auto connect to existing node.
+
 You can also checkout bigdesk into your local harddrive (or download and extract zip from github) and simply use it by opening <code>index.html</code> in your favorite web browser.
 
 h3. How to use bigdesk
