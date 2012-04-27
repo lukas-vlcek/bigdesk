@@ -266,7 +266,20 @@ $(document).ready(
         };
 
         var useUrlParams = function() {
+
             var params = getUrlParams();
+
+            // assume this is a plugin running in ES node
+            if (window.location.href.indexOf("/_plugin/") != -1) {
+                // if "endpoint" or "connect" values provided as an URL parameter, do not change them
+                if (!getSearchUrlVar("endpoint")) {
+                    params.endpoint = window.location.protocol + "//" + window.location.host;
+                }
+                if (!getSearchUrlVar("connect")) {
+                    params.connect = true;
+                }
+            }
+
             restEndPoint.val(params.endpoint);
             refreshInterval.val(params.refresh);
             storeSize.val(params.history);
