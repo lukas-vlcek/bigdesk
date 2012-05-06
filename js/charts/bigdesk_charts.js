@@ -376,7 +376,7 @@ bigdesk_charts.indicesSearchReqs = {
         return timeSeriesChart()
             .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
             .legend({
-                caption: "Search requests per second",
+                caption: "Search requests per second (Δ)",
                 series1: "Fetch",
                 series2: "Query",
                 margin_left: 5,
@@ -410,7 +410,7 @@ bigdesk_charts.indicesSearchTime = {
         return  timeSeriesChart()
             .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
             .legend({
-                caption: "Search time per second",
+                caption: "Search time per second (Δ)",
                 series1: "Fetch",
                 series2: "Query",
                 margin_left: 5,
@@ -444,7 +444,7 @@ bigdesk_charts.indicesGetReqs = {
         return timeSeriesChart()
             .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
             .legend({
-                caption: "Get requests per second",
+                caption: "Get requests per second (Δ)",
                 series1: "Missing",
                 series2: "Exists",
                 series3: "Get",
@@ -488,7 +488,7 @@ bigdesk_charts.indicesGetTime = {
         return timeSeriesChart()
             .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
             .legend({
-                caption: "Get time per second",
+                caption: "Get time per second (Δ)",
                 series1: "Missing",
                 series2: "Exists",
                 series3: "Get",
@@ -532,7 +532,7 @@ bigdesk_charts.indicesIndexingReqs = {
         return timeSeriesChart()
             .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
             .legend({
-                caption: "Indexing requests per second",
+                caption: "Indexing requests per second (Δ)",
                 series1: "Index",
                 series2: "Delete",
                 margin_left: 5,
@@ -565,7 +565,7 @@ bigdesk_charts.indicesIndexingTime = {
         return timeSeriesChart()
             .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
             .legend({
-                caption: "Indexing time per second",
+                caption: "Indexing time per second (Δ)",
                 series1: "Index",
                 series2: "Delete",
                 margin_left: 5,
@@ -588,6 +588,74 @@ bigdesk_charts.indicesIndexingTime = {
             return {
                 timestamp: +snapshot.id,
                 value: +snapshot.node.indices.indexing.delete_time_in_millis
+            }
+        })
+    }
+};
+
+bigdesk_charts.indicesCacheSize = {
+    chart: function(element) {
+        return timeSeriesChart()
+            .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
+            .legend({
+                caption: "Cache size",
+                series1: "Field",
+                series2: "Filter",
+                margin_left: 5,
+                margin_bottom: 6,
+                width: 65
+            })
+            .svg(element);
+    },
+
+    series1: function(stats) {
+        return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.id,
+                value: +snapshot.node.indices.cache.field_size_in_bytes
+            }
+        })
+    },
+
+    series2: function(stats) {
+        return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.id,
+                value: +snapshot.node.indices.cache.filter_size_in_bytes
+            }
+        })
+    }
+};
+
+bigdesk_charts.indicesCacheEvictions = {
+    chart: function(element) {
+        return timeSeriesChart()
+            .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
+            .legend({
+                caption: "Cache evictions (Δ)",
+                series1: "Field",
+                series2: "Filter",
+                margin_left: 5,
+                margin_bottom: 6,
+                width: 65
+            })
+            .svg(element);
+    },
+
+    series1: function(stats) {
+        return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.id,
+                value: +snapshot.node.indices.cache.field_evictions
+            }
+        })
+    },
+
+    series2: function(stats) {
+        return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.id,
+                value: +snapshot.node.indices.cache.filter_evictions
             }
         })
     }

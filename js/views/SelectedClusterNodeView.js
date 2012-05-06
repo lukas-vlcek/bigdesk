@@ -69,6 +69,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
                 var chart_indicesGetReqs = bigdesk_charts.indicesGetReqs.chart(d3.select("#svg_indicesGetReqs"));
                 var chart_indicesGetTime = bigdesk_charts.indicesGetTime.chart(d3.select("#svg_indicesGetTime"));
                 var chart_indicesIndexingReqs = bigdesk_charts.indicesIndexingReqs.chart(d3.select("#svg_indicesIndexingReqs"));
+                var chart_indicesCacheSize = bigdesk_charts.indicesCacheSize.chart(d3.select("#svg_indicesCacheSize"));
+                var chart_indicesCacheEvictions = bigdesk_charts.indicesCacheEvictions.chart(d3.select("#svg_indicesCacheEvictions"));
                 var chart_indicesIndexingTime = bigdesk_charts.indicesIndexingTime.chart(d3.select("#svg_indicesIndexingTime"));
                 var chart_processCPU_time = bigdesk_charts.processCPU_time.chart(d3.select("#svg_processCPU_time"));
 
@@ -466,6 +468,44 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                             $("#indices_indexing_delete_time").text(stats_the_latest.node.indices.indexing.delete_time);
                             $("#indices_indexing_index_time").text(stats_the_latest.node.indices.indexing.index_time);
+                        }
+                    });
+
+                    // --------------------------------------------
+                    // Indices: cache size
+
+                    _.defer(function(){
+                        var indices_cache_field_size = bigdesk_charts.indicesCacheSize.series1(stats);
+                        var indices_cache_filter_size = bigdesk_charts.indicesCacheSize.series2(stats);
+
+                        chart_indicesCacheSize.animate(animatedCharts).update(indices_cache_field_size, indices_cache_filter_size);
+
+                        if (stats_the_latest.node && stats_the_latest.node.indices && stats_the_latest.node.indices.cache) {
+                            $("#indices_filter_cache_size").text(stats_the_latest.node.indices.cache.filter_size);
+                            $("#indices_field_cache_size").text(stats_the_latest.node.indices.cache.field_size);
+                        } else {
+                            $("#indices_filter_cache_size").text("n/a");
+                            $("#indices_field_cache_size").text("n/a");
+                        }
+                    });
+
+                    // --------------------------------------------
+                    // Indices: cache evictions
+
+                    _.defer(function(){
+                        var indices_cache_field_evictions = bigdesk_charts.indicesCacheEvictions.series1(stats);
+                        var indices_cache_filter_evictions = bigdesk_charts.indicesCacheEvictions.series2(stats);
+
+                        if (indices_cache_field_evictions.length > 1 && indices_cache_filter_evictions.length > 1) {
+
+                            normalizedDeltaToSeconds(indices_cache_field_evictions);
+                            normalizedDeltaToSeconds(indices_cache_filter_evictions);
+
+                            chart_indicesCacheEvictions.animate(animatedCharts).update(indices_cache_field_evictions, indices_cache_filter_evictions);
+
+                            $("#indices_filter_cache_evictions").text(stats_the_latest.node.indices.cache.filter_evictions);
+                            $("#indices_field_cache_evictions").text(stats_the_latest.node.indices.cache.field_evictions);
+
                         }
                     });
 
@@ -1050,14 +1090,23 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
         // Indices charts row #2
 
+        var indicesCacheSize = Mustache.render(templates.selectedClusterNode.indicesCacheSizeTemplate, jsonModel);
+        var indicesCacheEvictions = Mustache.render(templates.selectedClusterNode.indicesCacheEvictionsTemplate, jsonModel);
+
+        var indicesCharts2p1 = this.make("p", {},
+            "<div style='overflow: auto;'>" +
+                "<svg width='100%' height='160'>" +
+                    "<svg id='svg_indicesCacheSize' clip_id='clip_indicesCacheSize' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMid' viewBox='0 0 250 160'/>" +
+                    "<svg id='svg_indicesCacheEvictions' clip_id='clip_indicesCacheEvictions' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMid' viewBox='0 0 250 160'/>" +
+                "</svg>" +
+                "<div width='46.5%' style='margin-left: 0%; float: left;'>" + indicesCacheSize + "</div>" +
+                "<div width='46.5%' style='margin-left: 54%;'>" + indicesCacheEvictions + "</div>" +
+            "</div>"
+        );
+
         var indicesIndexingReqs = Mustache.render(templates.selectedClusterNode.indicesIndexingReqsTemplate, jsonModel);
         var indicesIndexingTime = Mustache.render(templates.selectedClusterNode.indicesIndexingTimeTemplate, jsonModel);
 
-        var indicesCharts2p1 = this.make("p", {},
-            "<svg width='100%' height='160'>" +
-                "<rect x='0' y='0' width='100%' height='100%' fill='#eee' stroke-width='1' />" +
-            "</svg>"
-        );
         var indicesCharts2p2 = this.make("p", {},
             "<div style='overflow: auto;'>" +
                 "<svg width='100%' height='160'>" +

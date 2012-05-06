@@ -181,6 +181,16 @@ var templates = {
             "Missing: <span id='indices_missing_time'>n/a</span>"
         ].join("<br>"),
 
+        indicesCacheSizeTemplate: [
+            "Filter: <span id='indices_filter_cache_size'>n/a</span>",
+            "Field: <span id='indices_field_cache_size'>n/a</span>"
+        ].join("<br>"),
+
+        indicesCacheEvictionsTemplate: [
+            "Filter: <span id='indices_filter_cache_evictions'>n/a</span>",
+            "Field: <span id='indices_field_cache_evictions'>n/a</span>"
+        ].join("<br>"),
+
         indicesIndexingReqsTemplate: [
             "Delete: <span id='indices_indexing_delete_reqs'>n/a</span>",
             "Index: <span id='indices_indexing_index_reqs'>n/a</span>"
