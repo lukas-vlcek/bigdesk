@@ -510,6 +510,17 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     });
 
                     // --------------------------------------------
+                    // Indices: cache filter count
+
+                    _.defer(function(){
+                        if (stats_the_latest.node && stats_the_latest.node.indices && stats_the_latest.node.indices.cache) {
+                            $("#indices_cache_filter_size").text(stats_the_latest.node.indices.cache.filter_count);
+                        } else {
+                            $("#indices_cache_filter_size").text("n/a");
+                        }
+                    });
+
+                    // --------------------------------------------
                     // Process: CPU time (in millis)
 
                     _.defer(function(){

@@ -156,7 +156,8 @@ var templates = {
         ].join("<br>"),
 
         indices1Template3: [
-            "Size: <span id='indices_store_size'>n/a</span>"
+            "Size: <span id='indices_store_size'>n/a</span>",
+            "Filters cached: <span id='indices_cache_filter_size'>n/a</span>"
         ].join("<br>"),
 
         indicesSearchReqsTemplate: [
