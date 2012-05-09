@@ -103,9 +103,9 @@ var Cluster = Backbone.Model.extend({
     },
 
     // returns false or true depending on given version numbers
-    // for now we allow only 0.19.x versions
+    // for now we allow versions 0.19.x and 0.20.x
     checkVersion: function(major, minor, maintenance) {
-        if (major == 0 && minor == 19 && maintenance >= 0) {
+        if (major == 0 && (minor == 19 || minor == 20) && maintenance >= 0) {
             return true;
         }
         return false;
@@ -120,7 +120,7 @@ var Cluster = Backbone.Model.extend({
             "*********************************\n" +
             "Bigdesk may not work correctly!\n" +
             "Found ES node version: " + version + "\n" +
-            "Requires ES node version: 0.19.x\n" +
+            "Requires ES node version: 0.19.x or 0.20.x\n" +
             "*********************************";
         console.log(message);
         if (alert) { alert(message); }
