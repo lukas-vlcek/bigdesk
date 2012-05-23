@@ -128,7 +128,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                         var theLatestTotalOpened = stats[stats.length-1].node.http.total_opened;
 
-                        chart_channels.animate(animatedCharts).update(opened_http_channels, opened_transport_server_channels);
+                        try { chart_channels.animate(animatedCharts).update(opened_http_channels, opened_transport_server_channels); } catch (ignore) {}
 
                         if (opened_http_channels.length > 0) {
                             $("#open_http_channels").text(opened_http_channels[opened_http_channels.length-1].value);
@@ -159,7 +159,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         var jvm_threads_count = bigdesk_charts.jvmThreads.series1(stats);
                         var jvm_threads_peak_count = bigdesk_charts.jvmThreads.series2(stats);
 
-                        chart_jvmThreads.animate(animatedCharts).update(jvm_threads_count, jvm_threads_peak_count);
+                        try { chart_jvmThreads.animate(animatedCharts).update(jvm_threads_count, jvm_threads_peak_count); } catch (ignore) {}
 
                         if (stats_the_latest && stats_the_latest.node) {
                             $("#jvm_threads_peak").text(stats_the_latest.node.jvm.threads.peak_count);
@@ -181,7 +181,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             delta(jvm_gc_collection_count_delta);
                             delta(jvm_gc_collection_time_delta);
 
-                            chart_jvmGC.animate(animatedCharts).update(jvm_gc_collection_count_delta, jvm_gc_collection_time_delta);
+                            try { chart_jvmGC.animate(animatedCharts).update(jvm_gc_collection_count_delta, jvm_gc_collection_time_delta); } catch (ignore) {}
                         }
 
                         if (stats_the_latest && stats_the_latest.node) {
@@ -200,7 +200,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         var jvm_heap_used_mem= bigdesk_charts.jvmHeapMem.series1(stats);
                         var jvm_heap_committed_mem= bigdesk_charts.jvmHeapMem.series2(stats);
 
-                        chart_jvmHeapMem.animate(animatedCharts).update(jvm_heap_used_mem, jvm_heap_committed_mem);
+                        try { chart_jvmHeapMem.animate(animatedCharts).update(jvm_heap_used_mem, jvm_heap_committed_mem); } catch (ignore) {}
 
                         if (stats_the_latest && stats_the_latest.node) {
                             $("#jvm_heap_mem_committed").text(stats_the_latest.node.jvm.mem.heap_committed);
@@ -218,7 +218,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         var jvm_non_heap_used_mem= bigdesk_charts.jvmNonHeapMem.series1(stats);
                         var jvm_non_heap_committed_mem= bigdesk_charts.jvmNonHeapMem.series2(stats);
 
-                        chart_jvmNonHeapMem.animate(animatedCharts).update(jvm_non_heap_used_mem, jvm_non_heap_committed_mem);
+                        try { chart_jvmNonHeapMem.animate(animatedCharts).update(jvm_non_heap_used_mem, jvm_non_heap_committed_mem); } catch (ignore) {}
 
                         if (stats_the_latest && stats_the_latest.node) {
                             $("#jvm_non_heap_mem_committed").text(stats_the_latest.node.jvm.mem.non_heap_committed);
@@ -251,7 +251,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             var os_cpu_user = bigdesk_charts.osCpu.series2(stats);
                             var os_cpu_idle = bigdesk_charts.osCpu.series3(stats);
 
-                            chart_osCpu.animate(animatedCharts).update(os_cpu_sys, os_cpu_user, os_cpu_idle);
+                            try { chart_osCpu.animate(animatedCharts).update(os_cpu_sys, os_cpu_user, os_cpu_idle); } catch (ignore) {}
 
                             $("#os_cpu_user").text(stats_the_latest.node.os.cpu.user + "%");
                             $("#os_cpu_sys").text(stats_the_latest.node.os.cpu.sys + "%");
@@ -272,7 +272,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             var os_mem_actual_used = bigdesk_charts.osMem.series1(stats);
                             var os_mem_actual_free = bigdesk_charts.osMem.series2(stats);
 
-                            chart_osMem.animate(animatedCharts).update(os_mem_actual_used, os_mem_actual_free);
+                            try { chart_osMem.animate(animatedCharts).update(os_mem_actual_used, os_mem_actual_free); } catch (ignore) {}
 
                             $("#os_mem_free").text(stats_the_latest.node.os.mem.actual_free);
                             $("#os_mem_used").text(stats_the_latest.node.os.mem.actual_used);
@@ -293,7 +293,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             var os_swap_used = bigdesk_charts.osSwap.series1(stats);
                             var os_swap_free = bigdesk_charts.osSwap.series2(stats);
 
-                            chart_osSwap.animate(animatedCharts).update(os_swap_used, os_swap_free);
+                            try { chart_osSwap.animate(animatedCharts).update(os_swap_used, os_swap_free); } catch (ignore) {}
 
                             $("#os_swap_free").text(stats_the_latest.node.os.swap.free);
                             $("#os_swap_used").text(
@@ -319,7 +319,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             var os_loadAvg_1 = bigdesk_charts.osLoadAvg.series2(stats);
                             var os_loadAvg_2 = bigdesk_charts.osLoadAvg.series3(stats);
 
-                            chart_osLoadAvg.animate(animatedCharts).update(os_loadAvg_0, os_loadAvg_1, os_loadAvg_2);
+                            try { chart_osLoadAvg.animate(animatedCharts).update(os_loadAvg_0, os_loadAvg_1, os_loadAvg_2); } catch (ignore) {}
 
                             $("#os_load_0").text(stats_the_latest.node.os.load_average["0"]);
                             $("#os_load_1").text(stats_the_latest.node.os.load_average["1"]);
@@ -363,7 +363,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             normalizedDeltaToSeconds(indices_fetch_reqs);
                             normalizedDeltaToSeconds(indices_query_reqs);
 
-                            chart_indicesSearchReqs.animate(animatedCharts).update(indices_fetch_reqs, indices_query_reqs);
+                            try { chart_indicesSearchReqs.animate(animatedCharts).update(indices_fetch_reqs, indices_query_reqs); } catch (ignore) {}
 
                             $("#indices_search_query_reqs").text(stats_the_latest.node.indices.search.query_total);
                             $("#indices_search_fetch_reqs").text(stats_the_latest.node.indices.search.fetch_total);
@@ -382,7 +382,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             normalizedDeltaToSeconds(indices_fetch_time);
                             normalizedDeltaToSeconds(indices_query_time);
 
-                            chart_indicesSearchTime.animate(animatedCharts).update(indices_fetch_time, indices_query_time);
+                            try { chart_indicesSearchTime.animate(animatedCharts).update(indices_fetch_time, indices_query_time); } catch (ignore) {}
 
                             $("#indices_search_query_time").text(stats_the_latest.node.indices.search.query_time);
                             $("#indices_search_fetch_time").text(stats_the_latest.node.indices.search.fetch_time);
@@ -403,7 +403,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             normalizedDeltaToSeconds(indices_missing_reqs);
                             normalizedDeltaToSeconds(indices_exists_reqs);
 
-                            chart_indicesGetReqs.animate(animatedCharts).update(indices_get_reqs, indices_missing_reqs, indices_exists_reqs);
+                            try { chart_indicesGetReqs.animate(animatedCharts).update(indices_get_reqs, indices_missing_reqs, indices_exists_reqs); } catch (ignore) {}
 
                             $("#indices_get_reqs").text(stats_the_latest.node.indices.get.total);
                             $("#indices_exists_reqs").text(stats_the_latest.node.indices.get.exists_total);
@@ -425,7 +425,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             normalizedDeltaToSeconds(indices_missing_time);
                             normalizedDeltaToSeconds(indices_exists_time);
 
-                            chart_indicesGetTime.animate(animatedCharts).update(indices_get_time, indices_missing_time, indices_exists_time);
+                            try { chart_indicesGetTime.animate(animatedCharts).update(indices_get_time, indices_missing_time, indices_exists_time); } catch (ignore) {}
 
                             $("#indices_get_time").text(stats_the_latest.node.indices.get.time);
                             $("#indices_exists_time").text(stats_the_latest.node.indices.get.exists_time);
@@ -445,7 +445,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             normalizedDeltaToSeconds(indices_indexing_index_reqs);
                             normalizedDeltaToSeconds(indices_indexing_delete_reqs);
 
-                            chart_indicesIndexingReqs.animate(animatedCharts).update(indices_indexing_index_reqs, indices_indexing_delete_reqs);
+                            try { chart_indicesIndexingReqs.animate(animatedCharts).update(indices_indexing_index_reqs, indices_indexing_delete_reqs); } catch (ignore) {}
 
                             $("#indices_indexing_delete_reqs").text(stats_the_latest.node.indices.indexing.delete_total);
                             $("#indices_indexing_index_reqs").text(stats_the_latest.node.indices.indexing.index_total);
@@ -464,7 +464,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             normalizedDeltaToSeconds(indices_indexing_index_time);
                             normalizedDeltaToSeconds(indices_indexing_delete_time);
 
-                            chart_indicesIndexingTime.animate(animatedCharts).update(indices_indexing_index_time, indices_indexing_delete_time);
+                            try { chart_indicesIndexingTime.animate(animatedCharts).update(indices_indexing_index_time, indices_indexing_delete_time); } catch (ignore) {}
 
                             $("#indices_indexing_delete_time").text(stats_the_latest.node.indices.indexing.delete_time);
                             $("#indices_indexing_index_time").text(stats_the_latest.node.indices.indexing.index_time);
@@ -478,7 +478,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                         var indices_cache_field_size = bigdesk_charts.indicesCacheSize.series1(stats);
                         var indices_cache_filter_size = bigdesk_charts.indicesCacheSize.series2(stats);
 
-                        chart_indicesCacheSize.animate(animatedCharts).update(indices_cache_field_size, indices_cache_filter_size);
+                        try { chart_indicesCacheSize.animate(animatedCharts).update(indices_cache_field_size, indices_cache_filter_size); } catch (ignore) {}
 
                         if (stats_the_latest.node && stats_the_latest.node.indices && stats_the_latest.node.indices.cache) {
                             $("#indices_filter_cache_size").text(stats_the_latest.node.indices.cache.filter_size);
@@ -501,7 +501,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             normalizedDeltaToSeconds(indices_cache_field_evictions);
                             normalizedDeltaToSeconds(indices_cache_filter_evictions);
 
-                            chart_indicesCacheEvictions.animate(animatedCharts).update(indices_cache_field_evictions, indices_cache_filter_evictions);
+                            try { chart_indicesCacheEvictions.animate(animatedCharts).update(indices_cache_field_evictions, indices_cache_filter_evictions); } catch (ignore) {}
 
                             $("#indices_filter_cache_evictions").text(stats_the_latest.node.indices.cache.filter_evictions);
                             $("#indices_field_cache_evictions").text(stats_the_latest.node.indices.cache.field_evictions);
@@ -542,7 +542,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                                     delta(process_cpu_time_sys_delta);
                                 }
 
-                                chart_processCPU_time.animate(animatedCharts).update(process_cpu_time_user_delta, process_cpu_time_sys_delta);
+                                try { chart_processCPU_time.animate(animatedCharts).update(process_cpu_time_user_delta, process_cpu_time_sys_delta); } catch (ignore) {}
                             }
 
                             $("#process_cpu_time_sys").text(stats_the_latest.node.process.cpu.sys_in_millis + "ms");
@@ -565,7 +565,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
                                 value: +selectedNodeInfo.nodes[selectedNodeId].process.max_file_descriptors
                             }
                         });
-                        chart_fileDescriptors.animate(animatedCharts).update(open_file_descriptors, max_file_descriptors);
+
+                        try { chart_fileDescriptors.animate(animatedCharts).update(open_file_descriptors, max_file_descriptors); } catch (ignore) {}
 
                         if (open_file_descriptors.length > 0) {
                             $("#open_file_descriptors").text(open_file_descriptors[open_file_descriptors.length-1].value);
@@ -599,7 +600,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                                 }
                             });
 
-                            chart_processCPU_pct.animate(animatedCharts).update(process_cpu_pct, process_cpu_max);
+                            try { chart_processCPU_pct.animate(animatedCharts).update(process_cpu_pct, process_cpu_max); } catch (ignore) {}
 
                             $("#process_cpu_pct_total").text((_total_cores * 100) + "%");
                             $("#process_cpu_pct_process").text(stats_the_latest.node.process.cpu.percent + "%");
@@ -621,7 +622,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             var process_mem_resident = bigdesk_charts.processMem.series2(stats);
                             var process_mem_total_virtual = bigdesk_charts.processMem.series3(stats);
 
-                            chart_processMem.animate(animatedCharts).update(process_mem_share, process_mem_resident, process_mem_total_virtual);
+                            try { chart_processMem.animate(animatedCharts).update(process_mem_share, process_mem_resident, process_mem_total_virtual); } catch (ignore) {}
 
                             $("#process_mem_total_virtual").text(stats_the_latest.node.process.mem.total_virtual);
                             $("#process_mem_resident").text(stats_the_latest.node.process.mem.resident);
@@ -654,7 +655,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                                 delta(transport_rx_delta);
                             }
 
-                            chart_transport_txrx.animate(animatedCharts).update(transport_tx_delta, transport_rx_delta);
+                            try { chart_transport_txrx.animate(animatedCharts).update(transport_tx_delta, transport_rx_delta); } catch (ignore) {}
                         }
                         var _t = stats_the_latest.node.transport;
                         if (_t && _t.rx_size && _t.tx_size && _t.rx_count != undefined && _t.tx_count != undefined) {
@@ -740,7 +741,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                                             normalizedDeltaToSeconds(read_cnt_delta);
                                             normalizedDeltaToSeconds(write_cnt_delta);
 
-                                            charts_disk_reads_writes_cnt[keys[i]].animate(animatedCharts).update(read_cnt_delta, write_cnt_delta);
+                                            try { charts_disk_reads_writes_cnt[keys[i]].animate(animatedCharts).update(read_cnt_delta, write_cnt_delta); } catch (ignore) {}
                                         }
 
                                         $("#fs_disk_writes_"+keys[i]).text(fs_data.disk_writes);
@@ -763,7 +764,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                                             normalizedDeltaToSeconds(read_size_delta);
                                             normalizedDeltaToSeconds(write_size_delta);
 
-                                            charts_disk_reads_writes_size[keys[i]].animate(animatedCharts).update(read_size_delta, write_size_delta);
+                                            try { charts_disk_reads_writes_size[keys[i]].animate(animatedCharts).update(read_size_delta, write_size_delta); } catch (ignore) {}
                                         }
 
                                         $("#fs_disk_write_size_"+keys[i]).text(fs_data.disk_write_size);
