@@ -10,6 +10,28 @@ var templates = {
         "</form>"
     ].join(""),
 
+    nodesViewTemplate: [
+        "<div class='row'>",
+            "<div class='threecol'>",
+                "<p id='clusterHealth'></p>",
+            "</div>",
+            "<div class='ninecol last'>",
+                "<p id='clusterNodes'></p>",
+            "</div>",
+        "</div>",
+        "<div id='selectedClusterNode' class='row invisible'>",
+            "<div class='twelvecol last'/>",
+        "</div>"
+    ].join(""),
+
+    clusterViewTemplate: [
+        "<div class='row'>",
+            "<div class='twelvecol last'>",
+                "<p id='clusterChart'>Cluster view is WIP...</p>",
+            "</div>",
+        "</div>"
+    ].join(""),
+
     selectedClusterNode : {
 
         selectedNodeInfoTemplate: [

@@ -2,10 +2,56 @@
 var bigdeskStore = new BigdeskStore();
 
 // declare views
-var clusterHealthView = undefined;
-var clusterNodesListView = undefined;
+var nodesView = {
 
-var connectTo = function(url, refreshInterval, storeSize, dispatcher, callback) {
+    clusterHealthView: undefined,
+    clusterNodesListView: undefined,
+
+    render: function(cluster) {
+
+        var nodesViewTemplate = Mustache.render(templates.nodesViewTemplate, {});
+        $("#selectedViewDetail").empty().append(nodesViewTemplate);
+
+        this.clusterHealthView = new ClusterHealthView({el: $("#clusterHealth"), model: cluster});
+        this.clusterHealthView.render();
+
+        this.clusterNodesListView = new ClusterNodesListView({el: $("#clusterNodes"), model: cluster});
+        this.clusterNodesListView.render();
+    },
+
+    clear: function() {
+        if (this.clusterHealthView != undefined) {
+            this.clusterHealthView.clear();
+        }
+        if (this.clusterNodesListView != undefined) {
+            this.clusterNodesListView.clear();
+            this.clusterNodesListView.undelegateEvents();
+        }
+    }
+};
+
+var clusterView = {
+
+    render: function(cluster) {
+
+        var clusterViewTemplate = Mustache.render(templates.clusterViewTemplate, {});
+        $("#selectedViewDetail").empty().append(clusterViewTemplate);
+
+        //TODO
+    },
+
+    clear: function() {
+
+        //TODO
+
+    }
+};
+
+var selectedView = undefined;
+
+var selectedClusterName = undefined;
+
+var connectTo = function(url, refreshInterval, storeSize, dispatcher, selectedView, callback) {
 
     var connectionConfig = { baseUrl: url };
     var clusterHealth = new ClusterHealth({},connectionConfig);
@@ -17,13 +63,7 @@ var connectTo = function(url, refreshInterval, storeSize, dispatcher, callback) 
             var clusterName = model.get("cluster_name");
             var cluster = bigdeskStore.getCluster(clusterName);
 
-            var displayInitialView = function() {
-                clusterHealthView = new ClusterHealthView({el: $("#clusterHealth"), model: cluster});
-                clusterHealthView.render();
-
-                clusterNodesListView = new ClusterNodesListView({el: $("#clusterNodes"), model: cluster});
-                clusterNodesListView.render();
-            };
+            selectedClusterName = clusterName;
 
             if (cluster == undefined) {
 
@@ -44,7 +84,7 @@ var connectTo = function(url, refreshInterval, storeSize, dispatcher, callback) 
 
                 // get cluster reference so that it can be used in view later...
                 cluster = bigdeskStore.getCluster(clusterName);
-                displayInitialView();
+                selectedView.render(cluster);
 
             } else {
 
@@ -53,7 +93,7 @@ var connectTo = function(url, refreshInterval, storeSize, dispatcher, callback) 
                 cluster.setStoreSize(storeSize);
 
                 // init view first, then fetch the update!
-                displayInitialView();
+                selectedView.render(cluster);
                 cluster.startFetch(refreshInterval, connectionConfig.baseUrl);
             }
             if (callback) {
@@ -70,13 +110,7 @@ var disconnectFrom = function(url, callback) {
 
     var disconnectFromCluster = function(cluster) {
         cluster.clearIntervals();
-        if (clusterHealthView != undefined) {
-            clusterHealthView.clear();
-        }
-        if (clusterNodesListView != undefined) {
-            clusterNodesListView.clear();
-            clusterNodesListView.undelegateEvents();
-        }
+        selectedView.clear();
     };
 
     // Iterate through all clusters having baseUrl == url and disconnect from them.
@@ -234,7 +268,7 @@ $(document).ready(
             if (isConnected()) {
                 disconnectFrom(restEndPoint.val(), switchButtonText);
             } else {
-                connectTo(restEndPoint.val(), getRefreshInterval(), storeSize.val(), bigdeskEventDispatcher, switchButtonText);
+                connectTo(restEndPoint.val(), getRefreshInterval(), getStoreSize(), bigdeskEventDispatcher, selectedView, switchButtonText);
             }
         });
 
@@ -256,7 +290,7 @@ $(document).ready(
             return decodeURIComponent(result && result[1] || "");
         };
 
-        var getUrlParams = function() {
+        var parseUrlParams = function() {
             return {
                 endpoint: getSearchUrlVar("endpoint") || "http://localhost:9200",
                 refresh: getSearchUrlVar("refresh") || 2000,
@@ -265,9 +299,11 @@ $(document).ready(
             }
         };
 
-        var useUrlParams = function() {
+        // If any URL params are found (i.e. they are provided by the user)
+        // then they are applied/set into appropriate form fields.
+        var applyUrlParams = function() {
 
-            var params = getUrlParams();
+            var params = parseUrlParams();
 
             // assume this is a plugin running in ES node
             if (window.location.href.indexOf("/_plugin/") != -1) {
@@ -286,23 +322,55 @@ $(document).ready(
             return params;
         };
 
+        var applyUrlParamsCalled = false;
+
         var BigdeskRouter = Backbone.Router.extend({
 
             routes: {
-//                "nodes" : "nodes",
+                "nodes" : "nodes",
+//                "nodes/master" : "nodes",
 //                "nodes/:nodeId" : "nodes",
+                "cluster" : "cluster",
                 "*other" : "defaultRoute"
             },
 
-//            nodes: function(nodeId) {
-//                useUrlParams();
-//            },
+            cluster: function() {
+//                console.log("change route: cluster");
+                if (selectedView && _.isFunction(selectedView.clear)) {
+                    selectedView.clear();
+                }
+                selectedView = clusterView;
+                if (!isConnected() && !applyUrlParamsCalled) {
+                    var params = applyUrlParams();
+                    applyUrlParamsCalled = true;
+                } else {
+                    selectedView.render(
+                        bigdeskStore.getCluster(selectedClusterName)
+                    )
+                }
+            },
+
+            nodes: function(nodeId) {
+//                console.log("change route: nodes("+(nodeId||"")+")");
+                if (selectedView && _.isFunction(selectedView.clear)) {
+                    selectedView.clear();
+                }
+                selectedView = nodesView;
+                if (!isConnected() && !applyUrlParamsCalled) {
+                    var params = applyUrlParams();
+                    applyUrlParamsCalled = true;
+                    if (params.connect == true || params.connect == "true") {
+                        button.click();
+                    }
+                } else {
+                    selectedView.render(
+                        bigdeskStore.getCluster(selectedClusterName)
+                    )
+                }
+            },
 
             defaultRoute: function(other) {
-                var params = useUrlParams();
-                if (params.connect == true || params.connect == "true") {
-                    button.click();
-                }
+                this.navigate("nodes",{trigger: true, replace: true});
             }
 
         });
