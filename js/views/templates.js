@@ -26,8 +26,16 @@ var templates = {
 
     clusterViewTemplate: [
         "<div class='row'>",
+            "<div class='threecol'>",
+                "<p id='clusterHealth'></p>",
+            "</div>",
+            "<div class='ninecol last'>",
+                "<p id='clusterNodesAllocation'></p>",
+            "</div>",
+        "</div>",
+        "<div class='row'>",
             "<div class='twelvecol last'>",
-                "<p id='clusterChart'>Cluster view is WIP...</p>",
+                "<p id='clusterChart'>Loading cluster chart...</p>",
             "</div>",
         "</div>"
     ].join(""),

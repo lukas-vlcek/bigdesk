@@ -32,18 +32,21 @@ var nodesView = {
 
 var clusterView = {
 
+    clusterHealthView: undefined,
+
     render: function(cluster) {
 
         var clusterViewTemplate = Mustache.render(templates.clusterViewTemplate, {});
         $("#selectedViewDetail").empty().append(clusterViewTemplate);
 
-        //TODO
+        this.clusterHealthView = new ClusterHealthView({el: $("#clusterHealth"), model: cluster});
+        this.clusterHealthView.render();
     },
 
     clear: function() {
-
-        //TODO
-
+        if (this.clusterHealthView != undefined) {
+            this.clusterHealthView.clear();
+        }
     }
 };
 
