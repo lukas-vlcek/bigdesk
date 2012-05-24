@@ -346,6 +346,9 @@ $(document).ready(
                 if (!isConnected() && !applyUrlParamsCalled) {
                     var params = applyUrlParams();
                     applyUrlParamsCalled = true;
+                    if (params.connect == true || params.connect == "true") {
+                        button.click();
+                    }
                 } else {
                     selectedView.render(
                         bigdeskStore.getCluster(selectedClusterName)
