@@ -12,7 +12,27 @@ var ClusterNodesListView = Backbone.View.extend({
 
         var _view = this;
 
-        // Model is not available now (loaded via AJAX), thus we have to
+        // First, try to bind to event if the model is already there...
+        if (_view.model) {
+            var nodes = _view.model.get("nodesState");
+            if (nodes) {
+                nodes.on("add", function(model){
+                    // We also want to be able to notice when existing node becomes a master or is
+                    // no longer a master. Thus every node gets a "master" attribute change listener.
+                    model.on("change:master", function(){
+                        _view.updateMaster(model);
+                    });
+                    _view.addNode(model);
+                });
+
+                nodes.on("remove", function(model){
+                    model.off(); // remove change:master listener
+                    _view.removeNode(model);
+                });
+            }
+        }
+
+        // ... if the model is not available yet (because it is loaded via AJAX) then
         // wait for it to be loaded to bind to its events.
         this.model.on("change:nodesState",
             function(model){
@@ -130,6 +150,7 @@ var ClusterNodesListView = Backbone.View.extend({
 
     // clean list of nodes and destroy node detail view
     clear: function() {
+        // TODO off all events from initialize()
         this.$el.empty();
         if (this.selectedClusterNodeView) {
             this.selectedClusterNodeView.destroy();
