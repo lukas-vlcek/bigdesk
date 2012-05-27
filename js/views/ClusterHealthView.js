@@ -6,43 +6,33 @@ var ClusterHealthView = Backbone.View.extend({
 
         var _view = this;
 
-        // First, try to bind to event if the model is already there...
-        if (_view.model) {
-            var health = _view.model.get("health");
-            if (health) {
-                health.on("change:status", function(){
-                    _view.render();
+        var health = _view.model.get("health");
+        if (health) {
+            // First, try to bind to event if health model is already there...
+            _view.registerHealthChangeHandler(health, _view);
+        } else {
+            // ... if the model is not available yet (because it is loaded via AJAX) then
+            // wait for it to be loaded to bind to its events.
+            this.model.on("change:health",
+                function(model){
+                    var health = model.get("health");
+                    _view.registerHealthChangeHandler(health, _view);
                 });
-
-                health.on("change:number_of_nodes", function(){
-                    _view.render();
-                });
-
-                health.on("change:status", function(){
-                    _view.render();
-                });
-            }
         }
+    },
 
-        // ... if the model is not available yet (because it is loaded via AJAX) then
-        // wait for it to be loaded to bind to its events.
-        this.model.on("change:health",
-            function(model){
+    registerHealthChangeHandler: function(health, _view) {
+        health.on("change:status", function(){
+            _view.render();
+        });
 
-                var health = model.get("health");
+        health.on("change:number_of_nodes", function(){
+            _view.render();
+        });
 
-                health.on("change:status", function(){
-                    _view.render();
-                });
-
-                health.on("change:number_of_nodes", function(){
-                    _view.render();
-                });
-
-                health.on("change:status", function(){
-                    _view.render();
-                });
-            });
+        health.on("change:status", function(){
+            _view.render();
+        });
     },
 
     render: function() {

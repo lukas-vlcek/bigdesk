@@ -12,51 +12,39 @@ var ClusterNodesListView = Backbone.View.extend({
 
         var _view = this;
 
-        // First, try to bind to event if the model is already there...
-        if (_view.model) {
-            var nodes = _view.model.get("nodesState");
-            if (nodes) {
-                nodes.on("add", function(model){
-                    // We also want to be able to notice when existing node becomes a master or is
-                    // no longer a master. Thus every node gets a "master" attribute change listener.
-                    model.on("change:master", function(){
-                        _view.updateMaster(model);
-                    });
-                    _view.addNode(model);
+        var nodes = _view.model.get("nodesState");
+        if (nodes) {
+            // First, try to bind to event if nodesState model is already there...
+            _view.registerMasterNodeChangeHandler(nodes, _view);
+        } else {
+            // ... if the model is not available yet (because it is loaded via AJAX) then
+            // wait for it to be loaded to bind to its events.
+            this.model.on("change:nodesState",
+                function(model){
+                    var nodes = model.get("nodesState");
+                    _view.registerMasterNodeChangeHandler(nodes, _view);
                 });
-
-                nodes.on("remove", function(model){
-                    model.off(); // remove change:master listener
-                    _view.removeNode(model);
-                });
-            }
         }
+    },
 
-        // ... if the model is not available yet (because it is loaded via AJAX) then
-        // wait for it to be loaded to bind to its events.
-        this.model.on("change:nodesState",
-            function(model){
+    registerMasterNodeChangeHandler: function(nodes, view) {
+        nodes.on("add", function(model){
+          // We also want to be able to notice when existing node becomes a master or is
+          // no longer a master. Thus every node gets a "master" attribute change listener.
+          model.on("change:master", function(){
+              view.updateMaster(model);
+          });
+          view.addNode(model);
+        });
 
-                var nodes = model.get("nodesState");
+        nodes.on("remove", function(model){
+          model.off(); // remove change:master listener
+          view.removeNode(model);
+        });
 
-                nodes.on("add", function(model){
-                    // We also want to be able to notice when existing node becomes a master or is
-                    // no longer a master. Thus every node gets a "master" attribute change listener.
-                    model.on("change:master", function(){
-                        _view.updateMaster(model);
-                    });
-                    _view.addNode(model);
-                });
-
-                nodes.on("remove", function(model){
-                    model.off(); // remove change:master listener
-                    _view.removeNode(model);
-                });
-
-//                nodes.on("all", function(eventName){
-//                    console.log(eventName);
-//                });
-            });
+//        nodes.on("all", function(eventName){
+//            console.log(eventName);
+//        });
     },
 
     addNode: function(model) {
