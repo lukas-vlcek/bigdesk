@@ -2,9 +2,8 @@ var ClusterHealthView = Backbone.View.extend({
 
     initialize: function() {
 
-        this.clear();
-
         var _view = this;
+        _view.clear();
 
         var health = _view.model.get("health");
         if (health) {

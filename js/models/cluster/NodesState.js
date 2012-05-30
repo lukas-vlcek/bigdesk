@@ -7,7 +7,9 @@ var NodeState = Backbone.Model.extend({
 });
 
 var NodesState = Backbone.Collection.extend({
+
     model: NodeState,
+
     url: function() {
         var flags = ["filter_routing_table", "filter_metadata", "filter_blocks"];
         var query = flags.join("=true&")+"=true";

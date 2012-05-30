@@ -8,9 +8,8 @@ var ClusterNodesListView = Backbone.View.extend({
 
     initialize: function() {
 
-        this.clear();
-
         var _view = this;
+        _view.clear();
 
         var nodes = _view.model.get("nodesState");
         if (nodes) {
