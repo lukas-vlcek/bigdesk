@@ -25,7 +25,7 @@
                 clusterStateTimestamp: {},
                 ...
             ],
-            indicesStats: [
+            indicesStatus: [
                 indicesStatusTimestamp: {},
                 ...
             ]
