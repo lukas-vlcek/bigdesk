@@ -33,6 +33,7 @@ var nodesView = {
 var clusterView = {
 
     clusterHealthView: undefined,
+    clusterStateView: undefined,
 
     render: function(cluster) {
 
@@ -41,11 +42,17 @@ var clusterView = {
 
         this.clusterHealthView = new ClusterHealthView({el: $("#clusterHealth"), model: cluster});
         this.clusterHealthView.render();
+
+        this.clusterStateView = new ClusterStateView({el: $("#clusterChart"), model: cluster});
+        this.clusterStateView.render();
     },
 
     clear: function() {
         if (this.clusterHealthView != undefined) {
             this.clusterHealthView.clear();
+        }
+        if (this.clusterStateView != undefined) {
+            this.clusterStateView.clear();
         }
     }
 };

@@ -19,7 +19,11 @@
                 {node_with_id},
                 ...
             ],
-            nodeInfo: {} //relevant to selected node
+            nodeInfo: {}, //relevant to selected node
+            clusterState: [
+                clusterStateTimestamp: {},
+                ...
+            ]
         }
     }
 }
@@ -33,6 +37,7 @@ var Cluster = Backbone.Model.extend({
         nodesStats: undefined,
         nodesState: undefined,
         nodeInfo: undefined,
+        clusterState: undefined,
         storeSize: 60000, // 1min
         intervals: {},
         dispatcher: undefined
@@ -133,10 +138,11 @@ var Cluster = Backbone.Model.extend({
         // connection has been already verified
         _model.set({connectionVerified: true});
 
-        _model.set({health: new ClusterHealth({},connection)});
-        _model.set({nodesStats: new NodesStats([],connection)});
-        _model.set({nodesState: new NodesState([],connection)});
-        _model.set({nodeInfo: new NodeInfo({},connection)});
+        _model.set({       health: new ClusterHealth({}, connection) });
+        _model.set({   nodesStats: new NodesStats([],    connection) });
+        _model.set({   nodesState: new NodesState([],    connection) });
+        _model.set({     nodeInfo: new NodeInfo({},      connection) });
+        _model.set({ clusterState: new ClusterState({},  connection) });
 
         this.startFetch(connection.refreshInterval);
 
@@ -189,6 +195,7 @@ var Cluster = Backbone.Model.extend({
             _cluster.get("nodesStats").setBaseUrl(baseUrl);
             _cluster.get("nodesState").setBaseUrl(baseUrl);
             _cluster.get("nodeInfo").setBaseUrl(baseUrl);
+            _cluster.get("clusterState").setBaseUrl(baseUrl);
         }
 
         var healthRefreshFunction = function(){
@@ -221,13 +228,27 @@ var Cluster = Backbone.Model.extend({
             });
         };
 
+        var clusterStateRefreshFunction = function(){
+            _cluster.get("clusterState").fetch({
+                add: true,
+                storeSize: _cluster.get("storeSize"),
+                now: new Date().getTime(),
+                silent: true,
+                success:function(model, response){
+                    _dispatcher.trigger("onAjaxResponse", _clusterName, "cluster > State", response);
+                }
+            });
+        };
+
         this.clearInterval("nodesStateInterval");
         this.clearInterval("nodesStatsInterval");
         this.clearInterval("healthInterval");
+        this.clearInterval("clusterStateInterval");
 
-        this.startInterval("nodesStateInterval", nodesStateRefreshFunction, refreshInterval);
-        this.startInterval("nodesStatsInterval", nodesStatsRefreshFunction, refreshInterval);
-        this.startInterval("healthInterval", healthRefreshFunction, refreshInterval);
+        this.startInterval("nodesStateInterval",   nodesStateRefreshFunction,   refreshInterval);
+        this.startInterval("nodesStatsInterval",   nodesStatsRefreshFunction,   refreshInterval);
+        this.startInterval("healthInterval",       healthRefreshFunction,       refreshInterval);
+        this.startInterval("clusterStateInterval", clusterStateRefreshFunction, refreshInterval);
     },
 
     // set storeSize value of the cluster
