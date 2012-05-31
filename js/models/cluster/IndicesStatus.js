@@ -1,13 +1,14 @@
-// full _cluster/state response, http://www.elasticsearch.org/guide/reference/api/admin-cluster-state.html
+// full _all/_status response, http://www.elasticsearch.org/guide/reference/api/admin-indices-status.html
 
-var ClusterStateTimestamp = Backbone.Model;
+var IndicesStatusTimestamp = Backbone.Model;
 
-var ClusterState = Backbone.Collection.extend({
+var IndicesStatus = Backbone.Collection.extend({
 
-    model: ClusterStateTimestamp,
+    model: IndicesStatusTimestamp,
 
     url: function() {
-        return '/_cluster/state';
+        // TODO 'recovery' and 'snapshot' status
+        return '/_all/_status';
     },
 
     parse: function(data) {
@@ -19,8 +20,8 @@ var ClusterState = Backbone.Collection.extend({
     add: function(models, options) {
         delete options.silent;
         if (options && options.now && options.storeSize) {
-            var iterator = function(clusterStateTimestamp) {
-                return !(clusterStateTimestamp.id < (options.now - options.storeSize));
+            var iterator = function(indicesStatusTimestamp) {
+                return !(indicesStatusTimestamp.id < (options.now - options.storeSize));
             };
 
             var rejected = this.reject(iterator);
@@ -31,7 +32,7 @@ var ClusterState = Backbone.Collection.extend({
         var parentCall = Backbone.Collection.prototype.add.call(this, models, options);
 
         // custom trigger: collection has been updated
-        this.trigger("clusterStateUpdated", {});
+        this.trigger("indicesStatusUpdated", {});
 
         return parentCall;
     },
@@ -40,5 +41,5 @@ var ClusterState = Backbone.Collection.extend({
     comparator: function(model) {
         return model.id;
     }
-});
 
+});
