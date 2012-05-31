@@ -145,42 +145,50 @@ var ClusterNodesListView = Backbone.View.extend({
         }
     },
 
-    // if no node detail exists (no node is selected) then create a new view for selected node,
-    // if some node is already selected and it differs from selected one, destroy view and create a new one
-    // else ignore...
     nodeClicked: function(event) {
         var _view = this;
-        var _model = _view.model;
         var target = event.target || event.srcElement;
         if (target && target.className) {
             if (target.className.indexOf("clusterNode") > -1) {
 
                 var nodeId = $(target).attr("nodeId");
-                _view.setNodeAsSelected(nodeId);
-
-                if (!this.selectedClusterNodeView) {
-                    this.selectedClusterNodeView = new SelectedClusterNodeView(
-                        {
-                            nodeId: nodeId,
-                            model: _model
-                        }
-                    );
-                    this.selectedClusterNodeView.render();
-                }
-                else if (this.selectedClusterNodeView.nodeId() != $(target).attr("nodeId")) {
-                    this.selectedClusterNodeView.destroy();
-                    this.selectedClusterNodeView = undefined;
-                    this.selectedClusterNodeView = new SelectedClusterNodeView(
-                        {
-                            nodeId: nodeId,
-                            model: _model
-                        }
-                    );
-                    this.selectedClusterNodeView.render();
-                };
+                _view.showNodeDetail(nodeId);
 
             }
         }
+    },
+
+    // if no node detail exists (no node is selected) then create a new view for selected node,
+    // if some node is already selected and it differs from selected one, destroy view and create a new one
+    // else ignore...
+    showNodeDetail: function(nodeId) {
+
+        var _view = this;
+        var _model = _view.model;
+
+        _view.setNodeAsSelected(nodeId);
+
+        if (!this.selectedClusterNodeView) {
+            this.selectedClusterNodeView = new SelectedClusterNodeView(
+                {
+                    nodeId: nodeId,
+                    model: _model
+                }
+            );
+            this.selectedClusterNodeView.render();
+        }
+        else if (this.selectedClusterNodeView.nodeId() != nodeId) {
+            this.selectedClusterNodeView.destroy();
+            this.selectedClusterNodeView = undefined;
+            this.selectedClusterNodeView = new SelectedClusterNodeView(
+                {
+                    nodeId: nodeId,
+                    model: _model
+                }
+            );
+            this.selectedClusterNodeView.render();
+        };
+
     }
 });
 
