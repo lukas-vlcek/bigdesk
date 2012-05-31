@@ -19,6 +19,14 @@ var nodesView = {
         this.clusterNodesListView.render();
     },
 
+    showNodeDetail: function(cluster, nodeId) {
+        if (this.clusterNodesListView == undefined) {
+            this.clusterNodesListView = new ClusterNodesListView({el: $("#clusterNodes"), model: cluster});
+            this.clusterNodesListView.render();
+        }
+        this.clusterNodesListView.showNodeDetail(nodeId);
+    },
+
     clear: function() {
         if (this.clusterHealthView != undefined) {
             this.clusterHealthView.clear();
@@ -139,32 +147,6 @@ var disconnectFrom = function(url, callback) {
     };
 
     disconnectFromURL(url);
-
-//    var connectionConfig = { baseUrl: url };
-//    var clusterHealth = new ClusterHealth({},connectionConfig);
-//
-//    // we need to do the health.fetch to get cluster name.
-//    clusterHealth.fetch({
-//
-//        success: function(model, response) {
-//
-//            var clusterName = model.get("cluster_name");
-//            var cluster = bigdeskStore.getCluster(clusterName);
-//            if (cluster) {
-//                disconnectFromCluster(cluster);
-//                console.log("Disconnected from ["+clusterName+"]");
-//                if (callback) {
-//                    callback();
-//                }
-//            } else {
-//                disconnectFromURL(url);
-//            }
-//        },
-//
-//        error: function(model, response) { /* can not handle in JSONP */ }
-//
-//    });
-
 };
 
 var changeRefreshInterval = function(url, newRefreshInterval) {
@@ -339,7 +321,7 @@ $(document).ready(
             routes: {
                 "nodes" : "nodes",
 //                "nodes/master" : "nodes",
-//                "nodes/:nodeId" : "nodes",
+                "nodes/:nodeId" : "nodes",
                 "cluster" : "cluster",
                 "*other" : "defaultRoute"
             },
@@ -378,7 +360,10 @@ $(document).ready(
                 } else {
                     selectedView.render(
                         bigdeskStore.getCluster(selectedClusterName)
-                    )
+                    );
+                    if (nodeId) {
+                        selectedView.showNodeDetail(bigdeskStore.getCluster(selectedClusterName), nodeId);
+                    }
                 }
             },
 
