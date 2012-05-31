@@ -4,6 +4,7 @@
         cluster_name: {
             connectionVerified: bool,
             intervals: {_all_active_intervals_},
+            timeouts: {_all_active_timeouts_},
             storeSize: int,
             health: {},
             nodesStats: [
@@ -23,6 +24,10 @@
             clusterState: [
                 clusterStateTimestamp: {},
                 ...
+            ],
+            indicesStats: [
+                indicesStatusTimestamp: {},
+                ...
             ]
         }
     }
@@ -38,8 +43,10 @@ var Cluster = Backbone.Model.extend({
         nodesState: undefined,
         nodeInfo: undefined,
         clusterState: undefined,
+        indicesStatus: undefined,
         storeSize: 60000, // 1min
         intervals: {},
+        timeouts: {},
         dispatcher: undefined
     },
     // id: "cluster_name"
@@ -138,14 +145,32 @@ var Cluster = Backbone.Model.extend({
         // connection has been already verified
         _model.set({connectionVerified: true});
 
-        _model.set({       health: new ClusterHealth({}, connection) });
-        _model.set({   nodesStats: new NodesStats([],    connection) });
-        _model.set({   nodesState: new NodesState([],    connection) });
-        _model.set({     nodeInfo: new NodeInfo({},      connection) });
-        _model.set({ clusterState: new ClusterState({},  connection) });
+        _model.set({        health: new ClusterHealth({}, connection) });
+        _model.set({    nodesStats: new NodesStats([],    connection) });
+        _model.set({    nodesState: new NodesState([],    connection) });
+        _model.set({      nodeInfo: new NodeInfo({},      connection) });
+        _model.set({  clusterState: new ClusterState({},  connection) });
+        _model.set({ indicesStatus: new IndicesStatus({}, connection) });
 
         this.startFetch(connection.refreshInterval);
 
+    },
+
+    clearTimeouts: function() {
+        var _cluster = this;
+        var timeouts = _cluster.get("timeouts");
+        _.each(timeouts, function(num, key){
+            _cluster.clearTimeout(key);
+        });
+    },
+
+    clearTimeout: function(timeoutId) {
+        var timeouts = this.get("timeouts");
+        if (timeouts && timeouts[timeoutId]) {
+            window.clearTimeout(timeouts[timeoutId]);
+            delete timeouts[timeoutId];
+            this.set({timeouts: timeouts});
+        }
     },
 
     clearIntervals: function() {
@@ -160,20 +185,41 @@ var Cluster = Backbone.Model.extend({
 //        console.log("stop interval " + intervalId);
         var intervals = this.get("intervals");
         if (intervals && intervals[intervalId]) {
-            clearInterval(intervals[intervalId]);
+            window.clearInterval(intervals[intervalId]);
             delete intervals[intervalId];
             this.set({intervals: intervals});
         }
     },
 
+    startTimeout: function(timeoutId, functionCall, interval) {
+        var _model = this;
+        var timeouts = _model.get("timeouts");
+        if (timeouts) {
+            if (timeouts[timeoutId]) {
+                console.log("[WARN] clearing and replacing existing timeout");
+                _model.clearTimeout(timeoutId);
+            }
+
+            var timeoutFn = function() {
+                functionCall();
+                var t = window.setTimeout(timeoutFn, interval);
+                timeouts[timeoutId] = t;
+                _model.set({timeouts: timeouts});
+            };
+
+            timeoutFn();
+        }
+    },
+
     startInterval: function(intervalId, functionCall, interval) {
-//        console.log("start interval " + intervalId);
+        var _model = this;
         var intervals = this.get("intervals");
         if (intervals) {
             if (intervals[intervalId]) {
-                console.log("[WARN] replacing existing interval");
+                console.log("[WARN] clearing and replacing existing interval");
+                _model.clearInterval(intervalId);
             }
-            var i = setInterval(functionCall, interval);
+            var i = window.setInterval(functionCall, interval);
             intervals[intervalId] = i;
             this.set({intervals: intervals});
             // fire callback right now
@@ -196,11 +242,12 @@ var Cluster = Backbone.Model.extend({
             _cluster.get("nodesState").setBaseUrl(baseUrl);
             _cluster.get("nodeInfo").setBaseUrl(baseUrl);
             _cluster.get("clusterState").setBaseUrl(baseUrl);
+            _cluster.get("indicesStatus").setBaseUrl(baseUrl);
         }
 
         var healthRefreshFunction = function(){
             _cluster.get("health").fetch({
-                success:function(model, response){
+                success: function(model, response){
                     _dispatcher.trigger("onAjaxResponse", _clusterName, "cluster > Health", response);
                 }
             });
@@ -208,11 +255,11 @@ var Cluster = Backbone.Model.extend({
 
         var nodesStatsRefreshFunction = function(){
             _cluster.get("nodesStats").fetch({
-                add: true,
-                storeSize: _cluster.get("storeSize"),
-                now: new Date().getTime(),
-                silent: true,
-                success:function(model, response){
+                add:        true,
+                storeSize:  _cluster.get("storeSize"),
+                now:        new Date().getTime(),
+                silent:     true,
+                success:    function(model, response){
                     _dispatcher.trigger("onAjaxResponse", _clusterName, "cluster > NodesStats", response);
                 }
             });
@@ -220,9 +267,9 @@ var Cluster = Backbone.Model.extend({
 
         var nodesStateRefreshFunction = function(){
             _cluster.get("nodesState").fetch({
-                add: true,
-                silent: true,
-                success:function(model, response){
+                add:        true,
+                silent:     true,
+                success:    function(model, response){
                     _dispatcher.trigger("onAjaxResponse", _clusterName, "cluster > NodesState", response);
                 }
             });
@@ -230,12 +277,24 @@ var Cluster = Backbone.Model.extend({
 
         var clusterStateRefreshFunction = function(){
             _cluster.get("clusterState").fetch({
-                add: true,
-                storeSize: _cluster.get("storeSize"),
-                now: new Date().getTime(),
-                silent: true,
-                success:function(model, response){
+                add:        true,
+                storeSize:  _cluster.get("storeSize"),
+                now:        new Date().getTime(),
+                silent:     true,
+                success:    function(model, response){
                     _dispatcher.trigger("onAjaxResponse", _clusterName, "cluster > State", response);
+                }
+            });
+        };
+
+        var indicesStatusRefreshFunction = function(){
+            _cluster.get("indicesStatus").fetch({
+                add:        true,
+                storeSize:  _cluster.get("storeSize"),
+                now:        new Date().getTime(),
+                silent:     true,
+                success:    function(model, response){
+                    _dispatcher.trigger("onAjaxResponse", _clusterName, "indices > Status", response);
                 }
             });
         };
@@ -243,12 +302,14 @@ var Cluster = Backbone.Model.extend({
         this.clearInterval("nodesStateInterval");
         this.clearInterval("nodesStatsInterval");
         this.clearInterval("healthInterval");
-        this.clearInterval("clusterStateInterval");
+        this.clearTimeout("clusterStateInterval");
+        this.clearTimeout("indicesStatusInterval");
 
-        this.startInterval("nodesStateInterval",   nodesStateRefreshFunction,   refreshInterval);
-        this.startInterval("nodesStatsInterval",   nodesStatsRefreshFunction,   refreshInterval);
-        this.startInterval("healthInterval",       healthRefreshFunction,       refreshInterval);
-        this.startInterval("clusterStateInterval", clusterStateRefreshFunction, refreshInterval);
+        this.startInterval("nodesStateInterval",   nodesStateRefreshFunction,    refreshInterval);
+        this.startInterval("nodesStatsInterval",   nodesStatsRefreshFunction,    refreshInterval);
+        this.startInterval("healthInterval",       healthRefreshFunction,        refreshInterval);
+        this.startTimeout("clusterStateInterval",  clusterStateRefreshFunction,  refreshInterval);
+        this.startTimeout("indicesStatusInterval", indicesStatusRefreshFunction, refreshInterval);
     },
 
     // set storeSize value of the cluster

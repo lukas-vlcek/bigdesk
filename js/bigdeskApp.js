@@ -128,6 +128,7 @@ var disconnectFrom = function(url, callback) {
 
     var disconnectFromCluster = function(cluster) {
         cluster.clearIntervals();
+        cluster.clearTimeouts();
         selectedView.clear();
     };
 
