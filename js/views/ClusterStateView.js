@@ -11,8 +11,10 @@ var ClusterStateView = Backbone.View.extend({
         var _view = this;
         _view.clear();
 
-
+        var indicesStatus = _view.model.get("indicesStatus");
+        var theLatestIndicesStatus = (indicesStatus ? indicesStatus.at(indicesStatus.length-1) : undefined);
         var clusterState = _view.model.get("clusterState");
+
         if (clusterState) {
 
             var theLatest = clusterState.at(clusterState.length-1);
@@ -40,7 +42,7 @@ var ClusterStateView = Backbone.View.extend({
                         node.children.push({
 
                             name: shard.index,
-                            size: 1,
+                            size: _view.getIndexShardSize(theLatestIndicesStatus, shard.index, shard.shard, nodeId),
 
                             // optional
                             primary: shard.primary,
@@ -56,8 +58,8 @@ var ClusterStateView = Backbone.View.extend({
 
 //                console.log("pack", packData);
 
-                var width = 400,
-                    height = 400,
+                var width = 500,
+                    height = 500,
                     format = d3.format(",d");
 
                 var pack = d3.layout.pack()
@@ -91,6 +93,20 @@ var ClusterStateView = Backbone.View.extend({
             }
         }
 
+    },
+
+    // try to extract shard size in bytes, otherwise returns 1
+    getIndexShardSize: function(theLatestIndicesStatus, indexName, shard, nodeId) {
+        if (theLatestIndicesStatus) {
+            var indices = theLatestIndicesStatus.get("indices");
+            var _shards = indices[indexName].shards[shard];
+            for (var _shard in _shards) {
+                if (_shards[_shard].routing.node == nodeId) {
+                    return _shards[_shard].index.size_in_bytes;
+                }
+            }
+        }
+        return 1;
     },
 
     clear: function() {
