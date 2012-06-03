@@ -28,10 +28,6 @@ var ClusterHealthView = Backbone.View.extend({
         health.on("change:number_of_nodes", function(){
             _view.render();
         });
-
-        health.on("change:status", function(){
-            _view.render();
-        });
     },
 
     render: function() {
