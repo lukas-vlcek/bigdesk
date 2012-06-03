@@ -52,7 +52,7 @@ var clusterView = {
         this.clusterHealthView.render();
 
         this.clusterStateView = new ClusterStateView({el: $("#clusterChart"), model: cluster});
-        this.clusterStateView.render();
+//        this.clusterStateView.render();
     },
 
     clear: function() {

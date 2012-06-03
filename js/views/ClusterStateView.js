@@ -1,21 +1,53 @@
 var ClusterStateView = Backbone.View.extend({
 
     initialize: function() {
+
         var _view = this;
         _view.clear();
 
-//        var clusterState = _view.model.get("clusterState");
+        var indicesStatus = _view.model.get("indicesStatus");
+        var clusterState = _view.model.get("clusterState");
+
+        if (indicesStatus && clusterState) {
+            // both are present, we can register handler
+            _view.registerChangeCheckHandler();
+        } else {
+            // else make sure to fire handler as soon as both are available
+            _view.model.on("change:indicesStatus", function(model) {
+                if (_view.model.get("clusterState")) {
+                    _view.registerChangeCheckHandler();
+                }
+            });
+            _view.model.on("change:clusterState", function(model) {;
+                if (_view.model.get("indicesStatus")) {
+                    _view.registerChangeCheckHandler();
+                }
+            });
+        }
+    },
+
+    registerChangeCheckHandler: function() {
+        var _view = this;
+        _view.render();
+        _view.model.get("dispatcher").on("newClusterState", _view.checkForChange, _view);
+        _view.model.get("dispatcher").on("newIndicesStatus", _view.checkForChange, _view);
+    },
+
+    checkForChange: function() {
+        var _view = this;
+        // TODO redraw only if change...
+        _view.render();
     },
 
     render: function() {
         var _view = this;
-        _view.clear();
+        _view.emptyElement();
 
         var indicesStatus = _view.model.get("indicesStatus");
         var theLatestIndicesStatus = (indicesStatus ? indicesStatus.at(indicesStatus.length-1) : undefined);
         var clusterState = _view.model.get("clusterState");
 
-        if (clusterState) {
+        if (clusterState && clusterState.length > 0) {
 
             var theLatest = clusterState.at(clusterState.length-1);
 
@@ -109,8 +141,16 @@ var ClusterStateView = Backbone.View.extend({
         return 1;
     },
 
+    emptyElement: function() {
+        var _view = this;
+        _view.$el.empty();
+    },
+
     clear: function() {
+        var _view = this;
         // TODO off all events from initialize()
-        this.$el.empty();
+        _view.model.get("dispatcher").off("newClusterState", _view.checkForChange);
+        _view.model.get("dispatcher").off("newIndicesStatus", _view.checkForChange);
+        _view.emptyElement();
     }
 });

@@ -149,8 +149,8 @@ var Cluster = Backbone.Model.extend({
         _model.set({    nodesStats: new NodesStats([],    connection) });
         _model.set({    nodesState: new NodesState([],    connection) });
         _model.set({      nodeInfo: new NodeInfo({},      connection) });
-        _model.set({  clusterState: new ClusterState({},  connection) });
-        _model.set({ indicesStatus: new IndicesStatus({}, connection) });
+        _model.set({  clusterState: new ClusterState([],  connection) });
+        _model.set({ indicesStatus: new IndicesStatus([], connection) });
 
         this.startFetch(connection.refreshInterval);
 
@@ -283,6 +283,7 @@ var Cluster = Backbone.Model.extend({
                 silent:     true,
                 success:    function(model, response){
                     _dispatcher.trigger("onAjaxResponse", _clusterName, "cluster > State", response);
+                    _dispatcher.trigger("newClusterState");
                 }
             });
         };
@@ -295,6 +296,7 @@ var Cluster = Backbone.Model.extend({
                 silent:     true,
                 success:    function(model, response){
                     _dispatcher.trigger("onAjaxResponse", _clusterName, "indices > Status", response);
+                    _dispatcher.trigger("newIndicesStatus");
                 }
             });
         };
