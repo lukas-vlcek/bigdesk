@@ -5,6 +5,10 @@ circle {
     stroke-width: 1px;
 }
 
+circle:hover {
+    stroke-width: 3px;
+}
+
 .leaf circle {
     fill: #ff7f0e;
     fill-opacity: 0.5;
