@@ -50,7 +50,7 @@ var ClusterStateView = Backbone.View.extend({
         if (clusterState && clusterState.length > 0) {
 
             var theLatest = clusterState.at(clusterState.length-1);
-
+//            console.log(theLatest.toJSON());
             if (theLatest) {
 
                 var packData = {
@@ -64,7 +64,8 @@ var ClusterStateView = Backbone.View.extend({
 
                     var node = {
                         name: nodes[nodeId].name,
-                        children: []
+                        children: [],
+                        master: (nodeId == theLatest.get("master_node") ? true : false)
                     };
 
                     for (var shardCnt in theLatest.get("routing_nodes").nodes[nodeId]) {
@@ -90,12 +91,13 @@ var ClusterStateView = Backbone.View.extend({
 
 //                console.log("pack", packData);
 
-                var width = 500,
-                    height = 500,
-                    format = d3.format(",d");
+                var width = 400,
+                    height = 400,
+                    format = d3.format(",d"),
+                    span = 5;
 
                 var pack = d3.layout.pack()
-                     .size([width - 4, height - 4])
+                     .size([width - (span*2), height - (span*2)])
                      .value(function(d) { return d.size; });
 
                 var vis = d3.select("#clusterChart").append("svg")
@@ -103,19 +105,38 @@ var ClusterStateView = Backbone.View.extend({
                      .attr("height", height)
                      .attr("class", "pack")
                    .append("g")
-                     .attr("transform", "translate(2, 2)");
+                     .attr("transform", "translate("+span+", "+span+")");
 
                 var node = vis.data([packData]).selectAll("g.node")
                        .data(pack.nodes)
                      .enter().append("g")
-                       .attr("class", function(d) { return d.children ? "node" : d.primary ? "primary leaf node" : "leaf node"; })
+                       .attr("class", function(d){
+                            if (d.children) {
+                                if (d.master) {
+                                    return "master node";
+                                } else {
+                                    return "node";
+                                }
+                            } else {
+                                if (d.primary) {
+                                    return "primary leaf node";
+                                } else {
+                                    return "leaf node";
+                                }
+                            }
+                       })
                        .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
                 node.append("title")
-                   .text(function(d) { return d.name     + (d.children ? "" : ": " + format(d.size)); });
+                   .text(function(d) { return d.name + (d.children ? "" : ": " + format(d.size)); });
 
                 node.append("circle")
                    .attr("r", function(d) { return d.r; });
+
+                node.filter(function(d) { return d.children && d != undefined}).append("text")
+                    .attr("text-anchor", "middle")
+                    .attr("dy", function(d){ return -d.r+3; })
+                    .text(function(d) { return d.name; });
 
                 node.filter(function(d) { return !d.children; }).append("text")
                    .attr("text-anchor", "middle")
