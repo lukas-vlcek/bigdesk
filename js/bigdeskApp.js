@@ -321,7 +321,7 @@ $(document).ready(
 
             routes: {
                 "nodes" : "nodes",
-//                "nodes/master" : "nodes",
+                "nodes/master" : "nodes_master",
                 "nodes/:nodeId" : "nodes",
                 "cluster" : "cluster",
                 "*other" : "defaultRoute"
@@ -344,6 +344,18 @@ $(document).ready(
                         bigdeskStore.getCluster(selectedClusterName)
                     )
                 }
+            },
+
+            nodes_master: function() {
+                console.log("try to connect to the master node");
+                var masterNodeId = "";
+                if (!isConnected() && !applyUrlParamsCalled) {
+                    // we are not connected and master node id is not known yet
+                } else {
+                    masterNodeId = "/" + bigdeskStore.getCluster(selectedClusterName).getMasterNodeId();
+                }
+
+                this.navigate("nodes" + masterNodeId, {trigger: true, replace: true});
             },
 
             nodes: function(nodeId) {
@@ -369,7 +381,7 @@ $(document).ready(
             },
 
             defaultRoute: function(other) {
-                this.navigate("nodes",{trigger: true, replace: true});
+                this.navigate("nodes", {trigger: true, replace: true});
             }
 
         });
