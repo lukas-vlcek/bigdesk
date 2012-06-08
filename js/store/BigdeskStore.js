@@ -318,6 +318,14 @@ var Cluster = Backbone.Model.extend({
     setStoreSize: function(storeSize) {
         var _cluster = this;
         _cluster.set({storeSize: storeSize});
+    },
+
+    // return master node id if available, otherwise return empty string
+    getMasterNodeId: function() {
+        var _cluster = this;
+        var _x =  _cluster.get("nodesState").getMasterNodeId();
+        console.log(_x);
+        return _x;
     }
 });
 
