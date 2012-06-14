@@ -52,12 +52,11 @@ var NodesState = Backbone.Collection.extend({
         collection.remove(rejected, options);
     },
 
+    // return master node id if available, otherwise return empty string
     getMasterNodeId: function() {
         var masterNodeId = "";
         var collection = this;
-        console.log(collection);
         var masterNode = collection.find(function(node){
-            console.log(node);
             return node.get("master");
         });
         if (masterNode) {

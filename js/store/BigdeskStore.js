@@ -323,9 +323,7 @@ var Cluster = Backbone.Model.extend({
     // return master node id if available, otherwise return empty string
     getMasterNodeId: function() {
         var _cluster = this;
-        var _x =  _cluster.get("nodesState").getMasterNodeId();
-        console.log(_x);
-        return _x;
+        return  _cluster.get("nodesState").getMasterNodeId();
     }
 });
 

@@ -347,7 +347,7 @@ $(document).ready(
             },
 
             nodes_master: function() {
-                console.log("try to connect to the master node");
+//                console.log("try to connect to the master node");
                 var masterNodeId = "";
                 if (!isConnected() && !applyUrlParamsCalled) {
                     // we are not connected and master node id is not known yet
@@ -365,6 +365,12 @@ $(document).ready(
                 }
                 selectedView = nodesView;
                 if (!isConnected() && !applyUrlParamsCalled) {
+                    if (nodeId) {
+                        // If not connected yet but nodeId is provided, then redirect to "nodes" route
+                        // i.e. remove the nodeId form the URL fragment.
+                        this.navigate("nodes", {trigger: true, replace: true});
+                        return;
+                    }
                     var params = applyUrlParams();
                     applyUrlParamsCalled = true;
                     if (params.connect == true || params.connect == "true") {
