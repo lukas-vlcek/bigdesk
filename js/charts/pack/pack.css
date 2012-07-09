@@ -1,6 +1,6 @@
 circle {
-    fill: rgb(31, 119, 180);
-    fill-opacity: .25;
+    /*fill: rgb(31, 119, 180);*/
+    /*fill-opacity: .25;*/
     stroke: rgb(31, 119, 180);
     stroke-width: 1px;
 }
@@ -20,8 +20,19 @@ circle:hover {
     fill-opacity: 1;
 }
 
+.node {
+    fill: rgb(31, 119, 180);
+    fill-opacity: .25;
+}
+
+.master.node {
+    fill-opacity: .45;
+}
+
 text {
     font: 10px sans-serif;
+    fill: rgb(10, 10, 10);
+    fill-opacity: 1;
 }
 
 text:hover {
