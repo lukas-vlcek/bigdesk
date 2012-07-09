@@ -23,3 +23,8 @@ circle:hover {
 text {
     font: 10px sans-serif;
 }
+
+text:hover {
+    font: 10px sans-serif;
+    cursor: pointer;
+}
