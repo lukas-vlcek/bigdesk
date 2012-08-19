@@ -57,15 +57,11 @@ cd %{name}-%{version}
 %{__mkdir} -p %{buildroot}/%{site_install_dir}images
 %{__mkdir} -p %{buildroot}/%{site_install_dir}css
 %{__mkdir} -p %{buildroot}/%{site_install_dir}css/CssGrid_2
-%{__install} -D -m 755 plugins/bigdesk/bigdesk-1.0.0.jpg -t %{buildroot}/%{site_install_dir}/
 %{__install} -D -m 755 plugins/bigdesk/js/charts/time-series/time-series-chart.js -t %{buildroot}/%{site_install_dir}/
 %{__install} -D -m 755 plugins/bigdesk/js/charts/time-series/time-series-chart.css -t %{buildroot}/%{site_install_dir}/
-%{__install} -D -m 755 plugins/bigdesk/js/charts/time-series/test-time-series-chart.html -t %{buildroot}/%{site_install_dir}/
 %{__install} -D -m 755 plugins/bigdesk/js/charts/bigdesk_charts.js -t %{buildroot}/%{site_install_dir}/
 %{__install} -D -m 755 plugins/bigdesk/js/charts/not-available/not-available-chart.css -t %{buildroot}/%{site_install_dir}/
-%{__install} -D -m 755 plugins/bigdesk/js/charts/not-available/test-not-available-chart.html -t %{buildroot}/%{site_install_dir}/
 %{__install} -D -m 755 plugins/bigdesk/js/charts/not-available/not-available-chart.js -t %{buildroot}/%{site_install_dir}/
-%{__install} -D -m 755 plugins/bigdesk/js/charts/time-area/test-time-area-chart.html -t %{buildroot}/%{site_install_dir}/
 %{__install} -D -m 755 plugins/bigdesk/js/charts/time-area/time-area-chart.js -t %{buildroot}/%{site_install_dir}/
 %{__install} -D -m 755 plugins/bigdesk/js/charts/time-area/time-area-chart.css -t %{buildroot}/%{site_install_dir}/
 %{__install} -D -m 755 plugins/bigdesk/js/charts/common.css -t %{buildroot}/%{site_install_dir}/
@@ -95,11 +91,9 @@ cd %{name}-%{version}
 %{__install} -D -m 755 plugins/bigdesk/js/views/ClusterHealthView.js -t %{buildroot}/%{site_install_dir}/
 %{__install} -D -m 755 plugins/bigdesk/js/bigdeskApp.js -t %{buildroot}/%{site_install_dir}/
 %{__install} -D -m 755 plugins/bigdesk/index.html -t %{buildroot}/%{site_install_dir}/
-%{__install} -D -m 755 plugins/bigdesk/bigdesk-2.0.0-SNAPSHOT.jpg -t %{buildroot}/%{site_install_dir}/
 %{__install} -D -m 755 plugins/bigdesk/images/award_star_gold.png -t %{buildroot}/%{site_install_dir}/
 %{__install} -D -m 755 plugins/bigdesk/images/es-logo.png -t %{buildroot}/%{site_install_dir}/
 %{__install} -D -m 755 plugins/bigdesk/images/1license.txt -t %{buildroot}/%{site_install_dir}/
-%{__install} -D -m 755 plugins/bigdesk/README.textile -t %{buildroot}/%{site_install_dir}/
 %{__install} -D -m 755 plugins/bigdesk/css/reset.css -t %{buildroot}/%{site_install_dir}/
 %{__install} -D -m 755 plugins/bigdesk/css/normalize.css -t %{buildroot}/%{site_install_dir}/
 %{__install} -D -m 755 plugins/bigdesk/css/CssGrid_2/ie.css -t %{buildroot}/%{site_install_dir}/
