@@ -29,11 +29,11 @@ var ClusterStateView = Backbone.View.extend({
     registerChangeCheckHandler: function() {
         var _view = this;
         _view.render();
-        _view.model.get("dispatcher").on("newClusterState", _view.checkForChange, _view);
-        _view.model.get("dispatcher").on("newIndicesStatus", _view.checkForChange, _view);
+        _view.model.get("dispatcher").on("newClusterState", _view.redrawIfChanged, _view);
+        _view.model.get("dispatcher").on("newIndicesStatus", _view.redrawIfChanged, _view);
     },
 
-    checkForChange: function() {
+    redrawIfChanged: function() {
         var _view = this;
         // TODO redraw only if change...
         _view.render();
@@ -170,8 +170,8 @@ var ClusterStateView = Backbone.View.extend({
     clear: function() {
         var _view = this;
         // TODO off all events from initialize()
-        _view.model.get("dispatcher").off("newClusterState", _view.checkForChange);
-        _view.model.get("dispatcher").off("newIndicesStatus", _view.checkForChange);
+        _view.model.get("dispatcher").off("newClusterState", _view.redrawIfChanged);
+        _view.model.get("dispatcher").off("newIndicesStatus", _view.redrawIfChanged);
         _view.emptyElement();
     }
 });

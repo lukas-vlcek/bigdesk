@@ -35,6 +35,11 @@ var templates = {
         "</div>",
         "<div class='row'>",
             "<div class='twelvecol last'>",
+                "<h2>Experimental cluster Pack diagram:</h2>",
+            "</div>",
+        "</div>",
+        "<div class='row'>",
+            "<div class='twelvecol last'>",
                 "<p id='clusterChart'>Loading cluster chart...</p>",
             "</div>",
         "</div>"
