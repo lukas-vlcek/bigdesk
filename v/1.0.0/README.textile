@@ -1,0 +1,29 @@
+h1. BigDesk
+
+Live charts and statistics for ElasticSearch cluster.
+
+!https://github.com/lukas-vlcek/bigdesk/raw/master/screenshot.jpg!
+
+Info about cluster nodes:
+
+ * provide info about:
+ ** Global info about indices, field and filter caches
+ ** JVM details
+ ** OS details
+
+ * provides charts:
+ ** Size of Field and Filter Caches
+ ** File Descriptors and Open Channels
+ ** JVM threads
+ ** JVM Heap and non-heap memory
+ ** OS CPU(%)
+ ** OS Mem
+ ** OS Swap
+
+User can switch between nodes in the cluster, new nodes are added and old nodes are removed automatically on the fly.
+
+On top of that it is possible to set refresh interval and time window for the charts (no limits, 1 minute, 5 minutes, ... etc)
+
+Supports elasticsearch 0.17.x and 0.18.x
+
+To immediately connect to a particular host, add the <code>host</code>, <code>port</code>, and <code>go</code> parameters to the query string: <code>index.html?host=search.example.com&port=9200&go</code>

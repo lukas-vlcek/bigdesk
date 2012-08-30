@@ -1,0 +1,170 @@
+/*
+    Colour palettes for inspiration:
+    http://www.colourlovers.com/palettes/
+*/
+html {
+    background: white url("../images/es-logo.png") no-repeat center 200px;
+    overflow: -moz-scrollbars-vertical;
+    overflow-y: scroll;
+}
+
+body * {
+    color: #343032;
+    font: normal 12px helvetica,arial,sans-serif;
+}
+
+.topSection {
+    padding: 5px 5px 0 5px;
+}
+
+#mainArea {
+    padding-top: 6px;
+    opacity: 0.3;
+    display: none;
+}
+
+.clusterInfo {
+    margin-left: 5px;
+}
+
+.mainSection {
+    margin-top: 5px;
+    background-color: #eee;
+}
+
+.mainSection * {
+    vertical-align: text-top;
+}
+
+.sectionHeader {
+    background-color: #e5e5e5;
+    /*cursor:pointer;*/
+    font-weight:bold;
+    font-size:larger;
+    padding: 0 0 2px 0px;
+    margin-left: 5px;
+}
+
+.sectionHeader:hover {
+    /*background-color: #d4e2cc;*/
+}
+
+.container {
+    width: 100%;
+}
+
+.containerScroll {
+    /*overflow: auto;*/
+    /*padding-top: 10px;*/
+    margin-top: 10px;
+    background-color: white;
+    box-shadow: 0px 0px 10px 1px #ddd;
+    -moz-box-shadow: 0px 0px 10px 1px #ddd;
+    -webkit-box-shadow: 0px 0px 10px 1px #ddd;
+}
+
+.clusterName {
+    border: 2px solid #666;
+    background-color: #666666;
+    color: white;
+    padding: 2px 5px 2px 5px;
+    margin: 0 5px 0 5px;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+.node.masterNode {
+    padding-left: 20px;
+    background: url("../images/award_star_gold.png") no-repeat 1px 1px;
+}
+
+.node {
+    /*border: 2px solid #E1EDB9;*/
+    border: 2px solid #cccccc;
+    background-color: white;
+    cursor:pointer;
+    padding: 2px 5px 2px 5px;
+    margin: 0 0 0 5px;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+.node:hover {
+    border-color: #88A65E;
+    background-color: #eee;
+}
+
+.node.selectedNode {
+    /*border: 2px solid #628C6D;*/
+    border: 2px solid #336600;
+    /*background-color: #F4FAD2;*/
+    background-color: #aeba9c;
+    color: white;
+    cursor:default;
+}
+
+form #go,select {
+    margin-right: 20px;
+}
+
+#go {
+    width: 50px;
+}
+
+.v {
+    font-weight:bold;
+}
+
+.tableContainer {
+    width:300px;
+}
+
+.tableStyle {
+    padding-bottom: 10px;
+}
+
+.tableStyle table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tableStyle th {
+    font-weight: bold;
+    font-size: larger;
+    /*background-color: #F4FAD2;*/
+}
+
+.tableStyle td {
+    padding: 1px 3px 0 3px;
+}
+
+#about .sectionHeader {
+    cursor: default;
+    color: #d1d1d1;
+    background-color: white;
+}
+
+#about.mainSection {
+    color: #d1d1d1;
+    background-color: white;
+    padding: 5px 5px 10px 10px;
+}
+
+#about.mainSection a {
+    color: #d1d1d1;
+}
+
+#cluster-name.red {
+    background-color: red;
+}
+
+#cluster-name.yellow {
+    background-color: yellow;
+    color: black;
+}
+
+#cluster-name.green {
+    background-color: green;
+}

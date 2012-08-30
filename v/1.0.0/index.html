@@ -1,0 +1,314 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>BigDesk for @elasticsearch</title>
+    <meta name="description" content="Live charts and statistics for ElasticSearch cluster">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/bigdesk.css">
+    
+    <script id="indicesStatsTmpl" type="x-tmpl-mustache">
+            <tr><td nowrap>
+                Number of documents: <span class="v">{{#docs}}{{num_docs}}{{/docs}}</span>,
+                Store size: <span class="v">{{size}}</span> (<span class="v">{{size_in_bytes}} B</span>)
+            </td></tr>
+            <tr><td nowrap>
+                {{#cache}}
+                Field cache evictions: <span class="v">{{field_evictions}}</span>,
+                Field cache size: <span class="v">{{field_size}}</span>,
+                Filter cache size: <span class="v">{{filter_size}}</span>
+                {{/cache}}
+            </td></tr>
+            <tr><td nowrap>
+                Merges:{{#merges}}
+                    Current: <span class="v">{{current}}</span>,
+                    Total: <span class="v">{{total}}</span>,
+                    Took: <span class="v">{{total_time}}</span>{{/merges}}
+            </td></tr>
+    </script>
+
+    <script id="jvmStatsTmpl" type="x-tmpl-mustache">
+        {{#collectorsX}}
+            <tr><td>{{collection_type}}</td><td>{{collection_count}}</td><td>{{collection_time}}</td></tr>
+        {{/collectorsX}}
+        <tr></tr><td>Total:</td><td>{{collection_count}}</td><td>{{collection_time}}</td></tr>
+    </script>
+
+    <script id="cpuStateTmpl" type="x-tmpl-mustache">
+         <tr><td>Vendor:</td><td>{{vendor}}</td></tr>
+         <tr><td>Model:</td><td>{{model}}</td></tr>
+         <tr><td>MHz:</td><td>{{mhz}}</td></tr>
+         <tr><td>Cores:</td><td>{{total_cores}}</td></tr>
+         <tr><td>Cache:</td><td>{{cache_size}}</td></tr>
+    </script>
+
+    <script id="networkStateTmpl" type="x-tmpl-mustache">
+         <tr><td>HTTP address:</td><td>{{http_address}}</td></tr>
+         <tr><td>Transport address:</td><td>{{transport_address}}</td></tr>
+         <tr><td>Refresh interval:</td><td>{{#network}}{{refresh_interval}} ms{{/network}}</td></tr>
+    </script>
+
+    <script id="transportStateTmpl" type="x-tmpl-mustache">
+         <tr><td>Bound address:</td><td>{{bound_address}}</td></tr>
+         <tr><td>Publish address:</td><td>{{publish_address}}</td></tr>
+    </script>
+
+    <script id="jvmStateTmpl" type="x-tmpl-mustache">
+         <tr><td>Vendor:</td><td>{{vm_vendor}}</td></tr>
+         <tr><td>Name:</td><td>{{vm_name}}</td></tr>
+         <tr><td>Version:</td><td>{{vm_version}}</td></tr>
+         <tr><td>Java version:</td><td>{{version}}</td></tr>
+         <tr><td>PID:</td><td>{{pid}}</td></tr>
+    </script>
+
+    <script id="processStateTmpl" type="x-tmpl-mustache">
+          <td>Max file descriptors:</td><td>{{max_file_descriptors}}</td>
+    </script>
+
+    <script id="processStatsTmpl" type="x-tmpl-mustache">
+          <td>Open file descriptors:</td><td>{{open_file_descriptors}}</td>
+    </script>
+
+    <script id="nodeStatsTmpl" type="x-tmpl-mustache">
+          <tr><td>Open http channels:</td><td>{{#http}}{{server_open}}{{/http}}</td></tr>
+          <tr><td>Open transport channels:</td><td>{{#transport}}{{server_open}}{{/transport}}</td></tr>
+    </script>
+
+</head>
+<body>
+
+<table><tr><td>
+<div id="top" class="topSection">
+    <form id="form" action="#">
+        <input id="host" type="text" value="localhost"/>
+        <input id="port" type="text" value="9200" size="5"/>
+        <input type="button" id="go" value="GO!"/>
+
+        Refresh interval
+        <select id="interval">
+            <option value="1000">1 sec</option>
+            <option value="1500">1.5 sec</option>
+            <option value="2000" selected="selected">2 sec</option>
+            <option value="2500">2.5 sec</option>
+            <option value="3000">3 sec</option>
+            <option value="5000">5 sec</option>
+            <option value="10000">10 sec</option>
+            <option value="30000">30 sec</option>
+        </select>
+
+        Charts window size
+        <select id="winsize">
+            <option value="-1">no limit</option>
+            <option value=  "30000">30 sec</option>
+            <option value=  "60000">1 min</option>
+            <option value= "180000">3 min</option>
+            <option value= "300000">5 min</option>
+            <option value= "600000">10 min</option>
+            <option value= "900000" selected="selected">15 min</option>
+            <option value="1800000">30 min</option>
+            <option value="3600000">1 hour</option>
+        </select>
+    </form>
+</div>
+
+<table><tr><td>
+<div id="mainArea">
+
+    <div class="clusterInfo">
+        <table>
+            <tr>
+                <td>Cluster:<span id="cluster-name" class="clusterName"></span></td>
+                <td>Nodes:<span id="nodes"></span></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="containerScroll">
+
+    <div id="indices" class="mainSection">
+        <div class="sectionHeader">Indices</div>
+        <div class="container">
+            <table>
+                <tr>
+                    <td style="vertical-align:middle;">
+                        <div class="tableContainer" style="width:530px;">
+                            <table style=" margin-left:auto; margin-right: auto;">
+                                <tbody id="indicesContainer">
+                                    <tr><td>Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                    <td><div id="cache_size" style="width: 150px; height: 110px"></div></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="mainSection">
+        <div class="sectionHeader">File Descriptors</div>
+        <div class="container">
+            <table>
+                <tr>
+                    <td style="vertical-align:middle;">
+                        <div class="tableContainer">
+                            <table style=" margin-left:auto; margin-right: auto;">
+                                <tr id="processStatsContainer"></tr>
+                                <tr id="processStateContainer"></tr>
+                            </table>
+                        </div>
+                    </td>
+                    <td><div id="process_file_descriptors" style="width: 380px; height: 150px"></div></td>
+                    <td style="vertical-align:middle;">
+                        <div class="tableContainer">
+                            <table style=" margin-left:auto; margin-right: auto;">
+                                <tbody id="nodeStatsContainer"></tbody>
+                            </table>
+                        </div>
+                    </td>
+                    <td><div id="node_open_channels" style="width: 380px; height: 150px"></div></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="jvm" class="mainSection">
+        <div class="sectionHeader">JVM</div>
+        <div class="container">
+            <table>
+                <tr>
+                    <td rowspan="2" style="vertical-align:middle;">
+                        <div class="tableContainer">
+                            <table style=" margin-left:auto; margin-right: auto;">
+                                <tr><td>
+                                    <div class="tableStyle">
+                                    <table>
+                                        <tr><td>
+                                             Uptime: <span id="jvm_uptime"></span>
+                                        </td></tr>
+                                    </table>
+                                    </div>
+                                </td></tr>
+                                <tr>
+                                    <td>
+                                        <div class="tableStyle">
+                                            <table>
+                                                <thead>
+                                                    <tr><th colspan="2">Info</th></tr>
+                                                </thead>
+                                                <tbody id="jvmStateContainer">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="tableStyle">
+                                            <table style="width:100%;">
+                                                <thead>
+                                                    <tr><th colspan="3">GC</th></tr>
+                                                    <tr><th>Type:</th><th>Count:</th><th>Time:</th></tr>
+                                                </thead>
+                                                <tbody id="jvmStatsContainer"/>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                    <td rowspan="2"><div id="jvm-mem-heap" style="width: 680px; height: 350px"></div></td>
+                    <td><div id="jvm-threads" style="width: 450px; height: 200px"></div></td>
+                </tr>
+                <tr>
+                    <td><div id="jvm-mem-non-heap" style="width: 450px; height: 150px"></div></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="os" class="mainSection">
+        <div class="sectionHeader">System</div>
+        <div class="container">
+        <table>
+            <tr>
+                <td rowspan="2" style="vertical-align:middle;">
+                    <div class="tableContainer">
+                        <table style=" margin-left:auto; margin-right: auto;">
+                            <tr><td>
+                                <div class="tableStyle">
+                                <table>
+                                    <tr><td>
+                                         Uptime: <span id="os_uptime"></span>
+                                    </td></tr>
+                                </table>
+                                </div>
+                            </td></tr>
+                            <tr>
+                                <td>
+                                    <div class="tableStyle">
+                                        <table>
+                                            <thead>
+                                                <tr><th colspan="2">CPU</th></tr>
+                                            </thead>
+                                            <tbody id="cpuStateContainer"/>
+                                        </table>
+                                    </div>
+                                    <div class="tableStyle">
+                                        <table>
+                                            <thead>
+                                                <tr><th colspan="2">Network</th></tr>
+                                            </thead>
+                                            <tbody id="networkStateContainer"/>
+                                        </table>
+                                    </div>
+                                    <div class="tableStyle">
+                                        <table>
+                                            <thead>
+                                                <tr><th colspan="2">Transport</th></tr>
+                                            </thead>
+                                            <tbody id="transportStateContainer"/>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+                <td rowspan="2"><div id="os-cpu" style="width: 680px; height: 350px"></div></td>
+                <td><div id="os-mem" style="width: 450px; height: 200px"></div></td>
+            </tr>
+            <tr>
+                <td><div id="os-swap" style="width: 450px; height: 150px"></div></td>
+            </tr>
+        </table>
+        </div>
+    </div>
+
+    </div>
+
+</div>
+</td></tr></table>
+
+<div id="about" class="mainSection">
+    BigDesk v1.0.2-SNAPSHOT, GitHub: <a href="https://github.com/lukas-vlcek/bigdesk" target="_blank">BigDesk</a>
+</div>
+
+</td></tr></table>
+
+<script src="js/lib/jquery/jquery-1.4.4.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/lib/mustache/mustache.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/lib/jQueryMustache/jQueryMustache.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/lib/highcharts/highcharts.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/lib/parseUri/parseuri.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/charts.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/bigdesk.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    $(function() {
+        if (location.href.indexOf("/_plugin/") != -1) {
+            document.forms['form'].host.value = location.hostname;
+            document.forms['form'].port.value = location.port;
+            $("#go").click();
+        }
+    });
+</script>
+
+</body>
+</html>
