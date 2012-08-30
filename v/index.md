@@ -4,7 +4,7 @@ layout: v
 
 *****
 
-### Available version online
+### Available Online Versions
 
 #### 1.0.0
 
