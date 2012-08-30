@@ -12,21 +12,22 @@ It pulls data from elasticsearch REST API and turns it into charts.
 
 Currently, bigdesk **master** supports elasticsearch **0.19** and **0.20** (if you are using elasticsearch **0.17** and **0.18** then use bigdesk **1.0.0**).
 
+<div>
+<a href="https://twitter.com/bigdesk_" class="twitter-follow-button" data-show-count="false">Follow @bigdesk_</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+
 *****
 
 ### elasticsearch plugin
 
 To install bigdesk **master** branch as [elasticsearch plugin](http://www.elasticsearch.org/guide/reference/modules/plugins.html) on particular elasticsearch node, navigate to the node installation folder and run the following command:
 
-```
-bin/plugin -install lukas-vlcek/bigdesk
-```
+	bin/plugin -install lukas-vlcek/bigdesk
 
 To install specific version (for example **1.0.0**) run:
 
-```
-bin/plugin -install lukas-vlcek/bigdesk/1.0.0
-```
+	bin/plugin -install lukas-vlcek/bigdesk/1.0.0
 
 Then you can navigate your web browser to `http://<elasticsearch_REST_endpoint>/_plugin/bigdesk/`
 
@@ -36,9 +37,7 @@ Then you can navigate your web browser to `http://<elasticsearch_REST_endpoint>/
 
 Download bigdesk **master** as [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/master) or [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/master) and extract the archive. Alternatively, you can clone git repository from GitHub:
 
-```
-git clone git://github.com/lukas-vlcek/bigdesk.git bigdesk
-```
+	git clone git://github.com/lukas-vlcek/bigdesk.git bigdesk
 
 If you are looking for bigdesk **1.0.0** then use the following [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v1.0.0) or [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v1.0.0).
 
