@@ -2,7 +2,7 @@
 layout: default
 ---
 
-In simple words **bigdesk** makes it very easy to see how your elasticsearch cluster is doing. Just install it as an [elasticsearch plugin](#elasticsearch_plugin) or [download localy](#download_localy) or run [online from the web](#online_from_the_web), then point it to the elasticsearch node REST endpoint and **have fun**. 
+In simple words **bigdesk** makes it very easy to see how your elasticsearch cluster is doing. Just install it as an [elasticsearch plugin](#elasticsearch_plugin), [download locally](#download_locally) or run [online from the web](#online_from_the_web), then point it to the elasticsearch node REST endpoint and **have fun**. 
 
 *****
 
@@ -21,11 +21,11 @@ Currently, bigdesk **master** supports elasticsearch **0.19** and **0.20** (if y
 
 ### elasticsearch plugin
 
-To install bigdesk **master** branch as [elasticsearch plugin](http://www.elasticsearch.org/guide/reference/modules/plugins.html) on particular elasticsearch node, navigate to the node installation folder and run the following command:
+To install bigdesk **master** branch as an [elasticsearch plugin](http://www.elasticsearch.org/guide/reference/modules/plugins.html) on a particular elasticsearch node, navigate to the node installation folder and run the following command:
 
 	bin/plugin -install lukas-vlcek/bigdesk
 
-To install specific version (for example **1.0.0**) run:
+To install a specific version (for example **1.0.0**) run:
 
 	bin/plugin -install lukas-vlcek/bigdesk/1.0.0
 
@@ -33,9 +33,9 @@ Then you can navigate your web browser to `http://<elasticsearch_REST_endpoint>/
 
 *****
 
-### download localy
+### download locally
 
-Download bigdesk **master** as [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/master) or [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/master) and extract the archive. Alternatively, you can clone git repository from GitHub:
+Download bigdesk **master** as a [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/master) or a [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/master) and extract the archive. Alternatively, you can clone the git repository from GitHub:
 
 	git clone git://github.com/lukas-vlcek/bigdesk.git bigdesk
 
@@ -47,7 +47,7 @@ Then simply open `bigdesk/index.html` in your web broswer.
 
 ### online from the web
 
-You can also run bigdesk directly from the web without need to install it anywhere. Just [select version](v) you want to use and you are ready to go.
+You can also run bigdesk directly from the web without needing to install it. Just [select the version](v) you want to use and you are ready to go.
 
 *****
 
@@ -67,7 +67,7 @@ Refresh interval in milliseconds. Defaults to `2000` (2 sec).
 ##### &mdash; history
 How much data in milliseconds to keep in history. Defaults to `300000` (5 min).
 
-For example to open bigdesk and have it connected to `http://127.0.0.1:9201` endpoint with `3` sec refresh interval use:
+For example, to open bigdesk and have it connect to `http://127.0.0.1:9201` endpoint with a `3` sec refresh interval use:
 
 `index.html?endpoint=http://127.0.0.1:9201&connect=true&refresh=3000`
 
