@@ -6,7 +6,28 @@ In simple words **bigdesk** makes it very easy to see how your elasticsearch clu
 
 *****
 
-![bigdesk master screenshot](images/bigdesk-2.0.0-SNAPSHOT.jpg)
+<!-- ![bigdesk master screenshot](images/bigdesk-2.0.0-SNAPSHOT.jpg) -->
+<!-- ![bigdesk master screenshot](images/bigdesk-master-nodes.png) -->
+<!-- ![bigdesk master screenshot](images/bigdesk-master-cluster.png) -->
+
+<section class="slider">
+	<div class="flexslider">
+	  <ul class="slides">
+	    <li>
+	      <img src="images/bigdesk-01.png" />
+	    </li>
+	    <!-- <li>
+	      <img src="images/bigdesk-02.png" />
+	    </li> -->
+	    <li>
+	      <img src="images/bigdesk-03.png" />
+	    </li>
+	    <li>
+	      <img src="images/bigdesk-04.png" />
+	    </li>
+	  </ul>
+	</div>
+</section>
 
 It pulls data from elasticsearch REST API and turns it into charts.
 

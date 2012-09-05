@@ -196,7 +196,6 @@ ul, ol, dl {
   margin-bottom: 20px;
 }
 
-
 /* COMMON STYLES */
 
 hr {
@@ -295,8 +294,9 @@ blockquote {
 }
 
 ul li {
-  list-style: disc inside;
-  padding-left: 20px;
+  /* commented out because of flexslider2 */
+  /*list-style: disc inside;*/
+  /*padding-left: 20px;*/
 }
 
 ol li {
