@@ -1,0 +1,228 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+        For those interested:
+
+        Maven - POM
+        http://maven.apache.org/pom.html
+
+        Maven - Lifecycle Reference
+        http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#Lifecycle_Reference
+    -->
+
+    <groupId>org.bigdesk</groupId>
+    <artifactId>bigdesk</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <name>bigdesk</name>
+    <url>http://bigdesk.org/</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>lukas.vlcek</id>
+            <name>Lukas Vlcek</name>
+            <email>lukas.vlcek@gmail.com</email>
+        </developer>
+    </developers>
+
+    <properties>
+
+         <maven.compiler.source>1.6</maven.compiler.source>
+         <maven.compiler.target>1.6</maven.compiler.target>
+         <maven.compiler.plugin.version>2.0.2</maven.compiler.plugin.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <jsframework.version>1.14.0</jsframework.version>
+        <jstd.plugin.version>1.3.2.5</jstd.plugin.version>
+
+        <closure.library.version>r2180</closure.library.version>
+        <!-- Compilation level is set in profile -->
+        <!-- <closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level> -->
+
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.googlecode.jstd-maven-plugin</groupId>
+            <artifactId>jstd-maven-plugin</artifactId>
+            <version>1.3.2.5</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <repositories>
+
+        <repository>
+            <id>jstd-maven-plugin google code repo</id>
+            <url>http://jstd-maven-plugin.googlecode.com/svn/maven2</url>
+        </repository>
+
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jstd-maven-plugin google code repo</id>
+            <url>http://jstd-maven-plugin.googlecode.com/svn/maven2</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <build>
+
+        <finalName>bigdesk</finalName>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.googlecode.jstd-maven-plugin</groupId>
+                <artifactId>jstd-maven-plugin</artifactId>
+                <version>${jstd.plugin.version}</version>
+                <configuration>
+                    <verbose>true</verbose>
+                    <!-- You might need to adjust this depending on your OS.  On Mac,
+                         this will launch your default browser -->
+                    <browser>open</browser>
+
+                    <port>9876</port>
+                    <!--
+                        Specify config file path.
+
+                        Now we can run jsTestDriver tests both manually from command line
+                        using 'mvn jstd:test' and using IntelliJ IDEA jsTestDriver plugin seamlessly.
+                    -->
+                    <config>jsTestDriver.conf</config>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>run-tests</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.jlgrock.javascript-framework</groupId>
+                <artifactId>jsar-maven-plugin</artifactId>
+                <version>${jsframework.version}</version>
+                <extensions>true</extensions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.jlgrock.javascript-framework</groupId>
+                <artifactId>jsdependency-maven-plugin</artifactId>
+                <version>${jsframework.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.jlgrock.javascript-framework</groupId>
+                <artifactId>closure-compiler-maven-plugin</artifactId>
+                <version>${jsframework.version}</version>
+                <configuration>
+                    <!--<compileLevel>ADVANCED_OPTIMIZATIONS</compileLevel>-->
+                    <!--<compileLevel>SIMPLE_OPTIMIZATIONS</compileLevel>-->
+                    <!--<compileLevel>WHITESPACE_ONLY</compileLevel>-->
+                    <compileLevel>${closure.compiler.level}</compileLevel>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.google.javascript</groupId>
+                        <artifactId>closure-compiler</artifactId>
+                        <version>${closure.library.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.jlgrock.javascript-framework</groupId>
+                <artifactId>closure-testing-maven-plugin</artifactId>
+                <version>${jsframework.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.jlgrock.javascript-framework</groupId>
+                <artifactId>jspreprocessor-maven-plugin</artifactId>
+                <version>${jsframework.version}</version>
+            </plugin>
+
+            <!--
+            <plugin>
+                <groupId>com.github.jlgrock.javascript-framework</groupId>
+                <artifactId>jsdocs-maven-plugin</artifactId>
+                <version>${jsframework.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jsar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.jlgrock.javascript-framework</groupId>
+                <artifactId>source-archive-maven-plugin</artifactId>
+                <version>${jsframework.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>js-gen-source-archive</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            -->
+
+        </plugins>
+
+    </build>
+
+    <profiles>
+
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level>
+            </properties>
+        </profile>
+
+        <!-- You should try advanced compilation before each commit into public repo. -->
+        <profile>
+            <id>optimize</id>
+            <properties>
+                <closure.compiler.level>ADVANCED_OPTIMIZATIONS</closure.compiler.level>
+            </properties>
+        </profile>
+
+    </profiles>
+
+</project>
