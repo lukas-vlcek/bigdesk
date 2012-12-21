@@ -42,7 +42,7 @@ org.bigdesk.store.Store = function() {
  * @return {boolean} True if an element was inserted.
  */
 org.bigdesk.store.Store.prototype.addNodesStats = function(timestamp, nodesStats) {
-    return this.addItem(timestamp, nodesStats, this, 'nodesStats');
+    return this.addItem_(timestamp, nodesStats, this, 'nodesStats');
 };
 
 /**
@@ -51,7 +51,7 @@ org.bigdesk.store.Store.prototype.addNodesStats = function(timestamp, nodesStats
  * @return {number}
  */
 org.bigdesk.store.Store.prototype.removeNodesStatsStaringFrom = function(timestamp) {
-    return this.removeItemStartingFrom(timestamp, this, 'nodesStats');
+    return this.removeItemStartingFrom_(timestamp, this, 'nodesStats');
 };
 
 /**
@@ -61,7 +61,7 @@ org.bigdesk.store.Store.prototype.removeNodesStatsStaringFrom = function(timesta
  * @return {boolean}
  */
 org.bigdesk.store.Store.prototype.addNodesInfo = function(timestamp, nodesInfo) {
-    return this.addItem(timestamp, nodesInfo, this, 'nodesInfo');
+    return this.addItem_(timestamp, nodesInfo, this, 'nodesInfo');
 };
 
 /**
@@ -70,7 +70,7 @@ org.bigdesk.store.Store.prototype.addNodesInfo = function(timestamp, nodesInfo) 
  * @return {number}
  */
 org.bigdesk.store.Store.prototype.removeNodesInfosStaringFrom = function(timestamp) {
-    return this.removeItemStartingFrom(timestamp, this, 'nodesInfo');
+    return this.removeItemStartingFrom_(timestamp, this, 'nodesInfo');
 };
 
 /**
@@ -80,7 +80,7 @@ org.bigdesk.store.Store.prototype.removeNodesInfosStaringFrom = function(timesta
  * @return {*}
  */
 org.bigdesk.store.Store.prototype.addClusterState = function(timestamp, clusterState) {
-    return this.addItem(timestamp, clusterState, this, 'clusterStates');
+    return this.addItem_(timestamp, clusterState, this, 'clusterStates');
 };
 
 /**
@@ -89,7 +89,7 @@ org.bigdesk.store.Store.prototype.addClusterState = function(timestamp, clusterS
  * @return {*}
  */
 org.bigdesk.store.Store.prototype.removeClusterStatesStaringFrom = function(timestamp) {
-    return this.removeItemStartingFrom(timestamp, this, 'clusterStates');
+    return this.removeItemStartingFrom_(timestamp, this, 'clusterStates');
 };
 
 
@@ -120,17 +120,42 @@ org.bigdesk.store.Store.prototype.timestampsCompareOnlyGreater = function(a, b) 
     return a.timestamp < b.timestamp ? 1 : 0;
 };
 
-/** @private */
-org.bigdesk.store.Store.prototype.addItem = function(timestamp, item, context, arrayName) {
-    return goog.array.binaryInsert(
-        context[arrayName],
-        { timestamp: timestamp, value: item },
-        org.bigdesk.store.Store.prototype.timestampsCompare
-    );
+/**
+ *
+ * @param {number} timestamp
+ * @param {object} item
+ * @param {object} context
+ * @param {string} arrayName
+ * @return {boolean}
+ * @private
+ */
+org.bigdesk.store.Store.prototype.addItem_ = function(timestamp, item, context, arrayName) {
+    var newArrayElement = { timestamp: timestamp, value: item };
+    // We assume an array is sorted (descending) so we can optimize here.
+    // First we check the first element's timestamp, if it is less then incoming
+    // timestamp we can insert new value at the first position in the array.
+    if (context[arrayName].length > 0 && context[arrayName][0].timestamp < timestamp) {
+        context[arrayName].unshift(newArrayElement);
+        return true;
+    } else {
+    // else we do binary insert
+        return goog.array.binaryInsert(
+            context[arrayName],
+            newArrayElement,
+            org.bigdesk.store.Store.prototype.timestampsCompare
+        );
+    }
 };
 
-/** @private */
-org.bigdesk.store.Store.prototype.removeItemStartingFrom = function(timestamp, context, arrayName) {
+/**
+ *
+ * @param {number} timestamp
+ * @param {object} context
+ * @param {string} arrayName
+ * @return {number}
+ * @private
+ */
+org.bigdesk.store.Store.prototype.removeItemStartingFrom_ = function(timestamp, context, arrayName) {
     var index = goog.array.binarySearch(
         context[arrayName],
         { timestamp: timestamp },
