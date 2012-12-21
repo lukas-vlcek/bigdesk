@@ -80,7 +80,7 @@ org.bigdesk.store.Store.prototype.removeNodesInfosStaringFrom = function(timesta
  * Add a new item into clusterStates.
  * @param timestamp
  * @param clusterState
- * @return {*}
+ * @return {boolean}
  */
 org.bigdesk.store.Store.prototype.addClusterState = function(timestamp, clusterState) {
     return this.addItem_(timestamp, clusterState, this, 'clusterStates');
@@ -89,7 +89,7 @@ org.bigdesk.store.Store.prototype.addClusterState = function(timestamp, clusterS
 /**
  * Remove all items from clusterStates older then timestamp (including).
  * @param timestamp
- * @return {*}
+ * @return {number}
  */
 org.bigdesk.store.Store.prototype.removeClusterStatesStaringFrom = function(timestamp) {
     return this.removeItemStartingFrom_(timestamp, this, 'clusterStates');
@@ -99,7 +99,7 @@ org.bigdesk.store.Store.prototype.removeClusterStatesStaringFrom = function(time
  * Add a new item into clusterHealths.
  * @param timestamp
  * @param clusterHealth
- * @return {*}
+ * @return {boolean}
  */
 org.bigdesk.store.Store.prototype.addClusterHealth = function(timestamp, clusterHealth) {
     return this.addItem_(timestamp, clusterHealth, this, 'clusterHealths');
@@ -108,7 +108,7 @@ org.bigdesk.store.Store.prototype.addClusterHealth = function(timestamp, cluster
 /**
  * Remove all items from clusterHealths older then timestamp (including).
  * @param timestamp
- * @return {*}
+ * @return {number}
  */
 org.bigdesk.store.Store.prototype.removeClusterHealthsStaringFrom = function(timestamp) {
     return this.removeItemStartingFrom_(timestamp, this, 'clusterHealths');
