@@ -35,6 +35,9 @@ org.bigdesk.store.Store = function() {
 
     /** @type {goog.array.ArrayLike} */
     this.clusterHealths = [];
+
+    /** @type {goog.array.ArrayLike} */
+    this.indexSegments = [];
 };
 
 
@@ -112,6 +115,25 @@ org.bigdesk.store.Store.prototype.addClusterHealth = function(timestamp, cluster
  */
 org.bigdesk.store.Store.prototype.removeClusterHealthsStaringFrom = function(timestamp) {
     return this.removeItemStartingFrom_(timestamp, this, 'clusterHealths');
+};
+
+/**
+ * Add a new item into indexSegments.
+ * @param timestamp
+ * @param indexSegments
+ * @return {boolean}
+ */
+org.bigdesk.store.Store.prototype.addIndexSegments = function(timestamp, indexSegments) {
+    return this.addItem_(timestamp, indexSegments, this, 'indexSegments');
+};
+
+/**
+ * Remove all items from indexSegments older then timestamp (including).
+ * @param timestamp
+ * @return {number}
+ */
+org.bigdesk.store.Store.prototype.removeIndexSegmentsStaringFrom = function(timestamp) {
+    return this.removeItemStartingFrom_(timestamp, this, 'indexSegments');
 };
 
 

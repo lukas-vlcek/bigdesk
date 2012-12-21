@@ -189,3 +189,46 @@ var testClusterHealths = function() {
         goog.array.map(store.clusterHealths, function(item){ return item.timestamp })
     );
 };
+
+var testIndexSegments = function() {
+
+    var store = new org.bigdesk.store.Store();
+    assertEquals("Array is empty", 0, store.indexSegments.length);
+
+    store.addIndexSegments(1, {});
+    store.addIndexSegments(3, {});
+    store.addIndexSegments(5, {});
+    store.addIndexSegments(4, {});
+    store.addIndexSegments(2, {});
+
+    assertEquals("indexSegments array should have five items", 5, store.indexSegments.length);
+    assertArrayEquals("indexSegments array should be kept sorted",
+        [5,4,3,2,1],
+        goog.array.map(store.indexSegments, function(item){ return item.timestamp })
+    );
+
+    // delete all from existing timestamp
+    store.removeIndexSegmentsStaringFrom(2);
+
+    assertArrayEquals("indexSegments array should be kept sorted",
+        [5,4,3],
+        goog.array.map(store.indexSegments, function(item){ return item.timestamp })
+    );
+
+    store.addIndexSegments(7, {});
+    store.addIndexSegments(8, {});
+    store.addIndexSegments(9, {});
+
+    assertArrayEquals("indexSegments array should be kept sorted",
+        [9,8,7,5,4,3],
+        goog.array.map(store.indexSegments, function(item){ return item.timestamp })
+    );
+
+    // delete all from non-existing timestamp
+    store.removeIndexSegmentsStaringFrom(6);
+
+    assertArrayEquals("indexSegments array should be kept sorted",
+        [9,8,7],
+        goog.array.map(store.indexSegments, function(item){ return item.timestamp })
+    );
+};
