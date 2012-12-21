@@ -145,8 +145,8 @@ org.bigdesk.store.Store.prototype.timestampsCompareOnlyGreater = function(a, b) 
 /**
  *
  * @param {number} timestamp
- * @param {object} item
- * @param {object} context
+ * @param {Object} item
+ * @param {Object} context
  * @param {string} arrayName
  * @return {boolean}
  * @private
@@ -172,7 +172,7 @@ org.bigdesk.store.Store.prototype.addItem_ = function(timestamp, item, context, 
 /**
  *
  * @param {number} timestamp
- * @param {object} context
+ * @param {Object} context
  * @param {string} arrayName
  * @return {number}
  * @private
