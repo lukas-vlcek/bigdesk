@@ -99,35 +99,6 @@
             </plugin>
 
             <plugin>
-                <groupId>com.googlecode.jstd-maven-plugin</groupId>
-                <artifactId>jstd-maven-plugin</artifactId>
-                <version>${jstd.plugin.version}</version>
-                <configuration>
-                    <verbose>true</verbose>
-                    <!-- You might need to adjust this depending on your OS.  On Mac,
-                         this will launch your default browser -->
-                    <browser>open</browser>
-
-                    <port>9876</port>
-                    <!--
-                        Specify config file path.
-
-                        Now we can run jsTestDriver tests both manually from command line
-                        using 'mvn jstd:test' and using IntelliJ IDEA jsTestDriver plugin seamlessly.
-                    -->
-                    <config>jsTestDriver.conf</config>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>run-tests</id>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
                 <groupId>com.github.jlgrock.javascript-framework</groupId>
                 <artifactId>jsar-maven-plugin</artifactId>
                 <version>${jsframework.version}</version>
@@ -221,6 +192,51 @@
             <properties>
                 <closure.compiler.level>ADVANCED_OPTIMIZATIONS</closure.compiler.level>
             </properties>
+        </profile>
+
+        <!-- Execute also all jsTestDriver tests -->
+        <profile>
+            <id>jsTestDriver</id>
+            <properties>
+                <closure.compiler.level>ADVANCED_OPTIMIZATIONS</closure.compiler.level>
+                <!--<closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level>-->
+            </properties>
+
+            <build>
+                <plugins>
+
+                    <plugin>
+                        <groupId>com.googlecode.jstd-maven-plugin</groupId>
+                        <artifactId>jstd-maven-plugin</artifactId>
+                        <version>${jstd.plugin.version}</version>
+                        <configuration>
+                            <verbose>true</verbose>
+                            <!-- You might need to adjust this depending on your OS.  On Mac,
+                                 this will launch your default browser -->
+                            <browser>open</browser>
+
+                            <port>9876</port>
+                            <!--
+                                Specify config file path.
+
+                                Now we can run jsTestDriver tests both manually from command line
+                                using 'mvn jstd:test' and using IntelliJ IDEA jsTestDriver plugin seamlessly.
+                            -->
+                            <config>jsTestDriver.conf</config>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>run-tests</id>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+
         </profile>
 
     </profiles>
