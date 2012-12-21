@@ -32,6 +32,9 @@ org.bigdesk.store.Store = function() {
 
     /** @type {goog.array.ArrayLike} */
     this.clusterStates = [];
+
+    /** @type {goog.array.ArrayLike} */
+    this.clusterHealths = [];
 };
 
 
@@ -90,6 +93,25 @@ org.bigdesk.store.Store.prototype.addClusterState = function(timestamp, clusterS
  */
 org.bigdesk.store.Store.prototype.removeClusterStatesStaringFrom = function(timestamp) {
     return this.removeItemStartingFrom_(timestamp, this, 'clusterStates');
+};
+
+/**
+ * Add a new item into clusterHealths.
+ * @param timestamp
+ * @param clusterHealth
+ * @return {*}
+ */
+org.bigdesk.store.Store.prototype.addClusterHealth = function(timestamp, clusterHealth) {
+    return this.addItem_(timestamp, clusterHealth, this, 'clusterHealths');
+};
+
+/**
+ * Remove all items from clusterHealths older then timestamp (including).
+ * @param timestamp
+ * @return {*}
+ */
+org.bigdesk.store.Store.prototype.removeClusterHealthsStaringFrom = function(timestamp) {
+    return this.removeItemStartingFrom_(timestamp, this, 'clusterHealths');
 };
 
 

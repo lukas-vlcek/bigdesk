@@ -29,8 +29,8 @@ var testNodesStats = function() {
     store.addNodesStats(4, {});
     store.addNodesStats(2, {});
 
-    assertEquals("Stats array should have five items", 5, store.nodesStats.length);
-    assertArrayEquals("Stats array should be kept sorted",
+    assertEquals("NodesStats array should have five items", 5, store.nodesStats.length);
+    assertArrayEquals("v array should be kept sorted",
         [5,4,3,2,1],
         goog.array.map(store.nodesStats, function(item){ return item.timestamp })
     );
@@ -38,7 +38,7 @@ var testNodesStats = function() {
     // delete all from existing timestamp
     store.removeNodesStatsStaringFrom(2);
 
-    assertArrayEquals("Stats array should be kept sorted",
+    assertArrayEquals("NodesStats array should be kept sorted",
         [5,4,3],
         goog.array.map(store.nodesStats, function(item){ return item.timestamp })
     );
@@ -47,7 +47,7 @@ var testNodesStats = function() {
     store.addNodesStats(8, {});
     store.addNodesStats(9, {});
 
-    assertArrayEquals("Stats array should be kept sorted",
+    assertArrayEquals("NodesStats array should be kept sorted",
         [9,8,7,5,4,3],
         goog.array.map(store.nodesStats, function(item){ return item.timestamp })
     );
@@ -55,7 +55,7 @@ var testNodesStats = function() {
     // delete all from non-existing timestamp
     store.removeNodesStatsStaringFrom(6);
 
-    assertArrayEquals("Stats array should be kept sorted",
+    assertArrayEquals("NodesStats array should be kept sorted",
         [9,8,7],
         goog.array.map(store.nodesStats, function(item){ return item.timestamp })
     );
@@ -72,8 +72,8 @@ var testNodesInfo = function() {
     store.addNodesInfo(4, {});
     store.addNodesInfo(2, {});
 
-    assertEquals("Info array should have five items", 5, store.nodesInfo.length);
-    assertArrayEquals("Info array should be kept sorted",
+    assertEquals("NodesInfo array should have five items", 5, store.nodesInfo.length);
+    assertArrayEquals("NodesInfo array should be kept sorted",
         [5,4,3,2,1],
         goog.array.map(store.nodesInfo, function(item){ return item.timestamp })
     );
@@ -81,7 +81,7 @@ var testNodesInfo = function() {
     // delete all from existing timestamp
     store.removeNodesInfosStaringFrom(2);
 
-    assertArrayEquals("Info array should be kept sorted",
+    assertArrayEquals("NodesInfo array should be kept sorted",
         [5,4,3],
         goog.array.map(store.nodesInfo, function(item){ return item.timestamp })
     );
@@ -90,7 +90,7 @@ var testNodesInfo = function() {
     store.addNodesInfo(8, {});
     store.addNodesInfo(9, {});
 
-    assertArrayEquals("Info array should be kept sorted",
+    assertArrayEquals("NodesInfo array should be kept sorted",
         [9,8,7,5,4,3],
         goog.array.map(store.nodesInfo, function(item){ return item.timestamp })
     );
@@ -98,7 +98,7 @@ var testNodesInfo = function() {
     // delete all from non-existing timestamp
     store.removeNodesInfosStaringFrom(6);
 
-    assertArrayEquals("Info array should be kept sorted",
+    assertArrayEquals("NodesInfo array should be kept sorted",
         [9,8,7],
         goog.array.map(store.nodesInfo, function(item){ return item.timestamp })
     );
@@ -116,7 +116,7 @@ var testClusterStates = function() {
     store.addClusterState(2, {});
 
     assertEquals("clusterStates array should have five items", 5, store.clusterStates.length);
-    assertArrayEquals("Info array should be kept sorted",
+    assertArrayEquals("clusterStates array should be kept sorted",
         [5,4,3,2,1],
         goog.array.map(store.clusterStates, function(item){ return item.timestamp })
     );
@@ -144,5 +144,48 @@ var testClusterStates = function() {
     assertArrayEquals("clusterStates array should be kept sorted",
         [9,8,7],
         goog.array.map(store.clusterStates, function(item){ return item.timestamp })
+    );
+};
+
+var testClusterHealths = function() {
+
+    var store = new org.bigdesk.store.Store();
+    assertEquals("Array is empty", 0, store.clusterHealths.length);
+
+    store.addClusterHealth(1, {});
+    store.addClusterHealth(3, {});
+    store.addClusterHealth(5, {});
+    store.addClusterHealth(4, {});
+    store.addClusterHealth(2, {});
+
+    assertEquals("clusterHealths array should have five items", 5, store.clusterHealths.length);
+    assertArrayEquals("clusterHealths array should be kept sorted",
+        [5,4,3,2,1],
+        goog.array.map(store.clusterHealths, function(item){ return item.timestamp })
+    );
+
+    // delete all from existing timestamp
+    store.removeClusterHealthsStaringFrom(2);
+
+    assertArrayEquals("clusterHealths array should be kept sorted",
+        [5,4,3],
+        goog.array.map(store.clusterHealths, function(item){ return item.timestamp })
+    );
+
+    store.addClusterHealth(7, {});
+    store.addClusterHealth(8, {});
+    store.addClusterHealth(9, {});
+
+    assertArrayEquals("clusterHealths array should be kept sorted",
+        [9,8,7,5,4,3],
+        goog.array.map(store.clusterHealths, function(item){ return item.timestamp })
+    );
+
+    // delete all from non-existing timestamp
+    store.removeClusterHealthsStaringFrom(6);
+
+    assertArrayEquals("clusterHealths array should be kept sorted",
+        [9,8,7],
+        goog.array.map(store.clusterHealths, function(item){ return item.timestamp })
     );
 };
