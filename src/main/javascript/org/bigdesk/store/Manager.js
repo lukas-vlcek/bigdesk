@@ -27,6 +27,7 @@
  */
 
 goog.provide('org.bigdesk.store.Manager');
+goog.provide('org.bigdesk.store.Manager.EventType');
 
 goog.require('org.bigdesk.net.XhrService');
 
@@ -34,6 +35,7 @@ goog.require('goog.async.Delay');
 goog.require('goog.object');
 goog.require('goog.Uri');
 
+goog.require('goog.events');
 goog.require("goog.events.EventTarget");
 
 /**
@@ -174,4 +176,19 @@ org.bigdesk.store.Manager.prototype.isJsonp = function() {
  */
 org.bigdesk.store.Manager.prototype.getConfiguration = function() {
     return goog.object.clone(this.config);
+};
+
+
+/**
+ * Events fired by the Manager.
+ * @enum {string}
+ */
+org.bigdesk.store.Manager.EventType = {
+
+    NODES_STATS_ADD    : goog.events.getUniqueId('nodes_stats_add'),
+    NODES_STATS_REMOVE : goog.events.getUniqueId('nodes_stats_remove'),
+
+    NODES_INFO_ADD     : goog.events.getUniqueId('nodes_info_add'),
+    NODES_INFO_REMOVE  : goog.events.getUniqueId('nodes_info_remove')
+
 };
