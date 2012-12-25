@@ -14,21 +14,31 @@
  * limitations under the License.
  */
 
+/**
+ * @fileoverview A store for data retrieved from elasticsearch node.
+ * @author Lukas Vlcek (lukas.vlcek@gmail.com)
+ */
+
 goog.provide('org.bigdesk.store.Store');
 
 goog.require('goog.array');
 
+goog.require("goog.Disposable");
+
 /**
- * bigdesk store
+ * Store is not typically created directly. It is managed by the Manager.
  * @constructor
+ * @extends {goog.Disposable}
  */
 org.bigdesk.store.Store = function() {
+
+    goog.base(this);
 
     /** @type {goog.array.ArrayLike} */
     this.nodesStats = [];
 
     /** @type {goog.array.ArrayLike} */
-    this.nodesInfo = [];
+    this.nodesInfos = [];
 
     /** @type {goog.array.ArrayLike} */
     this.clusterStates = [];
@@ -39,7 +49,19 @@ org.bigdesk.store.Store = function() {
     /** @type {goog.array.ArrayLike} */
     this.indexSegments = [];
 };
+goog.inherits(org.bigdesk.store.Store, goog.Disposable);
 
+/** @inheritDoc */
+org.bigdesk.store.Store.prototype.disposeInternal = function() {
+
+    delete this.nodesStats;
+    delete this.nodesInfos;
+    delete this.clusterStates;
+    delete this.clusterHealths;
+    delete this.indexSegments;
+
+    goog.base(this, 'disposeInternal');
+};
 
 /**
  * Add a new item into nodesStats.
@@ -67,7 +89,7 @@ org.bigdesk.store.Store.prototype.removeNodesStatsStaringFrom = function(timesta
  * @return {boolean}
  */
 org.bigdesk.store.Store.prototype.addNodesInfo = function(timestamp, nodesInfo) {
-    return this.addItem_(timestamp, nodesInfo, this, 'nodesInfo');
+    return this.addItem_(timestamp, nodesInfo, this, 'nodesInfos');
 };
 
 /**
@@ -76,7 +98,7 @@ org.bigdesk.store.Store.prototype.addNodesInfo = function(timestamp, nodesInfo) 
  * @return {number}
  */
 org.bigdesk.store.Store.prototype.removeNodesInfosStaringFrom = function(timestamp) {
-    return this.removeItemStartingFrom_(timestamp, this, 'nodesInfo');
+    return this.removeItemStartingFrom_(timestamp, this, 'nodesInfos');
 };
 
 /**

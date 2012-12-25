@@ -61,10 +61,10 @@ var testNodesStats = function() {
     );
 };
 
-var testNodesInfo = function() {
+var testNodesInfos = function() {
 
     var store = new org.bigdesk.store.Store();
-    assertEquals("Array is empty", 0, store.nodesInfo.length);
+    assertEquals("Array is empty", 0, store.nodesInfos.length);
 
     store.addNodesInfo(1, {});
     store.addNodesInfo(3, {});
@@ -72,35 +72,35 @@ var testNodesInfo = function() {
     store.addNodesInfo(4, {});
     store.addNodesInfo(2, {});
 
-    assertEquals("NodesInfo array should have five items", 5, store.nodesInfo.length);
-    assertArrayEquals("NodesInfo array should be kept sorted",
+    assertEquals("NodesInfos array should have five items", 5, store.nodesInfos.length);
+    assertArrayEquals("NodesInfos array should be kept sorted",
         [5,4,3,2,1],
-        goog.array.map(store.nodesInfo, function(item){ return item.timestamp })
+        goog.array.map(store.nodesInfos, function(item){ return item.timestamp })
     );
 
     // delete all from existing timestamp
     store.removeNodesInfosStaringFrom(2);
 
-    assertArrayEquals("NodesInfo array should be kept sorted",
+    assertArrayEquals("NodesInfos array should be kept sorted",
         [5,4,3],
-        goog.array.map(store.nodesInfo, function(item){ return item.timestamp })
+        goog.array.map(store.nodesInfos, function(item){ return item.timestamp })
     );
 
     store.addNodesInfo(7, {});
     store.addNodesInfo(8, {});
     store.addNodesInfo(9, {});
 
-    assertArrayEquals("NodesInfo array should be kept sorted",
+    assertArrayEquals("NodesInfos array should be kept sorted",
         [9,8,7,5,4,3],
-        goog.array.map(store.nodesInfo, function(item){ return item.timestamp })
+        goog.array.map(store.nodesInfos, function(item){ return item.timestamp })
     );
 
     // delete all from non-existing timestamp
     store.removeNodesInfosStaringFrom(6);
 
-    assertArrayEquals("NodesInfo array should be kept sorted",
+    assertArrayEquals("NodesInfos array should be kept sorted",
         [9,8,7],
-        goog.array.map(store.nodesInfo, function(item){ return item.timestamp })
+        goog.array.map(store.nodesInfos, function(item){ return item.timestamp })
     );
 };
 

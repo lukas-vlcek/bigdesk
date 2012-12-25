@@ -5,3 +5,5 @@
 --path ./../../../../../main/javascript/org/bigdesk/store \
 --output_mode deps \
 > deps_test.js
+
+echo "Generated file: deps_test.js"
