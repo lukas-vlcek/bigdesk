@@ -34,13 +34,13 @@ goog.require('goog.async.Delay');
 goog.require('goog.object');
 goog.require('goog.Uri');
 
-goog.require("goog.Disposable");
+goog.require("goog.events.EventTarget");
 
 /**
  * Creates a new Manager.
  * @param {Object=} opt_config optional configuration
  * @constructor
- * @extends {goog.Disposable}
+ * @extends {goog.events.EventTarget}
  */
 org.bigdesk.store.Manager = function(opt_config) {
 
@@ -88,7 +88,7 @@ org.bigdesk.store.Manager = function(opt_config) {
 
 
 };
-goog.inherits(org.bigdesk.store.Manager, goog.Disposable);
+goog.inherits(org.bigdesk.store.Manager, goog.events.EventTarget);
 
 /** @inheritDoc */
 org.bigdesk.store.Manager.prototype.disposeInternal = function() {
