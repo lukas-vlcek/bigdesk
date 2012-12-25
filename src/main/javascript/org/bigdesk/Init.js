@@ -21,8 +21,7 @@
 
 goog.provide('org.bigdesk.Init');
 
-goog.require('org.bigdesk.store.Store');
-goog.require('org.bigdesk.Manager');
+goog.require('org.bigdesk.store.Manager');
 
 /*
  Quick workaround: 'require' the following two files to get rid of advanced compilation errors.
@@ -39,7 +38,7 @@ goog.require('goog.debug.ErrorHandler');
         jsonp: false
     };
 
-    var manager = new org.bigdesk.Manager(configuration);
+    var manager = new org.bigdesk.store.Manager(configuration);
 
     manager
         .stop()
