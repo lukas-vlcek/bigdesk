@@ -86,13 +86,13 @@ org.bigdesk.store.Manager = function(opt_config) {
 
     this.delay_nodesStats = new goog.async.Delay(
         function(){
-            this.xhrService.getNodesStats(this.processNewNodesStats)
+            this.xhrService.getNodesStats(this.processNodesStatsDelay)
         },
         this.config.delay);
 
     this.delay_nodesInfo = new goog.async.Delay(
         function(){
-            this.xhrService.getNodesInfo(this.processNewNodesInfo)
+            this.xhrService.getNodesInfo(this.processNodesInfoDelay)
         },
         this.config.delay);
 
@@ -122,6 +122,17 @@ org.bigdesk.store.Manager.prototype.disposeInternal = function() {
 };
 
 /**
+ *
+ * @param {!number} timestamp
+ * @param {!Object} data
+ */
+org.bigdesk.store.Manager.prototype.processNodesStatsDelay = function(timestamp, data) {
+    this.dropOldNodesStats(timestamp - this.config.window);
+    this.processNewNodesStats(timestamp, data);
+    this.delay_nodesStats.start();
+};
+
+/**
  * Called when a new nodes stats data is retrieved.
  * @param {!number} timestamp
  * @param {!Object} data
@@ -131,6 +142,26 @@ org.bigdesk.store.Manager.prototype.processNewNodesStats = function(timestamp, d
     this.store.addNodesStats(timestamp, data);
     var event = new org.bigdesk.store.event.NodesStatsAdd(timestamp, data);
     this.dispatchEvent(event);
+};
+
+/**
+ *
+ * @param {!number} timestamp
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.dropOldNodesStats = function(timestamp) {
+    // TODO
+};
+
+/**
+ *
+ * @param {!number} timestamp
+ * @param {!Object} data
+ */
+org.bigdesk.store.Manager.prototype.processNodesInfoDelay = function(timestamp, data) {
+    this.dropOldNodesInfo(timestamp - this.config.window);
+    this.processNewNodesInfo(timestamp, data);
+    this.delay_nodesInfo.start();
 };
 
 /**
@@ -147,10 +178,22 @@ org.bigdesk.store.Manager.prototype.processNewNodesInfo = function(timestamp, da
 
 /**
  *
+ * @param {!number} timestamp
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.dropOldNodesInfo = function(timestamp) {
+    // TODO
+};
+
+/**
+ *
  * @return {org.bigdesk.store.Manager}
  */
 org.bigdesk.store.Manager.prototype.stop = function() {
     if (this.running) {
+
+        this.delay_nodesStats.stop();
+        this.delay_nodesInfo.stop();
 
         this.running = false;
     }
@@ -166,8 +209,8 @@ org.bigdesk.store.Manager.prototype.start = function() {
         this.running = true;
 
         // request data right now (so we do not have to wait for delay to get first data)
-        this.xhrService.getNodesStats(this.processNewNodesStats);
-        this.xhrService.getNodesInfo(this.processNewNodesInfo);
+        this.delay_nodesStats.fire();
+        this.delay_nodesInfo.fire();
 
     }
     return this;

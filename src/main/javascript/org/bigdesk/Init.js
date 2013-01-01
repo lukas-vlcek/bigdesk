@@ -42,7 +42,7 @@ goog.require('goog.debug.ErrorHandler');
 
     manager
         .stop()
-        .setJsonp(false) // false by default
+//        .setJsonp(false) // false by default
         .start();
 
 }
