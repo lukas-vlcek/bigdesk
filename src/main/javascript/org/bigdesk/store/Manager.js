@@ -112,15 +112,27 @@ org.bigdesk.store.Manager.prototype.disposeInternal = function() {
 };
 
 /**
- *
+ * Called when a new nodes stats data is retrieved.
  * @param {number} timestamp
  * @param {Object} data
+ * @protected
  */
-org.bigdesk.store.Manager.prototype.handleNewNodesStats = function(timestamp, data) {
-
+org.bigdesk.store.Manager.prototype.processNewNodesStats = function(timestamp, data) {
     this.store.addNodesStats(timestamp, data);
+    var event = new org.bigdesk.store.event.NodesStatsAdd(timestamp, data);
+    this.dispatchEvent(event);
+};
 
-    // TODO fire some event!
+/**
+ * Called when a new nodes info data is retrieved.
+ * @param {number} timestamp
+ * @param {Object} data
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.processNewNodesInfo = function(timestamp, data) {
+    this.store.addNodesInfo(timestamp, data);
+    var event = new org.bigdesk.store.event.NodesInfoAdd(timestamp, data);
+    this.dispatchEvent(event);
 };
 
 /**
@@ -142,7 +154,11 @@ org.bigdesk.store.Manager.prototype.stop = function() {
 org.bigdesk.store.Manager.prototype.start = function() {
     if (!this.running) {
         this.running = true;
-        this.xhrService.getNodesStats(this.handleNewNodesStats);
+
+        // request data right now (so we do not have to wait for delay to get first data)
+        this.xhrService.getNodesStats(this.processNewNodesStats);
+        this.xhrService.getNodesInfo(this.processNewNodesInfo);
+
     }
     return this;
 };

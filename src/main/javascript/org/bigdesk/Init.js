@@ -42,12 +42,7 @@ goog.require('goog.debug.ErrorHandler');
 
     manager
         .stop()
-        .setJsonp(false)
-//        .delays(function(delays){
-//            delays
-//                .setNodesStatsDelay(3000)
-//                .setNodesInfosDelay(3000)
-//        })
+        .setJsonp(false) // false by default
         .start();
 
 }
