@@ -22,6 +22,8 @@
 
 goog.provide('org.bigdesk.net.XhrService');
 
+goog.require('org.bigdesk.net.Service');
+
 goog.require('goog.string');
 
 goog.require('goog.net.XhrManager');
@@ -38,6 +40,7 @@ goog.require("goog.Disposable");
  * to a valid accessible elasticsearch HTTP REST endpoint.
  * @param {!goog.Uri} uri
  * @constructor
+ * @implements {org.bigdesk.net.Service}
  * @extends {goog.Disposable}
  */
 org.bigdesk.net.XhrService = function(uri) {
@@ -98,13 +101,7 @@ org.bigdesk.net.XhrService.prototype.disposeInternal = function() {
     goog.base(this, 'disposeInternal');
 };
 
-/**
- * Request for NodesStats data.
- * The first parameter if callback function which is passed 'timestamp' and 'json response' data.
- * The second optional parameter is value of timestamp. If not provided goog.now() is used instead.
- * @param {!function(!number, !Object)} callback
- * @param {number=} opt_timestamp
- */
+/** @inheritDoc */
 org.bigdesk.net.XhrService.prototype.getNodesStats = function(callback, opt_timestamp) {
 
     var timestamp = opt_timestamp || goog.now();
@@ -126,13 +123,7 @@ org.bigdesk.net.XhrService.prototype.getNodesStats = function(callback, opt_time
     );
 };
 
-/**
- * Request for NodesInfo data.
- * The first parameter if callback function which is passed 'timestamp' and 'json response' data.
- * The second optional parameter is value of timestamp. If not provided goog.now() is used instead.
- * @param {!function(!number, !Object)} callback
- * @param {number=} opt_timestamp
- */
+/** @inheritDoc */
 org.bigdesk.net.XhrService.prototype.getNodesInfo = function(callback, opt_timestamp) {
 
     var timestamp = opt_timestamp || goog.now();

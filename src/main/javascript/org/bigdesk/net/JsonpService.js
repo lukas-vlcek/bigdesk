@@ -21,10 +21,19 @@
 
 goog.provide('org.bigdesk.net.JsonpService');
 
-/**
- *
- * @constructor
- */
-org.bigdesk.net.JsonpService = function(){
+goog.require('org.bigdesk.net.Service');
 
+/**
+ * TODO will be implemented later
+ * @constructor
+ * @implements {org.bigdesk.net.Service}
+ */
+org.bigdesk.net.JsonpService = function(){};
+
+/** @inheritDoc */
+org.bigdesk.net.JsonpService.prototype.getNodesStats = function (callback, opt_timestamp) {
+};
+
+/** @inheritDoc */
+org.bigdesk.net.JsonpService.prototype.getNodesInfo = function (callback, opt_timestamp) {
 };
