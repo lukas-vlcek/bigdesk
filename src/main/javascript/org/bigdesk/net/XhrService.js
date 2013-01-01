@@ -102,7 +102,7 @@ org.bigdesk.net.XhrService.prototype.disposeInternal = function() {
  * Request for NodesStats data.
  * The first parameter if callback function which is passed 'timestamp' and 'json response' data.
  * The second optional parameter is value of timestamp. If not provided goog.now() is used instead.
- * @param {!function(number, Object)} callback
+ * @param {!function(!number, !Object)} callback
  * @param {number=} opt_timestamp
  */
 org.bigdesk.net.XhrService.prototype.getNodesStats = function(callback, opt_timestamp) {
@@ -130,7 +130,7 @@ org.bigdesk.net.XhrService.prototype.getNodesStats = function(callback, opt_time
  * Request for NodesInfo data.
  * The first parameter if callback function which is passed 'timestamp' and 'json response' data.
  * The second optional parameter is value of timestamp. If not provided goog.now() is used instead.
- * @param {!function(number, Object)} callback
+ * @param {!function(!number, !Object)} callback
  * @param {number=} opt_timestamp
  */
 org.bigdesk.net.XhrService.prototype.getNodesInfo = function(callback, opt_timestamp) {

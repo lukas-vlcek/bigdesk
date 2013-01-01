@@ -84,9 +84,17 @@ org.bigdesk.store.Manager = function(opt_config) {
      */
     this.store = new org.bigdesk.store.Store();
 
-//    this.delayId_nodesStats = new goog.async.Delay(function(){
-//    }, this.config.delay);
+    this.delay_nodesStats = new goog.async.Delay(
+        function(){
+            this.xhrService.getNodesStats(this.processNewNodesStats)
+        },
+        this.config.delay);
 
+    this.delay_nodesInfo = new goog.async.Delay(
+        function(){
+            this.xhrService.getNodesInfo(this.processNewNodesInfo)
+        },
+        this.config.delay);
 
 
 };
@@ -96,6 +104,8 @@ goog.inherits(org.bigdesk.store.Manager, goog.events.EventTarget);
 org.bigdesk.store.Manager.prototype.disposeInternal = function() {
 
     // Dispose of all Disposable objects owned by this class.
+    this.delay_nodesStats.dispose();
+    this.delay_nodesInfo.dispose();
 
     // Remove listeners added by this class.
 
@@ -113,8 +123,8 @@ org.bigdesk.store.Manager.prototype.disposeInternal = function() {
 
 /**
  * Called when a new nodes stats data is retrieved.
- * @param {number} timestamp
- * @param {Object} data
+ * @param {!number} timestamp
+ * @param {!Object} data
  * @protected
  */
 org.bigdesk.store.Manager.prototype.processNewNodesStats = function(timestamp, data) {
@@ -125,8 +135,8 @@ org.bigdesk.store.Manager.prototype.processNewNodesStats = function(timestamp, d
 
 /**
  * Called when a new nodes info data is retrieved.
- * @param {number} timestamp
- * @param {Object} data
+ * @param {!number} timestamp
+ * @param {!Object} data
  * @protected
  */
 org.bigdesk.store.Manager.prototype.processNewNodesInfo = function(timestamp, data) {
