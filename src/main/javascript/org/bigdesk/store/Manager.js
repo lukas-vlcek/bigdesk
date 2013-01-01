@@ -19,8 +19,8 @@
  * <ul>
  *     <li>Starts, stops and manages delays between all async calls.
  *     <li>Collects responses from async calls and pushes them to Store.
- *     <li>Dropping old data from Store.
- *     <li>Firing custom events when data in Store changes.
+ *     <li>Drops old data from Store.
+ *     <li>Fires custom events when data in Store changes.
  * </ul>
  * Execution of async calls is delegated to XhrService or JsonpService (depending on Manager configuration).
  * @author Lukas Vlcek (lukas.vlcek@gmail.com)
