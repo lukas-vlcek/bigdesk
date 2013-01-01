@@ -122,9 +122,11 @@ org.bigdesk.store.Manager.prototype.disposeInternal = function() {
 };
 
 /**
- *
+ * Called from nodes stats delay. Once a new data is received from the service point
+ * it first drops old data, then adds a new data and resets the delay.
  * @param {!number} timestamp
  * @param {!Object} data
+ * @protected
  */
 org.bigdesk.store.Manager.prototype.processNodesStatsDelay = function(timestamp, data) {
     this.dropOldNodesStats(timestamp - this.config.window);
@@ -154,9 +156,11 @@ org.bigdesk.store.Manager.prototype.dropOldNodesStats = function(timestamp) {
 };
 
 /**
- *
+ * Called from nodes info delay. Once a new data is received from the service point
+ * it first drops old data, then adds a new data and resets the delay.
  * @param {!number} timestamp
  * @param {!Object} data
+ * @protected
  */
 org.bigdesk.store.Manager.prototype.processNodesInfoDelay = function(timestamp, data) {
     this.dropOldNodesInfo(timestamp - this.config.window);
