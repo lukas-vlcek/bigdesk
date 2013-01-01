@@ -25,6 +25,13 @@ goog.require('org.bigdesk.store.Manager.EventType');
 
 goog.require('goog.events.Event');
 
+/**
+ *
+ * @param timestamp
+ * @param json
+ * @constructor
+ * @extends {goog.events.Event}
+ */
 org.bigdesk.store.event.NodesInfoAdd = function(timestamp, json) {
 
     goog.base(this, org.bigdesk.store.Manager.EventType.NODES_INFO_ADD);
