@@ -22,14 +22,16 @@
  *     <li>Drops old data from Store.
  *     <li>Fires custom events when data in Store changes.
  * </ul>
- * Execution of async calls is delegated to XhrService or JsonpService (depending on Manager configuration).
+ * Execution of async calls is delegated to Service implementation provided by ServiceProvider.
  * @author Lukas Vlcek (lukas.vlcek@gmail.com)
  */
 
 goog.provide('org.bigdesk.store.Manager');
 goog.provide('org.bigdesk.store.Manager.EventType');
 
-goog.require('org.bigdesk.net.XhrService');
+goog.require('org.bigdesk.net.Service');
+goog.require('org.bigdesk.net.ServiceProvider');
+goog.require('org.bigdesk.net.DefaultServiceProvider');
 
 goog.require('goog.async.Delay');
 goog.require('goog.object');
@@ -41,10 +43,11 @@ goog.require("goog.events.EventTarget");
 /**
  * Creates a new Manager.
  * @param {Object=} opt_config optional configuration
+ * @param {org.bigdesk.net.ServiceProvider=} opt_serviceProvider
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-org.bigdesk.store.Manager = function(opt_config) {
+org.bigdesk.store.Manager = function(opt_config, opt_serviceProvider) {
 
     goog.base(this);
 
@@ -52,12 +55,15 @@ org.bigdesk.store.Manager = function(opt_config) {
         goog.object.extend(this.config, opt_config);
     }
 
+    this.serviceProvider_ = goog.isDef(opt_serviceProvider) ? opt_serviceProvider : new org.bigdesk.net.DefaultServiceProvider();
+
     /**
      * @type {!Object}
      * @private
      */
     this.config = {
         endpoint: 'http://localhost:9200',
+        net_service_provider: 'xhr',
         jsonp: false,
         delay: 4000,
         window: 10000
@@ -67,10 +73,11 @@ org.bigdesk.store.Manager = function(opt_config) {
     var endpointUri = goog.Uri.parse(this.config.endpoint);
 
     /**
-     * @type {!org.bigdesk.net.XhrService}
+     * @type {!org.bigdesk.net.Service}
      * @private
      */
-    this.xhrService = new org.bigdesk.net.XhrService(endpointUri);
+    this.xhrService = this.serviceProvider_.getService(this.config.net_service_provider,endpointUri);
+//    this.xhrService = new org.bigdesk.net.XhrService(endpointUri);
 
     /**
      * @type {boolean}
