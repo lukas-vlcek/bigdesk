@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+/**
+ * @fileoverview TestService is a Service used for tests instead of production Service implementations.
+ * The idea is that it does not need to do any async requests and we have full control over the response
+ * data thus we do not have to mock any elasticsearch node at this level.
+ * @author Lukas Vlcek (lukas.vlcek@gmail.com)
+ */
+
 goog.provide('org.bigdesk.net.TestService');
 
 goog.require('org.bigdesk.net.Service');
@@ -21,7 +28,6 @@ goog.require('org.bigdesk.net.Service');
 goog.require('goog.debug.Logger');
 
 /**
- *
  * @constructor
  * @implements {org.bigdesk.net.Service}
  */
@@ -30,7 +36,7 @@ org.bigdesk.net.TestService = function() {
 };
 
 /** @inheritDoc */
-org.bigdesk.net.TestService.prototype.getNodesStats = function (callback, opt_timestamp) {;
+org.bigdesk.net.TestService.prototype.getNodesStats = function (callback, opt_timestamp) {
 
     var data = { type: 'nodes stats' };
     callback(opt_timestamp, data);

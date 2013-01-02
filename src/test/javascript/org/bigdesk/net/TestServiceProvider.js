@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+/**
+ * @fileoverview Simple implementation of ServiceProvider used in tests. It knows only
+ * how to serve TestService instance.
+ * @author Lukas Vlcek (lukas.vlcek@gmail.com)
+ */
+
 goog.provide('org.bigdesk.net.TestServiceProvider');
 
 goog.require('org.bigdesk.net.Service');
@@ -23,7 +29,6 @@ goog.require('org.bigdesk.net.TestService');
 goog.require('goog.Uri');
 
 /**
- *
  * @constructor
  * @implements {org.bigdesk.net.ServiceProvider}
  */
