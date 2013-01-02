@@ -34,6 +34,8 @@ org.bigdesk.net.TestServiceProvider.prototype.getService = function (name, uri) 
 
     if (name === 'test') {
         return new org.bigdesk.net.TestService(uri);
+    } else {
+        throw new Error("Unsupported name of service implementation ["+name+"]");
     }
 
 };

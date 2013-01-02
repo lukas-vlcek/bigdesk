@@ -32,7 +32,7 @@ org.bigdesk.net.TestService = function() {
 /** @inheritDoc */
 org.bigdesk.net.TestService.prototype.getNodesStats = function (callback, opt_timestamp) {;
 
-    var data = {};
+    var data = { type: 'nodes stats' };
     callback(opt_timestamp, data);
 
 };
@@ -40,7 +40,7 @@ org.bigdesk.net.TestService.prototype.getNodesStats = function (callback, opt_ti
 /** @inheritDoc */
 org.bigdesk.net.TestService.prototype.getNodesInfo = function (callback, opt_timestamp) {
 
-    var data = {};
+    var data = { type: 'nodes info' };
     callback(opt_timestamp, data);
 
 };

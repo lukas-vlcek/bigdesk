@@ -21,26 +21,42 @@ goog.require('goog.events.EventTarget');
 
 goog.require('org.bigdesk.store.Manager');
 goog.require('org.bigdesk.net.TestServiceProvider');
+goog.require('org.bigdesk.store.Manager.EventType');
 
 goog.require('goog.testing.jsunit');
 
+var getNewStoreManager = function(configuration) {
+
+    var config = {
+        net_service_provider: 'test'
+    };
+
+    if (goog.isDefAndNotNull(configuration)) {
+        goog.mixin(config, configuration)
+    }
+
+    /** @type {org.bigdesk.net.ServiceProvider} */
+     var serviceProvider = new org.bigdesk.net.TestServiceProvider();
+
+    this.manager = new org.bigdesk.store.Manager(config, serviceProvider);
+    return this.manager;
+};
+
+var tearDown = function() {
+    if (this.manager) {
+        this.manager.dispose(); delete this.manager;
+    }
+};
+
 /**
- * Test that if you start the manager, it pulls all resources immediately without the delay.
+ * If you start the manager, it pulls all resources immediately without the delay.
  * This test uses TestService which does not execute any requests and the results are delivered immediately,
  * in practice, the Service executes some kind of async request, so the results are delivered after some
  * time.
  */
 var testManagerStartStop = function () {
 
-    var config = {
-        endpoint: 'http://localhost:9200',
-        net_service_provider: 'test'
-    };
-
-    /** @type {org.bigdesk.net.ServiceProvider} */
-    var serviceProvider = new org.bigdesk.net.TestServiceProvider();
-
-    var manager = new org.bigdesk.store.Manager(config, serviceProvider);
+    var manager = getNewStoreManager();
 
     assertEquals("Manager's store is empty", 0, manager.getNodesStatsCount());
     assertEquals("Manager's store is empty", 0, manager.getNodesInfoCount());
@@ -50,4 +66,29 @@ var testManagerStartStop = function () {
     assertEquals("Manager's store contains just one item", 1, manager.getNodesStatsCount());
     assertEquals("Manager's store contains just one item", 1, manager.getNodesInfoCount());
 
+};
+
+var testManagerEvents = function () {
+
+    var manager = getNewStoreManager();
+
+    var id1 = goog.events.listen(
+        manager,
+        org.bigdesk.store.Manager.EventType.NODES_STATS_ADD,
+        function(e) {
+            var event = /** @type {org.bigdesk.store.event.NodesStatsAdd} */ e;
+            assertEquals('Expecting event with nodes stats', 'nodes stats', event.getNodesStats()['type'])
+        }
+    );
+
+    var id2 = goog.events.listen(
+        manager,
+        org.bigdesk.store.Manager.EventType.NODES_INFO_ADD,
+        function(e) {
+            var event = /** @type {org.bigdesk.store.event.NodesInfoAdd} */ e;
+            assertEquals('Expecting event with nodes info', 'nodes info', event.getNodesStats()['type'])
+        }
+    );
+
+    manager.start().stop();
 };
