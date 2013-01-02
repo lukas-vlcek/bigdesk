@@ -66,8 +66,8 @@ org.bigdesk.store.Store.prototype.disposeInternal = function() {
 
 /**
  * Add a new item into nodesStats.
- * @param timestamp
- * @param nodesStats
+ * @param {!number} timestamp
+ * @param {!Object} nodesStats
  * @return {boolean} True if an element was inserted.
  */
 org.bigdesk.store.Store.prototype.addNodesStats = function(timestamp, nodesStats) {
@@ -76,7 +76,7 @@ org.bigdesk.store.Store.prototype.addNodesStats = function(timestamp, nodesStats
 
 /**
  * Remove all items from nodesStats older then timestamp (including).
- * @param timestamp
+ * @param {!number} timestamp
  * @return {number}
  */
 org.bigdesk.store.Store.prototype.removeNodesStatsStaringFrom = function(timestamp) {
@@ -85,8 +85,8 @@ org.bigdesk.store.Store.prototype.removeNodesStatsStaringFrom = function(timesta
 
 /**
  * Add a new item into nodesInfo.
- * @param timestamp
- * @param nodesInfo
+ * @param {!number} timestamp
+ * @param {!Object} nodesInfo
  * @return {boolean}
  */
 org.bigdesk.store.Store.prototype.addNodesInfo = function(timestamp, nodesInfo) {
@@ -95,7 +95,7 @@ org.bigdesk.store.Store.prototype.addNodesInfo = function(timestamp, nodesInfo) 
 
 /**
  * Remove all items from nodesInfo older then timestamp (including).
- * @param timestamp
+ * @param {!number} timestamp
  * @return {number}
  */
 org.bigdesk.store.Store.prototype.removeNodesInfosStaringFrom = function(timestamp) {
@@ -104,8 +104,8 @@ org.bigdesk.store.Store.prototype.removeNodesInfosStaringFrom = function(timesta
 
 /**
  * Add a new item into clusterStates.
- * @param timestamp
- * @param clusterState
+ * @param {!number} timestamp
+ * @param {!Object} clusterState
  * @return {boolean}
  */
 org.bigdesk.store.Store.prototype.addClusterState = function(timestamp, clusterState) {
@@ -114,7 +114,7 @@ org.bigdesk.store.Store.prototype.addClusterState = function(timestamp, clusterS
 
 /**
  * Remove all items from clusterStates older then timestamp (including).
- * @param timestamp
+ * @param {!number} timestamp
  * @return {number}
  */
 org.bigdesk.store.Store.prototype.removeClusterStatesStaringFrom = function(timestamp) {
@@ -123,8 +123,8 @@ org.bigdesk.store.Store.prototype.removeClusterStatesStaringFrom = function(time
 
 /**
  * Add a new item into clusterHealths.
- * @param timestamp
- * @param clusterHealth
+ * @param {!number} timestamp
+ * @param {!Object} clusterHealth
  * @return {boolean}
  */
 org.bigdesk.store.Store.prototype.addClusterHealth = function(timestamp, clusterHealth) {
@@ -133,7 +133,7 @@ org.bigdesk.store.Store.prototype.addClusterHealth = function(timestamp, cluster
 
 /**
  * Remove all items from clusterHealths older then timestamp (including).
- * @param timestamp
+ * @param {!number} timestamp
  * @return {number}
  */
 org.bigdesk.store.Store.prototype.removeClusterHealthsStaringFrom = function(timestamp) {
@@ -142,8 +142,8 @@ org.bigdesk.store.Store.prototype.removeClusterHealthsStaringFrom = function(tim
 
 /**
  * Add a new item into indexSegments.
- * @param timestamp
- * @param indexSegments
+ * @param {!number} timestamp
+ * @param {!Object} indexSegments
  * @return {boolean}
  */
 org.bigdesk.store.Store.prototype.addIndexSegments = function(timestamp, indexSegments) {
@@ -152,7 +152,7 @@ org.bigdesk.store.Store.prototype.addIndexSegments = function(timestamp, indexSe
 
 /**
  * Remove all items from indexSegments older then timestamp (including).
- * @param timestamp
+ * @param {!number} timestamp
  * @return {number}
  */
 org.bigdesk.store.Store.prototype.removeIndexSegmentsStaringFrom = function(timestamp) {
@@ -189,14 +189,16 @@ org.bigdesk.store.Store.prototype.timestampsCompareOnlyGreater = function(a, b) 
 
 /**
  *
- * @param {number} timestamp
- * @param {Object} item
- * @param {Object} context
- * @param {string} arrayName
+ * @param {!number} timestamp
+ * @param {!Object} item
+ * @param {!Object} context
+ * @param {!string} arrayName
  * @return {boolean}
  * @private
  */
 org.bigdesk.store.Store.prototype.addItem_ = function(timestamp, item, context, arrayName) {
+    if (!goog.isNumber(timestamp)) { throw new Error("timestamp must be a number") }
+    if (!goog.isObject(item)) { throw new Error("item must be an object") }
     var newArrayElement = { timestamp: timestamp, value: item };
     // We assume an array is sorted (descending) so we can optimize here.
     // First we check the first element's timestamp, if it is less then incoming
@@ -216,13 +218,14 @@ org.bigdesk.store.Store.prototype.addItem_ = function(timestamp, item, context, 
 
 /**
  *
- * @param {number} timestamp
- * @param {Object} context
- * @param {string} arrayName
+ * @param {!number} timestamp
+ * @param {!Object} context
+ * @param {!string} arrayName
  * @return {number}
  * @private
  */
 org.bigdesk.store.Store.prototype.removeItemStartingFrom_ = function(timestamp, context, arrayName) {
+    if (!goog.isNumber(timestamp)) { throw new Error("timestamp must be a number") }
     var index = goog.array.binarySearch(
         context[arrayName],
         { timestamp: timestamp },

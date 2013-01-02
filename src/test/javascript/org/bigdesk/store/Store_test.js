@@ -18,6 +18,82 @@ goog.require('org.bigdesk.store.Store');
 
 goog.require('goog.testing.jsunit');
 
+var testMissingTimestamp = function() {
+
+    var store = new org.bigdesk.store.Store();
+
+    try {
+        var error = assertThrows('Must throw an Error',store.addNodesStats());
+        fail('store.addNodesStats incorrectly doesn\'t thrown exception');
+    } catch (e) {
+        assertEquals('error message', 'timestamp must be a number', e.message);
+    }
+};
+
+var testMissingItem = function() {
+
+    var store = new org.bigdesk.store.Store();
+
+    try {
+        var error = assertThrows('Must throw an Error',store.addNodesStats(1));
+        fail('store.addNodesStats incorrectly doesn\'t thrown exception');
+    } catch (e) {
+        assertEquals('error message', 'item must be an object', e.message);
+    }
+};
+
+var testNullTimestamp = function() {
+
+    var store = new org.bigdesk.store.Store();
+
+    try {
+        var error = assertThrows('Must throw an Error',store.addNodesStats(null));
+        fail('store.addNodesStats incorrectly doesn\'t thrown exception');
+    } catch (e) {
+        assertEquals('error message', 'timestamp must be a number', e.message);
+    }
+};
+
+var testNullItem = function() {
+
+    var store = new org.bigdesk.store.Store();
+
+    try {
+        var error = assertThrows('Must throw an Error',store.addNodesStats(1, null));
+        fail('store.addNodesStats incorrectly doesn\'t thrown exception');
+    } catch (e) {
+        assertEquals('error message', 'item must be an object', e.message);
+    }
+};
+
+var testUndefinedTimestamp = function() {
+
+    var store = new org.bigdesk.store.Store();
+
+    var undef;
+    assertTrue(!goog.isDef(undef));
+    try {
+        var error = assertThrows('Must throw an Error',store.addNodesStats(undef));
+        fail('store.addNodesStats incorrectly doesn\'t thrown exception');
+    } catch (e) {
+        assertEquals('error message', 'timestamp must be a number', e.message);
+    }
+};
+
+var testUndefinedItem = function() {
+
+    var store = new org.bigdesk.store.Store();
+
+    var undef;
+    assertTrue(!goog.isDef(undef));
+    try {
+        var error = assertThrows('Must throw an Error',store.addNodesStats(1, undef));
+        fail('store.addNodesStats incorrectly doesn\'t thrown exception');
+    } catch (e) {
+        assertEquals('error message', 'item must be an object', e.message);
+    }
+};
+
 var testNodesStats = function() {
 
     var store = new org.bigdesk.store.Store();

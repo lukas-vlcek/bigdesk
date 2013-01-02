@@ -77,7 +77,7 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceProvider) {
 
     this.log.info('Instantiating Manager with configuration: ' + goog.debug.expose(this.config));
 
-    this.serviceProvider_ = goog.isDef(opt_serviceProvider) ? opt_serviceProvider : new org.bigdesk.net.DefaultServiceProvider();
+    this.serviceProvider = goog.isDef(opt_serviceProvider) ? opt_serviceProvider : new org.bigdesk.net.DefaultServiceProvider();
 
     /** @type {!goog.Uri} */
     var endpointUri = goog.Uri.parse(this.config.endpoint);
@@ -86,7 +86,7 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceProvider) {
      * @type {!org.bigdesk.net.Service}
      * @private
      */
-    this.xhrService = this.serviceProvider_.getService(this.config.net_service_provider,endpointUri);
+    this.netService = this.serviceProvider.getService(this.config.net_service_provider,endpointUri);
 //    this.xhrService = new org.bigdesk.net.XhrService(endpointUri);
 
     /**
@@ -105,13 +105,13 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceProvider) {
 
     this.delay_nodesStats = new goog.async.Delay(
         function(){
-            thiz_.xhrService.getNodesStats(goog.bind(thiz_.processNodesStatsDelay, thiz_))
+            thiz_.netService.getNodesStats(goog.bind(thiz_.processNodesStatsDelay, thiz_))
         },
         this.config.delay);
 
     this.delay_nodesInfo = new goog.async.Delay(
         function(){
-            thiz_.xhrService.getNodesInfo(goog.bind(thiz_.processNodesInfoDelay, thiz_))
+            thiz_.netService.getNodesInfo(goog.bind(thiz_.processNodesInfoDelay, thiz_))
         },
         this.config.delay);
 };
@@ -133,7 +133,7 @@ org.bigdesk.store.Manager.prototype.disposeInternal = function() {
 
     // Remove references to DOM nodes, which are COM objects in IE.
     delete this.store;
-    delete this.xhrService;
+    delete this.netService;
     delete this.running;
     delete this.config;
 

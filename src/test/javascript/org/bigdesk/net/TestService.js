@@ -37,17 +37,15 @@ org.bigdesk.net.TestService = function() {
 
 /** @inheritDoc */
 org.bigdesk.net.TestService.prototype.getNodesStats = function (callback, opt_timestamp) {
-
+    var timestamp = opt_timestamp || goog.now();
     var data = { type: 'nodes stats' };
-    callback(opt_timestamp, data);
-
+    callback(timestamp, data);
 };
 
 /** @inheritDoc */
 org.bigdesk.net.TestService.prototype.getNodesInfo = function (callback, opt_timestamp) {
-
+    var timestamp = opt_timestamp || goog.now();
     var data = { type: 'nodes info' };
-    callback(opt_timestamp, data);
-
+    callback(timestamp, data);
 };
 
