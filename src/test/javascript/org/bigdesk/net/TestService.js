@@ -30,11 +30,7 @@ org.bigdesk.net.TestService = function() {
 };
 
 /** @inheritDoc */
-org.bigdesk.net.TestService.prototype.getNodesStats = function (callback, opt_timestamp) {
-
-    console.log('getNodesStats >>', this);
-    console.log(callback);
-    console.log(opt_timestamp);
+org.bigdesk.net.TestService.prototype.getNodesStats = function (callback, opt_timestamp) {;
 
     var data = {};
     callback(opt_timestamp, data);
@@ -43,10 +39,6 @@ org.bigdesk.net.TestService.prototype.getNodesStats = function (callback, opt_ti
 
 /** @inheritDoc */
 org.bigdesk.net.TestService.prototype.getNodesInfo = function (callback, opt_timestamp) {
-
-    console.log('getNodesInfo >>', this);
-    console.log(callback);
-    console.log(opt_timestamp);
 
     var data = {};
     callback(opt_timestamp, data);

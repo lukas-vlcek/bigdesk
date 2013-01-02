@@ -24,7 +24,13 @@ goog.require('org.bigdesk.net.TestServiceProvider');
 
 goog.require('goog.testing.jsunit');
 
-var testManager = function () {
+/**
+ * Test that if you start the manager, it pulls all resources immediately without the delay.
+ * This test uses TestService which does not execute any requests and the results are delivered immediately,
+ * in practice, the Service executes some kind of async request, so the results are delivered after some
+ * time.
+ */
+var testManagerStartStop = function () {
 
     var config = {
         endpoint: 'http://localhost:9200',
@@ -36,9 +42,12 @@ var testManager = function () {
 
     var manager = new org.bigdesk.store.Manager(config, serviceProvider);
 
-    console.log('manager',manager);
-    manager.start();
+    assertEquals("Manager's store is empty", 0, manager.getNodesStatsCount());
+    assertEquals("Manager's store is empty", 0, manager.getNodesInfoCount());
 
-    assertTrue("We should get here...", true);
+    manager.start().stop();
+
+    assertEquals("Manager's store contains just one item", 1, manager.getNodesStatsCount());
+    assertEquals("Manager's store contains just one item", 1, manager.getNodesInfoCount());
 
 };

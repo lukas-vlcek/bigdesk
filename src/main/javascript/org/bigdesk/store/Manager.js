@@ -105,14 +105,12 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceProvider) {
 
     this.delay_nodesStats = new goog.async.Delay(
         function(){
-            console.log('delay_nodesStats');
             thiz_.xhrService.getNodesStats(goog.bind(thiz_.processNodesStatsDelay, thiz_))
         },
         this.config.delay);
 
     this.delay_nodesInfo = new goog.async.Delay(
         function(){
-            console.log('delay_nodesInfo');
             thiz_.xhrService.getNodesInfo(goog.bind(thiz_.processNodesInfoDelay, thiz_))
         },
         this.config.delay);
@@ -149,7 +147,6 @@ org.bigdesk.store.Manager.prototype.disposeInternal = function() {
  * @protected
  */
 org.bigdesk.store.Manager.prototype.processNodesStatsDelay = function(timestamp, data) {
-    console.log('>>>', this);
     this.dropOldNodesStats(timestamp - this.config.window);
     this.processNewNodesStats(timestamp, data);
     this.delay_nodesStats.start();
@@ -239,6 +236,22 @@ org.bigdesk.store.Manager.prototype.start = function() {
 
     }
     return this;
+};
+
+/**
+ *
+ * @return {!number}
+ */
+org.bigdesk.store.Manager.prototype.getNodesStatsCount = function() {
+    return this.store.nodesStats.length;
+};
+
+/**
+ *
+ * @return {!number}
+ */
+org.bigdesk.store.Manager.prototype.getNodesInfoCount = function() {
+    return this.store.nodesInfos.length;
 };
 
 /**
