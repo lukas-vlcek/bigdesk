@@ -45,7 +45,7 @@ goog.require("goog.Disposable");
  */
 org.bigdesk.net.XhrService = function(uri) {
 
-    goog.base(this);
+    goog.Disposable.call(this);
 
     /**
      * @type {goog.Uri}
@@ -96,9 +96,9 @@ goog.inherits(org.bigdesk.net.XhrService, goog.Disposable);
 
 /** @inheritDoc */
 org.bigdesk.net.XhrService.prototype.disposeInternal = function() {
+    org.bigdesk.net.XhrService.superClass_.disposeInternal(this);
     delete this.uri;
     goog.dispose(this.xhrManager);
-    goog.base(this, 'disposeInternal');
 };
 
 /** @inheritDoc */

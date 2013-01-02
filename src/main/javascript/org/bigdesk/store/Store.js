@@ -32,7 +32,7 @@ goog.require("goog.Disposable");
  */
 org.bigdesk.store.Store = function() {
 
-    goog.base(this);
+    goog.Disposable.call(this);
 
     /** @type {goog.array.ArrayLike} */
     this.nodesStats = [];
@@ -54,13 +54,14 @@ goog.inherits(org.bigdesk.store.Store, goog.Disposable);
 /** @inheritDoc */
 org.bigdesk.store.Store.prototype.disposeInternal = function() {
 
+    org.bigdesk.store.Store.superClass_.disposeInternal.call(this);
+
     delete this.nodesStats;
     delete this.nodesInfos;
     delete this.clusterStates;
     delete this.clusterHealths;
     delete this.indexSegments;
 
-    goog.base(this, 'disposeInternal');
 };
 
 /**
