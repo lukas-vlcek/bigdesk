@@ -96,7 +96,7 @@ goog.inherits(org.bigdesk.net.XhrService, goog.Disposable);
 
 /** @inheritDoc */
 org.bigdesk.net.XhrService.prototype.disposeInternal = function() {
-    org.bigdesk.net.XhrService.superClass_.disposeInternal(this);
+    org.bigdesk.net.XhrService.superClass_.disposeInternal.call(this);
     delete this.uri;
     goog.dispose(this.xhrManager);
 };
