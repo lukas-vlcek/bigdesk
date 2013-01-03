@@ -77,10 +77,10 @@ org.bigdesk.store.Store.prototype.addNodesStats = function(timestamp, nodesStats
 /**
  * Remove all items from nodesStats older then timestamp (including).
  * @param {!number} timestamp
- * @return {number}
+ * @return {!Array.<number>} array with dropped timestamps
  */
-org.bigdesk.store.Store.prototype.removeNodesStatsStaringFrom = function(timestamp) {
-    return this.removeItemStartingFrom_(timestamp, this, 'nodesStats');
+org.bigdesk.store.Store.prototype.dropNodesStatsStaringFrom = function(timestamp) {
+    return this.dropItemStartingFrom_(timestamp, this, 'nodesStats');
 };
 
 /**
@@ -96,10 +96,10 @@ org.bigdesk.store.Store.prototype.addNodesInfo = function(timestamp, nodesInfo) 
 /**
  * Remove all items from nodesInfo older then timestamp (including).
  * @param {!number} timestamp
- * @return {number}
+ * @return {!Array.<number>} array with dropped timestamps
  */
-org.bigdesk.store.Store.prototype.removeNodesInfosStaringFrom = function(timestamp) {
-    return this.removeItemStartingFrom_(timestamp, this, 'nodesInfos');
+org.bigdesk.store.Store.prototype.dropNodesInfosStaringFrom = function(timestamp) {
+    return this.dropItemStartingFrom_(timestamp, this, 'nodesInfos');
 };
 
 /**
@@ -115,10 +115,10 @@ org.bigdesk.store.Store.prototype.addClusterState = function(timestamp, clusterS
 /**
  * Remove all items from clusterStates older then timestamp (including).
  * @param {!number} timestamp
- * @return {number}
+ * @return {!Array.<number>} array with dropped timestamps
  */
-org.bigdesk.store.Store.prototype.removeClusterStatesStaringFrom = function(timestamp) {
-    return this.removeItemStartingFrom_(timestamp, this, 'clusterStates');
+org.bigdesk.store.Store.prototype.dropClusterStatesStaringFrom = function(timestamp) {
+    return this.dropItemStartingFrom_(timestamp, this, 'clusterStates');
 };
 
 /**
@@ -134,10 +134,10 @@ org.bigdesk.store.Store.prototype.addClusterHealth = function(timestamp, cluster
 /**
  * Remove all items from clusterHealths older then timestamp (including).
  * @param {!number} timestamp
- * @return {number}
+ * @return {!Array.<number>} array with dropped timestamps
  */
-org.bigdesk.store.Store.prototype.removeClusterHealthsStaringFrom = function(timestamp) {
-    return this.removeItemStartingFrom_(timestamp, this, 'clusterHealths');
+org.bigdesk.store.Store.prototype.dropClusterHealthsStaringFrom = function(timestamp) {
+    return this.dropItemStartingFrom_(timestamp, this, 'clusterHealths');
 };
 
 /**
@@ -153,12 +153,11 @@ org.bigdesk.store.Store.prototype.addIndexSegments = function(timestamp, indexSe
 /**
  * Remove all items from indexSegments older then timestamp (including).
  * @param {!number} timestamp
- * @return {number}
+ * @return {!Array.<number>} array with dropped timestamps
  */
-org.bigdesk.store.Store.prototype.removeIndexSegmentsStaringFrom = function(timestamp) {
-    return this.removeItemStartingFrom_(timestamp, this, 'indexSegments');
+org.bigdesk.store.Store.prototype.dropIndexSegmentsStaringFrom = function(timestamp) {
+    return this.dropItemStartingFrom_(timestamp, this, 'indexSegments');
 };
-
 
 /**
  * Compares its two arguments for order, using < and > operators.
@@ -193,7 +192,7 @@ org.bigdesk.store.Store.prototype.timestampsCompareOnlyGreater = function(a, b) 
  * @param {!Object} item
  * @param {!Object} context
  * @param {!string} arrayName
- * @return {boolean}
+ * @return {boolean} insert succeeded?
  * @private
  */
 org.bigdesk.store.Store.prototype.addItem_ = function(timestamp, item, context, arrayName) {
@@ -221,20 +220,20 @@ org.bigdesk.store.Store.prototype.addItem_ = function(timestamp, item, context, 
  * @param {!number} timestamp
  * @param {!Object} context
  * @param {!string} arrayName
- * @return {number}
+ * @return {!Array.<number>} array with dropped timestamps
  * @private
  */
-org.bigdesk.store.Store.prototype.removeItemStartingFrom_ = function(timestamp, context, arrayName) {
+org.bigdesk.store.Store.prototype.dropItemStartingFrom_ = function(timestamp, context, arrayName) {
     if (!goog.isNumber(timestamp)) { throw new Error("timestamp must be a number") }
     var index = goog.array.binarySearch(
         context[arrayName],
         { timestamp: timestamp },
         org.bigdesk.store.Store.prototype.timestampsCompareOnlyGreater);
     if (index >= 0) {
-        var length = context[arrayName].length;
+        var dropped = /** @type {!Array.<number>} */ goog.array.slice(context[arrayName], index);
         context[arrayName] = goog.array.slice(context[arrayName], 0, index);
-        return length - context[arrayName].length;
+        return dropped;
     } else {
-        return 0;
+        return [];
     }
 };

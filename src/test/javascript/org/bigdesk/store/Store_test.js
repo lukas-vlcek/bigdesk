@@ -94,6 +94,32 @@ var testUndefinedItem = function() {
     }
 };
 
+var testDropItems = function() {
+
+    var store = new org.bigdesk.store.Store();
+
+    store.addNodesStats(3, {});
+    store.addNodesStats(5, {});
+    store.addNodesStats(4, {});
+    store.addNodesStats(2, {});
+
+    assertEquals("NodesStats array should have four items", 4, store.nodesStats.length);
+
+    assertArrayEquals("if dropped from 1 no items are actually removed",
+        [],
+        goog.array.map(store.dropNodesStatsStaringFrom(1), function(item){ return item.timestamp })
+    );
+
+    assertEquals("NodesStats array should have still four items", 4, store.nodesStats.length);
+
+    assertArrayEquals("if dropped from 1 no items are actually removed",
+        [5,4,3,2],
+        goog.array.map(store.dropNodesStatsStaringFrom(6), function(item){ return item.timestamp })
+    );
+
+    assertEquals("NodesStats array should be empty now", 0, store.nodesStats.length);
+};
+
 var testNodesStats = function() {
 
     var store = new org.bigdesk.store.Store();
@@ -111,8 +137,12 @@ var testNodesStats = function() {
         goog.array.map(store.nodesStats, function(item){ return item.timestamp })
     );
 
-    // delete all from existing timestamp
-    store.removeNodesStatsStaringFrom(2);
+    // drop all items after timestamp that is explicitly present in the array
+    var dropped = store.dropNodesStatsStaringFrom(2);
+    assertArrayEquals("dropped array is also sorted",
+        [2,1],
+        goog.array.map(dropped, function(item){ return item.timestamp })
+    );
 
     assertArrayEquals("NodesStats array should be kept sorted",
         [5,4,3],
@@ -128,8 +158,12 @@ var testNodesStats = function() {
         goog.array.map(store.nodesStats, function(item){ return item.timestamp })
     );
 
-    // delete all from non-existing timestamp
-    store.removeNodesStatsStaringFrom(6);
+    // drop all items after timestamp that is not explicitly present in the array
+    dropped = store.dropNodesStatsStaringFrom(6);
+    assertArrayEquals("dropped array is also sorted",
+        [5,4,3],
+        goog.array.map(dropped, function(item){ return item.timestamp })
+    );
 
     assertArrayEquals("NodesStats array should be kept sorted",
         [9,8,7],
@@ -154,8 +188,12 @@ var testNodesInfos = function() {
         goog.array.map(store.nodesInfos, function(item){ return item.timestamp })
     );
 
-    // delete all from existing timestamp
-    store.removeNodesInfosStaringFrom(2);
+    // drop all items after timestamp that is explicitly present in the array
+    var dropped = store.dropNodesInfosStaringFrom(2);
+    assertArrayEquals("dropped array is also sorted",
+        [2,1],
+        goog.array.map(dropped, function(item){ return item.timestamp })
+    );
 
     assertArrayEquals("NodesInfos array should be kept sorted",
         [5,4,3],
@@ -171,8 +209,12 @@ var testNodesInfos = function() {
         goog.array.map(store.nodesInfos, function(item){ return item.timestamp })
     );
 
-    // delete all from non-existing timestamp
-    store.removeNodesInfosStaringFrom(6);
+    // drop all items after timestamp that is not explicitly present in the array
+    dropped = store.dropNodesInfosStaringFrom(6);
+    assertArrayEquals("dropped array is also sorted",
+        [5,4,3],
+        goog.array.map(dropped, function(item){ return item.timestamp })
+    );
 
     assertArrayEquals("NodesInfos array should be kept sorted",
         [9,8,7],
@@ -197,8 +239,12 @@ var testClusterStates = function() {
         goog.array.map(store.clusterStates, function(item){ return item.timestamp })
     );
 
-    // delete all from existing timestamp
-    store.removeClusterStatesStaringFrom(2);
+    // drop all items after timestamp that is explicitly present in the array
+    var dropped = store.dropClusterStatesStaringFrom(2);
+    assertArrayEquals("dropped array is also sorted",
+        [2,1],
+        goog.array.map(dropped, function(item){ return item.timestamp })
+    );
 
     assertArrayEquals("clusterStates array should be kept sorted",
         [5,4,3],
@@ -214,8 +260,12 @@ var testClusterStates = function() {
         goog.array.map(store.clusterStates, function(item){ return item.timestamp })
     );
 
-    // delete all from non-existing timestamp
-    store.removeClusterStatesStaringFrom(6);
+    // drop all items after timestamp that is not explicitly present in the array
+    dropped = store.dropClusterStatesStaringFrom(6);
+    assertArrayEquals("dropped array is also sorted",
+        [5,4,3],
+        goog.array.map(dropped, function(item){ return item.timestamp })
+    );
 
     assertArrayEquals("clusterStates array should be kept sorted",
         [9,8,7],
@@ -240,8 +290,12 @@ var testClusterHealths = function() {
         goog.array.map(store.clusterHealths, function(item){ return item.timestamp })
     );
 
-    // delete all from existing timestamp
-    store.removeClusterHealthsStaringFrom(2);
+    // drop all items after timestamp that is explicitly present in the array
+    var dropped = store.dropClusterHealthsStaringFrom(2);
+    assertArrayEquals("dropped array is also sorted",
+        [2,1],
+        goog.array.map(dropped, function(item){ return item.timestamp })
+    );
 
     assertArrayEquals("clusterHealths array should be kept sorted",
         [5,4,3],
@@ -257,8 +311,12 @@ var testClusterHealths = function() {
         goog.array.map(store.clusterHealths, function(item){ return item.timestamp })
     );
 
-    // delete all from non-existing timestamp
-    store.removeClusterHealthsStaringFrom(6);
+    // drop all items after timestamp that is not explicitly present in the array
+    dropped = store.dropClusterHealthsStaringFrom(6);
+    assertArrayEquals("dropped array is also sorted",
+        [5,4,3],
+        goog.array.map(dropped, function(item){ return item.timestamp })
+    );
 
     assertArrayEquals("clusterHealths array should be kept sorted",
         [9,8,7],
@@ -283,8 +341,12 @@ var testIndexSegments = function() {
         goog.array.map(store.indexSegments, function(item){ return item.timestamp })
     );
 
-    // delete all from existing timestamp
-    store.removeIndexSegmentsStaringFrom(2);
+    // drop all items after timestamp that is explicitly present in the array
+    var dropped = store.dropIndexSegmentsStaringFrom(2);
+    assertArrayEquals("dropped array is also sorted",
+        [2,1],
+        goog.array.map(dropped, function(item){ return item.timestamp })
+    );
 
     assertArrayEquals("indexSegments array should be kept sorted",
         [5,4,3],
@@ -300,8 +362,12 @@ var testIndexSegments = function() {
         goog.array.map(store.indexSegments, function(item){ return item.timestamp })
     );
 
-    // delete all from non-existing timestamp
-    store.removeIndexSegmentsStaringFrom(6);
+    // drop all items after timestamp that is not explicitly present in the array
+    dropped = store.dropIndexSegmentsStaringFrom(6);
+    assertArrayEquals("dropped array is also sorted",
+        [5,4,3],
+        goog.array.map(dropped, function(item){ return item.timestamp })
+    );
 
     assertArrayEquals("indexSegments array should be kept sorted",
         [9,8,7],
