@@ -16,7 +16,6 @@
 
 goog.provide('org.bigdesk.net.DefaultServiceProvider');
 
-goog.require('org.bigdesk.net.Service');
 goog.require('org.bigdesk.net.ServiceProvider');
 goog.require('org.bigdesk.net.XhrService');
 goog.require('org.bigdesk.net.JsonpService');

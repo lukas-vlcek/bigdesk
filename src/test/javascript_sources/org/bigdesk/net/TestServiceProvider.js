@@ -22,7 +22,6 @@
 
 goog.provide('org.bigdesk.net.TestServiceProvider');
 
-goog.require('org.bigdesk.net.Service');
 goog.require('org.bigdesk.net.ServiceProvider');
 goog.require('org.bigdesk.net.TestService');
 
@@ -38,7 +37,7 @@ org.bigdesk.net.TestServiceProvider = function() {};
 org.bigdesk.net.TestServiceProvider.prototype.getService = function (name, uri) {
 
     if (name === 'test') {
-        return new org.bigdesk.net.TestService(uri);
+        return new org.bigdesk.net.TestService();
     } else {
         throw new Error("Unsupported name of service implementation ["+name+"]");
     }

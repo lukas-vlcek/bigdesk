@@ -21,8 +21,6 @@
 
 goog.provide('org.bigdesk.store.event.NodesStatsRemove');
 
-goog.require('org.bigdesk.store.Manager.EventType');
-
 goog.require('goog.events.Event');
 
 /**

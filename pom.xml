@@ -18,6 +18,7 @@
     <packaging>war</packaging>
 
     <name>bigdesk</name>
+    <description>Live charts and statistics for elasticsearch cluster.</description>
     <url>http://bigdesk.org/</url>
 
     <licenses>
@@ -35,6 +36,16 @@
             <email>lukas.vlcek@gmail.com</email>
         </developer>
     </developers>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/lukas-vlcek/bigdesk/issues</url>
+    </issueManagement>
+
+    <scm>
+        <tag>v3.x.x</tag>
+        <url>https://github.com/lukas-vlcek/bigdesk</url>
+    </scm>
 
     <properties>
 
@@ -87,14 +98,40 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>2.5</version>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>${basedir}/src/main/javascript_tmp</directory>
-                            <followSymlinks>false</followSymlinks>
-                        </fileset>
-                    </filesets>
-                </configuration>
+                <executions>
+                    <execution>
+                        <id>clean-javascript</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <!--<excludeDefaultDirectories>true</excludeDefaultDirectories>-->
+                            <filesets>
+                                <fileset>
+                                    <directory>${basedir}/src/main/javascript</directory>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>clean-after-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                            <filesets>
+                                <fileset>
+                                    <directory>${basedir}/src/main/javascript</directory>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -115,25 +152,23 @@
                 <executions>
                     <execution>
                         <id>copy-resources</id>
-                        <!-- here the phase you need -->
                         <phase>process-sources</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <!--<outputDirectory>${basedir}/target/extra-resources</outputDirectory>-->
-                            <outputDirectory>${basedir}/src/main/javascript_tmp</outputDirectory>
+                            <outputDirectory>${basedir}/src/main/javascript</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>src/main/javascript</directory>
+                                    <directory>src/main/javascript_sources</directory>
                                     <!--<filtering>true</filtering>-->
                                 </resource>
                                 <resource>
-                                    <directory>src/test/javascript</directory>
-                                    <excludes>
-                                        <exclude>**/*_test.js</exclude>
-                                        <exclude>**/*.md</exclude>
-                                    </excludes>
+                                    <directory>src/test/javascript_sources</directory>
+                                    <!--<excludes>-->
+                                        <!--<exclude>**/*_test.js</exclude>-->
+                                        <!--<exclude>**/*.md</exclude>-->
+                                    <!--</excludes>-->
                                 </resource>
                             </resources>
                         </configuration>

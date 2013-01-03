@@ -36,8 +36,6 @@ goog.require('org.bigdesk.store.event.NodesInfoRemove');
 
 goog.require('org.bigdesk.store.Store');
 
-//goog.require('org.bigdesk.net.Service');
-//goog.require('org.bigdesk.net.ServiceProvider');
 goog.require('org.bigdesk.net.DefaultServiceProvider');
 
 goog.require('goog.async.Delay');

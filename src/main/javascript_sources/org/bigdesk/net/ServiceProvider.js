@@ -16,10 +16,6 @@
 
 goog.provide('org.bigdesk.net.ServiceProvider');
 
-goog.require('org.bigdesk.net.Service');
-
-goog.require('goog.Uri');
-
 /**
  * An interface that represents provider of a net Services.
  * The idea is that the provider implementation can return specific Service

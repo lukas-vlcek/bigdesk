@@ -1,4 +1,7 @@
 .idea
 *.iml
 
+# This folder is created and used only for Closure compilation.
+src/main/javascript
+
 target/
