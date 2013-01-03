@@ -159,9 +159,15 @@ org.bigdesk.store.Manager.prototype.processNodesStatsDelay = function(timestamp,
  * @protected
  */
 org.bigdesk.store.Manager.prototype.processNewNodesStats = function(timestamp, data) {
-    this.store.addNodesStats(timestamp, data);
-    var event = new org.bigdesk.store.event.NodesStatsAdd(timestamp, data);
-    this.dispatchEvent(event);
+    if (goog.isNumber(timestamp) && goog.isObject(data)) {
+        this.store.addNodesStats(timestamp, data);
+        var event = new org.bigdesk.store.event.NodesStatsAdd(timestamp, data);
+        this.dispatchEvent(event);
+    } else {
+        this.log.warning('Something went wrong when adding new nodes stats');
+        this.log.finer('timestamp: ' + timestamp);
+        this.log.finer('data: ' + goog.debug.expose(data));
+    }
 };
 
 /**
@@ -193,9 +199,15 @@ org.bigdesk.store.Manager.prototype.processNodesInfoDelay = function(timestamp, 
  * @protected
  */
 org.bigdesk.store.Manager.prototype.processNewNodesInfo = function(timestamp, data) {
-    this.store.addNodesInfo(timestamp, data);
-    var event = new org.bigdesk.store.event.NodesInfoAdd(timestamp, data);
-    this.dispatchEvent(event);
+    if (goog.isNumber(timestamp) && goog.isObject(data)) {
+        this.store.addNodesInfo(timestamp, data);
+        var event = new org.bigdesk.store.event.NodesInfoAdd(timestamp, data);
+        this.dispatchEvent(event);
+    } else {
+        this.log.warning('Something went wrong when adding new nodes info');
+        this.log.finer('timestamp: ' + timestamp);
+        this.log.finer('data: ' + goog.debug.expose(data));
+    }
 };
 
 /**
