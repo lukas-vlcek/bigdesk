@@ -107,14 +107,14 @@ var testDropItems = function() {
 
     assertArrayEquals("if dropped from 1 no items are actually removed",
         [],
-        goog.array.map(store.dropNodesStatsStaringFrom(1), function(item){ return item.timestamp })
+        goog.array.map(store.dropFromNodesStats(1), function(item){ return item.timestamp })
     );
 
     assertEquals("NodesStats array should have still four items", 4, store.nodesStats.length);
 
     assertArrayEquals("if dropped from 1 no items are actually removed",
         [5,4,3,2],
-        goog.array.map(store.dropNodesStatsStaringFrom(6), function(item){ return item.timestamp })
+        goog.array.map(store.dropFromNodesStats(6), function(item){ return item.timestamp })
     );
 
     assertEquals("NodesStats array should be empty now", 0, store.nodesStats.length);
@@ -138,7 +138,7 @@ var testNodesStats = function() {
     );
 
     // drop all items after timestamp that is explicitly present in the array
-    var dropped = store.dropNodesStatsStaringFrom(2);
+    var dropped = store.dropFromNodesStats(2);
     assertArrayEquals("dropped array is also sorted",
         [2,1],
         goog.array.map(dropped, function(item){ return item.timestamp })
@@ -159,7 +159,7 @@ var testNodesStats = function() {
     );
 
     // drop all items after timestamp that is not explicitly present in the array
-    dropped = store.dropNodesStatsStaringFrom(6);
+    dropped = store.dropFromNodesStats(6);
     assertArrayEquals("dropped array is also sorted",
         [5,4,3],
         goog.array.map(dropped, function(item){ return item.timestamp })
@@ -189,7 +189,7 @@ var testNodesInfos = function() {
     );
 
     // drop all items after timestamp that is explicitly present in the array
-    var dropped = store.dropNodesInfosStaringFrom(2);
+    var dropped = store.dropFromNodesInfos(2);
     assertArrayEquals("dropped array is also sorted",
         [2,1],
         goog.array.map(dropped, function(item){ return item.timestamp })
@@ -210,7 +210,7 @@ var testNodesInfos = function() {
     );
 
     // drop all items after timestamp that is not explicitly present in the array
-    dropped = store.dropNodesInfosStaringFrom(6);
+    dropped = store.dropFromNodesInfos(6);
     assertArrayEquals("dropped array is also sorted",
         [5,4,3],
         goog.array.map(dropped, function(item){ return item.timestamp })

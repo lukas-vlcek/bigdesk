@@ -79,7 +79,7 @@ org.bigdesk.store.Store.prototype.addNodesStats = function(timestamp, nodesStats
  * @param {!number} timestamp
  * @return {!Array.<number>} array with dropped timestamps
  */
-org.bigdesk.store.Store.prototype.dropNodesStatsStaringFrom = function(timestamp) {
+org.bigdesk.store.Store.prototype.dropFromNodesStats = function(timestamp) {
     return this.dropItemStartingFrom_(timestamp, this, 'nodesStats');
 };
 
@@ -98,7 +98,7 @@ org.bigdesk.store.Store.prototype.addNodesInfo = function(timestamp, nodesInfo) 
  * @param {!number} timestamp
  * @return {!Array.<number>} array with dropped timestamps
  */
-org.bigdesk.store.Store.prototype.dropNodesInfosStaringFrom = function(timestamp) {
+org.bigdesk.store.Store.prototype.dropFromNodesInfos = function(timestamp) {
     return this.dropItemStartingFrom_(timestamp, this, 'nodesInfos');
 };
 

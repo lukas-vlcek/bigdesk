@@ -17,10 +17,10 @@
 /**
  * @fileoverview Manager has couple of responsibilities:
  * <ul>
- *     <li>Starts, stops and manages delays between all async calls.
- *     <li>Collects responses from async calls and pushes them to Store.
+ *     <li>Starts, stops and manages delays between all [typically async] calls.
+ *     <li>Collects data from responses and add them to the Store.
  *     <li>Drops old data from Store.
- *     <li>Fires custom events when data in Store changes.
+ *     <li>Fires custom events when data in Store changes (i.e. when new data is added or old data dropped).
  * </ul>
  * Execution of async calls is delegated to Service implementation provided by ServiceProvider.
  * @author Lukas Vlcek (lukas.vlcek@gmail.com)
@@ -30,9 +30,9 @@ goog.provide('org.bigdesk.store.Manager');
 goog.provide('org.bigdesk.store.Manager.EventType');
 
 goog.require('org.bigdesk.store.event.NodesStatsAdd');
-//goog.require('org.bigdesk.store.event.NodesStatsRemove');
+goog.require('org.bigdesk.store.event.NodesStatsRemove');
 goog.require('org.bigdesk.store.event.NodesInfoAdd');
-//goog.require('org.bigdesk.store.event.NodesInfoRemove');
+goog.require('org.bigdesk.store.event.NodesInfoRemove');
 
 goog.require('org.bigdesk.store.Store');
 
@@ -147,8 +147,8 @@ org.bigdesk.store.Manager.prototype.disposeInternal = function() {
  * @protected
  */
 org.bigdesk.store.Manager.prototype.processNodesStatsDelay = function(timestamp, data) {
-    this.dropOldNodesStats(timestamp - this.config.window);
-    this.processNewNodesStats(timestamp, data);
+    this.dropFromNodesStats(timestamp - this.config.window);
+    this.addIntoNodesStats(timestamp, data);
     this.delay_nodesStats.start();
 };
 
@@ -158,7 +158,7 @@ org.bigdesk.store.Manager.prototype.processNodesStatsDelay = function(timestamp,
  * @param {!Object} data
  * @protected
  */
-org.bigdesk.store.Manager.prototype.processNewNodesStats = function(timestamp, data) {
+org.bigdesk.store.Manager.prototype.addIntoNodesStats = function(timestamp, data) {
     if (goog.isNumber(timestamp) && goog.isObject(data)) {
         this.store.addNodesStats(timestamp, data);
         var event = new org.bigdesk.store.event.NodesStatsAdd(timestamp, data);
@@ -171,12 +171,19 @@ org.bigdesk.store.Manager.prototype.processNewNodesStats = function(timestamp, d
 };
 
 /**
- *
+ * Drop data from nodes stats.
  * @param {!number} timestamp
  * @protected
  */
-org.bigdesk.store.Manager.prototype.dropOldNodesStats = function(timestamp) {
-    // TODO
+org.bigdesk.store.Manager.prototype.dropFromNodesStats = function(timestamp) {
+    if (goog.isNumber(timestamp)) {
+        var dropped = this.store.dropFromNodesStats(timestamp);
+        var event = new org.bigdesk.store.event.NodesStatsRemove(dropped);
+        this.dispatchEvent(event);
+    } else {
+        this.log.warning('Something went wrong when dropping data from nodes stats');
+        this.log.finer('timestamp: ' + timestamp);
+    }
 };
 
 /**
@@ -187,8 +194,8 @@ org.bigdesk.store.Manager.prototype.dropOldNodesStats = function(timestamp) {
  * @protected
  */
 org.bigdesk.store.Manager.prototype.processNodesInfoDelay = function(timestamp, data) {
-    this.dropOldNodesInfo(timestamp - this.config.window);
-    this.processNewNodesInfo(timestamp, data);
+    this.dropFromNodesInfo(timestamp - this.config.window);
+    this.addIntoNodesInfo(timestamp, data);
     this.delay_nodesInfo.start();
 };
 
@@ -198,7 +205,7 @@ org.bigdesk.store.Manager.prototype.processNodesInfoDelay = function(timestamp, 
  * @param {!Object} data
  * @protected
  */
-org.bigdesk.store.Manager.prototype.processNewNodesInfo = function(timestamp, data) {
+org.bigdesk.store.Manager.prototype.addIntoNodesInfo = function(timestamp, data) {
     if (goog.isNumber(timestamp) && goog.isObject(data)) {
         this.store.addNodesInfo(timestamp, data);
         var event = new org.bigdesk.store.event.NodesInfoAdd(timestamp, data);
@@ -211,12 +218,19 @@ org.bigdesk.store.Manager.prototype.processNewNodesInfo = function(timestamp, da
 };
 
 /**
- *
+ * Drop data from nodes info.
  * @param {!number} timestamp
  * @protected
  */
-org.bigdesk.store.Manager.prototype.dropOldNodesInfo = function(timestamp) {
-    // TODO
+org.bigdesk.store.Manager.prototype.dropFromNodesInfo = function(timestamp) {
+    if (goog.isNumber(timestamp)) {
+        var dropped = this.store.dropFromNodesInfos(timestamp);
+        var event = new org.bigdesk.store.event.NodesInfoRemove(dropped);
+        this.dispatchEvent(event);
+    } else {
+        this.log.warning('Something went wrong when dropping data from nodes info');
+        this.log.finer('timestamp: ' + timestamp);
+    }
 };
 
 /**
