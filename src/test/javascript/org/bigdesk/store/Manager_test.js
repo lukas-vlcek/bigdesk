@@ -25,7 +25,15 @@ goog.require('org.bigdesk.store.Manager.EventType');
 
 goog.require('goog.testing.jsunit');
 
-var getNewStoreManager = function(configuration) {
+/**
+ * Setup new Manager instance into global variable called 'manager'.
+ * It allows for customized manager configuration.
+ * @param {Object} configuration
+ * @return {org.bigdesk.store.Manager}
+ */
+var setUpNewGlobalManager = function(configuration) {
+
+    if (goog.isDefAndNotNull(this.manager)) { tearDown() }
 
     var config = {
         net_service_provider: 'test'
@@ -50,13 +58,12 @@ var tearDown = function() {
 
 /**
  * If you start the manager, it pulls all resources immediately without the delay.
- * This test uses TestService which does not execute any requests and the results are delivered immediately,
- * in practice, the Service executes some kind of async request, so the results are delivered after some
- * time.
+ * This test uses TestService which does not execute any async requests thus the results are delivered immediately,
+ * in practice, the Service executes some kind of async request, so the results are delivered after some delay.
  */
 var testManagerStartStop = function () {
 
-    var manager = getNewStoreManager();
+    var manager = setUpNewGlobalManager();
 
     assertEquals("Manager's store is empty", 0, manager.getNodesStatsCount());
     assertEquals("Manager's store is empty", 0, manager.getNodesInfoCount());
@@ -68,9 +75,9 @@ var testManagerStartStop = function () {
 
 };
 
-var testManagerEvents = function () {
+var testManagerBasicEvents = function () {
 
-    var manager = getNewStoreManager();
+    var manager = setUpNewGlobalManager();
 
     var id1 = goog.events.listen(
         manager,
