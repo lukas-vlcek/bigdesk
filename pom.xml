@@ -43,7 +43,7 @@
     </issueManagement>
 
     <scm>
-        <tag>v3.x.x</tag>
+        <!--<tag>v3.x.x</tag>-->
         <url>https://github.com/lukas-vlcek/bigdesk</url>
     </scm>
 
