@@ -31,8 +31,7 @@ goog.require("goog.Disposable");
  * @extends {goog.Disposable}
  */
 org.bigdesk.store.Store = function() {
-
-    goog.Disposable.call(this);
+    goog.base(this);
 
     /** @type {goog.array.ArrayLike} */
     this.nodesStats = [];
@@ -53,15 +52,12 @@ goog.inherits(org.bigdesk.store.Store, goog.Disposable);
 
 /** @inheritDoc */
 org.bigdesk.store.Store.prototype.disposeInternal = function() {
-
-    org.bigdesk.store.Store.superClass_.disposeInternal.call(this);
-
+    goog.base(this, 'disposeInternal');
     delete this.nodesStats;
     delete this.nodesInfos;
     delete this.clusterStates;
     delete this.clusterHealths;
     delete this.indexSegments;
-
 };
 
 /**
@@ -187,7 +183,6 @@ org.bigdesk.store.Store.prototype.timestampsCompareOnlyGreater = function(a, b) 
 };
 
 /**
- *
  * @param {!number} timestamp
  * @param {!Object} item
  * @param {!Object} context
@@ -216,7 +211,6 @@ org.bigdesk.store.Store.prototype.addItem_ = function(timestamp, item, context, 
 };
 
 /**
- *
  * @param {!number} timestamp
  * @param {!Object} context
  * @param {!string} arrayName
