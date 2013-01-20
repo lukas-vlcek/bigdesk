@@ -25,6 +25,7 @@ goog.require('org.bigdesk.net.Service');
 
 /**
  * TODO will be implemented later
+ * Consider using goog.ds.JsonDataSource
  * @constructor
  * @implements {org.bigdesk.net.Service}
  */
