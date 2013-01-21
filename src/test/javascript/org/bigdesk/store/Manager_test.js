@@ -83,8 +83,8 @@ var testManagerBasicEvents = function () {
         manager,
         org.bigdesk.store.event.EventType.NODES_STATS_ADD,
         function(e) {
-            var event = /** @type {org.bigdesk.store.event.NodesStatsAdd} */ e;
-            assertEquals('Expecting event with nodes stats', 'nodes stats', event.getNodesStats()['type'])
+            var event = /** @type {org.bigdesk.store.event.DataAdd} */ e;
+            assertEquals('Expecting event with nodes stats', 'nodes stats', event.getData()['type'])
         }
     );
 
@@ -92,8 +92,8 @@ var testManagerBasicEvents = function () {
         manager,
         org.bigdesk.store.event.EventType.NODES_INFO_ADD,
         function(e) {
-            var event = /** @type {org.bigdesk.store.event.NodesInfoAdd} */ e;
-            assertEquals('Expecting event with nodes info', 'nodes info', event.getNodesStats()['type'])
+            var event = /** @type {org.bigdesk.store.event.DataAdd} */ e;
+            assertEquals('Expecting event with nodes info', 'nodes info', event.getData()['type'])
         }
     );
 

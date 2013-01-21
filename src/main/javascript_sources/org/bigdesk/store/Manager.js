@@ -29,10 +29,8 @@
 goog.provide('org.bigdesk.store.Manager');
 
 goog.require('org.bigdesk.store.event.StoreWhippedOut');
-goog.require('org.bigdesk.store.event.NodesStatsAdd');
-goog.require('org.bigdesk.store.event.NodesStatsRemove');
-goog.require('org.bigdesk.store.event.NodesInfoAdd');
-goog.require('org.bigdesk.store.event.NodesInfoRemove');
+goog.require('org.bigdesk.store.event.DataAdd');
+goog.require('org.bigdesk.store.event.DataRemove');
 goog.require('org.bigdesk.store.share.importing.event.DataImportProgress');
 goog.require('org.bigdesk.store.share.importing.event.DataImportDone');
 
@@ -158,7 +156,7 @@ org.bigdesk.store.Manager.prototype.processNodesStatsDelay = function(timestamp,
 org.bigdesk.store.Manager.prototype.addIntoNodesStats = function(timestamp, data) {
     if (goog.isNumber(timestamp) && goog.isObject(data)) {
         this.store.addNodesStats(timestamp, data);
-        var event = new org.bigdesk.store.event.NodesStatsAdd(timestamp, data);
+        var event = new org.bigdesk.store.event.DataAdd(org.bigdesk.store.event.EventType.NODES_STATS_ADD, timestamp, data);
         this.dispatchEvent(event);
     } else {
         this.log.warning('Something went wrong when adding new nodes stats');
@@ -175,7 +173,7 @@ org.bigdesk.store.Manager.prototype.addIntoNodesStats = function(timestamp, data
 org.bigdesk.store.Manager.prototype.dropFromNodesStats = function(timestamp) {
     if (goog.isNumber(timestamp)) {
         var dropped = this.store.dropFromNodesStats(timestamp);
-        var event = new org.bigdesk.store.event.NodesStatsRemove(dropped);
+        var event = new org.bigdesk.store.event.DataRemove(org.bigdesk.store.event.EventType.NODES_STATS_REMOVE, dropped);
         this.dispatchEvent(event);
     } else {
         this.log.warning('Something went wrong when dropping data from nodes stats');
@@ -205,7 +203,7 @@ org.bigdesk.store.Manager.prototype.processNodesInfoDelay = function(timestamp, 
 org.bigdesk.store.Manager.prototype.addIntoNodesInfo = function(timestamp, data) {
     if (goog.isNumber(timestamp) && goog.isObject(data)) {
         this.store.addNodesInfo(timestamp, data);
-        var event = new org.bigdesk.store.event.NodesInfoAdd(timestamp, data);
+        var event = new org.bigdesk.store.event.DataAdd(org.bigdesk.store.event.EventType.NODES_INFO_ADD, timestamp, data);
         this.dispatchEvent(event);
     } else {
         this.log.warning('Something went wrong when adding new nodes info');
@@ -222,7 +220,7 @@ org.bigdesk.store.Manager.prototype.addIntoNodesInfo = function(timestamp, data)
 org.bigdesk.store.Manager.prototype.dropFromNodesInfo = function(timestamp) {
     if (goog.isNumber(timestamp)) {
         var dropped = this.store.dropFromNodesInfos(timestamp);
-        var event = new org.bigdesk.store.event.NodesInfoRemove(dropped);
+        var event = new org.bigdesk.store.event.DataRemove(org.bigdesk.store.event.EventType.NODES_INFO_REMOVE, dropped);
         this.dispatchEvent(event);
     } else {
         this.log.warning('Something went wrong when dropping data from nodes info');

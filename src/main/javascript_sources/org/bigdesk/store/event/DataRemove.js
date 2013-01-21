@@ -14,38 +14,39 @@
  * limitations under the License.
  */
 
-/**
- * @fileoverview Event that is fired when nodes stats data is removed from the store.
- * @author Lukas Vlcek (lukas.vlcek@gmail.com)
- */
+goog.provide('org.bigdesk.store.event.DataRemove');
 
-goog.provide('org.bigdesk.store.event.NodesStatsRemove');
-
-goog.require('org.bigdesk.store.event.EventType');
 goog.require('goog.events.Event');
 
 /**
- * @param {!Array.<number>} timestamps of objects that vere removed
+ * @fileoverview Event that is fired when some data is removed from the store.
+ *
+ * @author Lukas Vlcek (lukas.vlcek@gmail.com)
+ */
+
+/**
+ *
+ * @param {!string} type
+ * @param {!Array.<number>} timestamps
  * @constructor
  * @extends {goog.events.Event}
  */
-org.bigdesk.store.event.NodesStatsRemove = function(timestamps) {
+org.bigdesk.store.event.DataRemove = function(type, timestamps) {
 
-    goog.events.Event.call(this, org.bigdesk.store.event.EventType.NODES_STATS_REMOVE);
+    goog.events.Event.call(this, type);
 
     /**
      * @type {!Array.<number>}
      * @private
      */
     this.timestamps_ = timestamps;
-
 };
-goog.inherits(org.bigdesk.store.event.NodesStatsRemove, goog.events.Event);
+goog.inherits(org.bigdesk.store.event.DataRemove, goog.events.Event);
 
 /**
  *
  * @return {!Array.<number>}
  */
-org.bigdesk.store.event.NodesStatsRemove.prototype.getTimestamps = function() {
+org.bigdesk.store.event.DataRemove.prototype.getTimestamps = function() {
     return this.timestamps_;
 };

@@ -14,26 +14,27 @@
  * limitations under the License.
  */
 
+goog.provide('org.bigdesk.store.event.DataAdd');
+
+goog.require('goog.events.Event');
+
 /**
- * @fileoverview Event that is fired when nodes stats data is added into the store.
+ * @fileoverview Event that is fired when a new data is added into the store.
+ *
  * @author Lukas Vlcek (lukas.vlcek@gmail.com)
  */
 
-goog.provide('org.bigdesk.store.event.NodesStatsAdd');
-
-goog.require('org.bigdesk.store.event.EventType');
-goog.require('goog.events.Event');
-
-
 /**
+ *
+ * @param {!string} type
  * @param {!number} timestamp
  * @param {!Object} json
  * @constructor
  * @extends {goog.events.Event}
  */
-org.bigdesk.store.event.NodesStatsAdd = function(timestamp, json) {
+org.bigdesk.store.event.DataAdd = function(type, timestamp, json) {
 
-    goog.events.Event.call(this, org.bigdesk.store.event.EventType.NODES_STATS_ADD);
+    goog.events.Event.call(this, type);
 
     /**
      * @type {!number}
@@ -47,13 +48,13 @@ org.bigdesk.store.event.NodesStatsAdd = function(timestamp, json) {
      */
     this.json_ = json;
 };
-goog.inherits(org.bigdesk.store.event.NodesStatsAdd, goog.events.Event);
+goog.inherits(org.bigdesk.store.event.DataAdd, goog.events.Event);
 
 /**
  *
  * @return {!Object}
  */
-org.bigdesk.store.event.NodesStatsAdd.prototype.getNodesStats = function() {
+org.bigdesk.store.event.DataAdd.prototype.getData = function() {
     return this.json_;
 };
 
@@ -61,6 +62,6 @@ org.bigdesk.store.event.NodesStatsAdd.prototype.getNodesStats = function() {
  *
  * @return {!number}
  */
-org.bigdesk.store.event.NodesStatsAdd.prototype.getTimestamp = function() {
+org.bigdesk.store.event.DataAdd.prototype.getTimestamp = function() {
     return this.timestamp_;
 };
