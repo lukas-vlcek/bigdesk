@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright 2011-2013 Lukas Vlcek
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Test for org.bigdesk.store.share.importing.ImportingHandler using FileList (requires user interaction)</title>
+    <script src="../../../../../../../../closure-library-r2180/closure/goog/base.js"></script>
+    <script src="importingHandler_test_deps.js"></script>
+    <script type="text/javascript">
+    goog.require('goog.array');
+    goog.require('goog.dom');
+    goog.require('goog.events');
+    goog.require('org.bigdesk.store.Store');
+    goog.require('org.bigdesk.store.share.importing.ImportingHandler');
+    goog.require('org.bigdesk.store.share.importing.ImportingHandler.EventType');
+    goog.require('goog.testing.ContinuationTestCase');
+    goog.require('goog.testing.jsunit');
+    </script>
+</head>
+<body>
+<h1>Select manifest and all data files</h1>
+Assuming <code>manifest</code> file is named <code>bigdesk_manifest</code>.<br>
+Countdown to test timeout: <span id="count"></span>s.
+<p>
+    <input type="file" id="fileinput" multiple="multiple"/>
+</p>
+
+
+<script type="text/javascript">
+
+    // ---- taken from continuationtestcase_test.html
+    var original_timeout = goog.testing.ContinuationTestCase.MAX_TIMEOUT;
+    goog.testing.ContinuationTestCase.MAX_TIMEOUT = 60 * 1000; // prolong default timeout
+    var testCase = new goog.testing.ContinuationTestCase('Continuation Test Case');
+    testCase.autoDiscoverTests();
+
+    // Standalone Closure Test Runner.
+    if (typeof G_testRunner != 'undefined') {
+        G_testRunner.initialize(testCase);
+    }
+    // ----
+
+    function testFileListImporting() {
+
+        var countSpan = goog.dom.getElement('count');
+        var count_down = goog.testing.ContinuationTestCase.MAX_TIMEOUT;
+        countSpan.innerHTML = (count_down/1000);
+        var intervalId = setInterval(function(){
+            count_down -= 1000;
+            countSpan.innerHTML = (count_down/1000);
+            if (count_down <= 0) {
+                clearInterval(intervalId);
+            }
+        }, 1000);
+
+        var input = goog.dom.getElement('fileinput');
+        goog.events.listenOnce(
+                input,
+                goog.events.EventType.CHANGE,
+                callback);
+
+        var store = new org.bigdesk.store.Store();
+        var importingHandler = new org.bigdesk.store.share.importing.ImportingHandler();
+        var selectedFiles = 0;
+
+        function callback(e) {
+            input.setAttribute('disabled','disabled');
+            var fileList = e.target.files;
+            selectedFiles = fileList.length;
+            assert(fileList instanceof FileList);
+            importingHandler.importData(store, prepareMaifest(fileList), fileList);
+        }
+
+        var progress = -1;
+        goog.events.listen(
+                importingHandler,
+                org.bigdesk.store.share.importing.ImportingHandler.EventType.DATA_IMPORT_PROGRESS,
+                function(e) {
+                    console.log("progress", e.getProgress());
+                    assertTrue(progress < e.getProgress());
+                    progress = e.getProgress();
+                }
+        );
+
+        goog.events.listenOnce(
+                importingHandler,
+                org.bigdesk.store.share.importing.ImportingHandler.EventType.DATA_IMPORT_DONE,
+                function(e) {
+                    assertEquals('All selected files were processed', selectedFiles, e.getNumberOfFiles());
+
+                    console.log(store);
+                    assertEquals("six items were imported", 6, store.nodesStats.length);
+                    assertArrayEquals("array should be sorted",
+                            [6,5,4,3,2,1],
+                            goog.array.map(store.nodesStats, function(item){ return item.timestamp })
+                    );
+
+                }
+        );
+
+        waitForEvent(input, goog.events.EventType.CHANGE,
+                function() {
+                    // set timeout to original value (in case more tests are run in one session)
+                    goog.testing.ContinuationTestCase.MAX_TIMEOUT = original_timeout;
+                    clearInterval(intervalId);
+                    countSpan.innerHTML = 'n/a ';
+                }
+        );
+
+        waitForEvent(importingHandler, org.bigdesk.store.share.importing.ImportingHandler.EventType.DATA_IMPORT_DONE,
+                function() {
+                    // noop, this is to make sure test does not finish until data import is done
+                    // which also means that asserts in listener are executed (that is what we need)
+                }
+            );
+
+    }
+
+    /**
+     * Prepare adhoc manifest from incoming files.
+     * @param fileList
+     * @return {!Object}
+     * @private
+     */
+    function prepareMaifest(fileList) {
+
+        return {
+
+            description: "Test",
+            create_date: "",
+            bigdesk_version: "3.0.0",
+            elasticsearch_version: "0.20.0",
+
+            store: {
+                source_type: "FileList",
+                nodes_stats: [
+                    { uri: "nodes_stats_1.json" },
+                    { uri: "nodes_stats_2.json" }
+                ],
+                nodes_info: [
+                    { uri: "nodes_info_1.json" },
+                    { uri: "nodes_info_2.json" }
+                ]
+            }
+        };
+
+    }
+
+</script>
+</body>
+</html>
