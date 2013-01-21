@@ -18,10 +18,11 @@ When `mvm clean test` is run, then all these tests are executed.
 
 ## html
 
-Contains wrappers that allow execution of individual tests from `src/test/javascript` package (see above). Each test requires three files:
+Contains wrappers that allow execution of individual tests from `src/test/javascript` package (see above).
+Each test typically requires three files:
 
 1. HTML page
-2. shell script to generate dependencies script
+2. shell script to generate file with a list of dependencies
 3. generated dependencies file
 
 Both HTML page and the shell script needs to be maintained manually, but that is not a big deal.
