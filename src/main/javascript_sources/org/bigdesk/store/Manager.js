@@ -29,10 +29,13 @@
 goog.provide('org.bigdesk.store.Manager');
 goog.provide('org.bigdesk.store.Manager.EventType');
 
+goog.require('org.bigdesk.store.event.StoreWhippedOut');
 goog.require('org.bigdesk.store.event.NodesStatsAdd');
 goog.require('org.bigdesk.store.event.NodesStatsRemove');
 goog.require('org.bigdesk.store.event.NodesInfoAdd');
 goog.require('org.bigdesk.store.event.NodesInfoRemove');
+goog.require('org.bigdesk.store.share.importing.event.DataImportProgress');
+goog.require('org.bigdesk.store.share.importing.event.DataImportDone');
 
 goog.require('org.bigdesk.store.Store');
 
@@ -55,7 +58,6 @@ goog.require('goog.debug.Logger');
  * @extends {goog.events.EventTarget}
  */
 org.bigdesk.store.Manager = function(opt_config, opt_serviceProvider) {
-
     goog.events.EventTarget.call(this);
 
     /** @private */ this.log = goog.debug.Logger.getLogger('org.bigdesk.store.Manager');
@@ -117,7 +119,6 @@ goog.inherits(org.bigdesk.store.Manager, goog.events.EventTarget);
 
 /** @inheritDoc */
 org.bigdesk.store.Manager.prototype.disposeInternal = function() {
-
     // Call the superclass's disposeInternal() method.
     org.bigdesk.store.Manager.superClass_.disposeInternal.call(this);
 
@@ -134,7 +135,6 @@ org.bigdesk.store.Manager.prototype.disposeInternal = function() {
     delete this.netService;
     delete this.running;
     delete this.config;
-
 };
 
 /**
@@ -237,10 +237,8 @@ org.bigdesk.store.Manager.prototype.dropFromNodesInfo = function(timestamp) {
  */
 org.bigdesk.store.Manager.prototype.stop = function() {
     if (this.running) {
-
         this.delay_nodesStats.stop();
         this.delay_nodesInfo.stop();
-
         this.running = false;
     }
     return this;
@@ -253,11 +251,9 @@ org.bigdesk.store.Manager.prototype.stop = function() {
 org.bigdesk.store.Manager.prototype.start = function() {
     if (!this.running) {
         this.running = true;
-
         // request data right now (so we do not have to wait for delay to get first data)
         this.delay_nodesStats.fire();
         this.delay_nodesInfo.fire();
-
     }
     return this;
 };
@@ -309,12 +305,55 @@ org.bigdesk.store.Manager.prototype.getConfiguration = function() {
     return goog.object.clone(this.config);
 };
 
+/**
+ * Imports data into Store from external source.
+ */
+org.bigdesk.store.Manager.prototype.importData = function(importHandler) {
+//    stop
+    this.stop();
+//    lock
+//    try {
+//      delete all data from store
+        this.dispatchEvent(new org.bigdesk.store.event.StoreWhippedOut());
+
+//      importData and report progress
+        this.dispatchEvent(new org.bigdesk.store.share.importing.event.DataImportProgress(0));
+        this.dispatchEvent(new org.bigdesk.store.share.importing.event.DataImportProgress(0.5));
+        this.dispatchEvent(new org.bigdesk.store.share.importing.event.DataImportProgress(1));
+
+        this.dispatchEvent(new org.bigdesk.store.share.importing.event.DataImportDone(0));
+//    } catch (e) {
+//        log
+//        fire error event
+//    } finally {
+//        unlock
+//    }
+};
+
+/**
+ * Exports data from Store.
+ */
+org.bigdesk.store.Manager.prototype.exportData = function(exportHandler) {
+//    stop
+    this.stop();
+//    lock
+//    try {
+//        exportData and report progress
+//    } catch (e) {
+//        log
+//        fire error event
+//    } finally {
+//        unlock
+//    }
+};
 
 /**
  * Events fired by the Manager.
  * @enum {string}
  */
 org.bigdesk.store.Manager.EventType = {
+
+    STORE_WHIPPED_OUT  : goog.events.getUniqueId('store_whipped_out'),
 
     NODES_STATS_ADD    : goog.events.getUniqueId('nodes_stats_add'),
     NODES_STATS_REMOVE : goog.events.getUniqueId('nodes_stats_remove'),
