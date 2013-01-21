@@ -21,7 +21,7 @@ goog.require('goog.events.EventTarget');
 
 goog.require('org.bigdesk.store.Manager');
 goog.require('org.bigdesk.net.TestServiceProvider');
-goog.require('org.bigdesk.store.Manager.EventType');
+goog.require('org.bigdesk.store.event.EventType');
 
 goog.require('goog.testing.jsunit');
 
@@ -81,7 +81,7 @@ var testManagerBasicEvents = function () {
 
     var id1 = goog.events.listen(
         manager,
-        org.bigdesk.store.Manager.EventType.NODES_STATS_ADD,
+        org.bigdesk.store.event.EventType.NODES_STATS_ADD,
         function(e) {
             var event = /** @type {org.bigdesk.store.event.NodesStatsAdd} */ e;
             assertEquals('Expecting event with nodes stats', 'nodes stats', event.getNodesStats()['type'])
@@ -90,7 +90,7 @@ var testManagerBasicEvents = function () {
 
     var id2 = goog.events.listen(
         manager,
-        org.bigdesk.store.Manager.EventType.NODES_INFO_ADD,
+        org.bigdesk.store.event.EventType.NODES_INFO_ADD,
         function(e) {
             var event = /** @type {org.bigdesk.store.event.NodesInfoAdd} */ e;
             assertEquals('Expecting event with nodes info', 'nodes info', event.getNodesStats()['type'])

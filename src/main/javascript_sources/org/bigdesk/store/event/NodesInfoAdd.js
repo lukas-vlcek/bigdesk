@@ -21,6 +21,7 @@
 
 goog.provide('org.bigdesk.store.event.NodesInfoAdd');
 
+goog.require('org.bigdesk.store.event.EventType');
 goog.require('goog.events.Event');
 
 /**
@@ -32,7 +33,7 @@ goog.require('goog.events.Event');
  */
 org.bigdesk.store.event.NodesInfoAdd = function(timestamp, json) {
 
-    goog.events.Event.call(this, org.bigdesk.store.Manager.EventType.NODES_INFO_ADD);
+    goog.events.Event.call(this, org.bigdesk.store.event.EventType.NODES_INFO_ADD);
 
     /**
      * @type {!number}

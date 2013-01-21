@@ -21,6 +21,7 @@
 
 goog.provide('org.bigdesk.store.event.NodesStatsRemove');
 
+goog.require('org.bigdesk.store.event.EventType');
 goog.require('goog.events.Event');
 
 /**
@@ -30,7 +31,7 @@ goog.require('goog.events.Event');
  */
 org.bigdesk.store.event.NodesStatsRemove = function(timestamps) {
 
-    goog.events.Event.call(this, org.bigdesk.store.Manager.EventType.NODES_STATS_REMOVE);
+    goog.events.Event.call(this, org.bigdesk.store.event.EventType.NODES_STATS_REMOVE);
 
     /**
      * @type {!Array.<number>}

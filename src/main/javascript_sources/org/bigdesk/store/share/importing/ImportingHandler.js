@@ -22,7 +22,6 @@
 goog.provide('org.bigdesk.store.share.importing.ImportingHandler');
 goog.provide('org.bigdesk.store.share.importing.StoreSourceType');
 goog.provide('org.bigdesk.store.share.importing.StorePart');
-goog.provide('org.bigdesk.store.share.importing.ImportingHandler.EventType');
 
 goog.require('org.bigdesk.store.share.importing.event.DataImportProgress');
 goog.require('org.bigdesk.store.share.importing.event.DataImportDone');
@@ -257,13 +256,4 @@ org.bigdesk.store.share.importing.StoreSourceType = {
 org.bigdesk.store.share.importing.StorePart = {
     NODES_STATS: "nodes_stats",
     NODES_INFO : "nodes_info"
-};
-
-/**
- * Events fired by the ImportingHandler.
- * @enum {string}
- */
-org.bigdesk.store.share.importing.ImportingHandler.EventType = {
-    DATA_IMPORT_DONE     : goog.events.getUniqueId('data_import_done'),
-    DATA_IMPORT_PROGRESS : goog.events.getUniqueId('data_import_progress')
 };

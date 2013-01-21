@@ -27,7 +27,6 @@
  */
 
 goog.provide('org.bigdesk.store.Manager');
-goog.provide('org.bigdesk.store.Manager.EventType');
 
 goog.require('org.bigdesk.store.event.StoreWhippedOut');
 goog.require('org.bigdesk.store.event.NodesStatsAdd');
@@ -345,20 +344,4 @@ org.bigdesk.store.Manager.prototype.exportData = function(exportHandler) {
 //    } finally {
 //        unlock
 //    }
-};
-
-/**
- * Events fired by the Manager.
- * @enum {string}
- */
-org.bigdesk.store.Manager.EventType = {
-
-    STORE_WHIPPED_OUT  : goog.events.getUniqueId('store_whipped_out'),
-
-    NODES_STATS_ADD    : goog.events.getUniqueId('nodes_stats_add'),
-    NODES_STATS_REMOVE : goog.events.getUniqueId('nodes_stats_remove'),
-
-    NODES_INFO_ADD     : goog.events.getUniqueId('nodes_info_add'),
-    NODES_INFO_REMOVE  : goog.events.getUniqueId('nodes_info_remove')
-
 };

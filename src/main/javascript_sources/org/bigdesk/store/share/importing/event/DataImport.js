@@ -17,8 +17,7 @@
 goog.provide('org.bigdesk.store.share.importing.event.DataImportDone');
 goog.provide('org.bigdesk.store.share.importing.event.DataImportProgress');
 
-// TODO Cyclical dependency! Fix it! (it is in all my events)
-//goog.require('org.bigdesk.store.share.importing.ImportingHandler.EventType');
+goog.require('org.bigdesk.store.share.importing.event.EventType');
 goog.require('goog.events.Event');
 
 /**
@@ -30,7 +29,7 @@ goog.require('goog.events.Event');
  */
 org.bigdesk.store.share.importing.event.DataImportDone = function(number_of_files, opt_message) {
 
-    goog.events.Event.call(this, org.bigdesk.store.share.importing.ImportingHandler.EventType.DATA_IMPORT_DONE);
+    goog.events.Event.call(this, org.bigdesk.store.share.importing.event.EventType.DATA_IMPORT_DONE);
 
     /**
      * @type {!number}
@@ -70,7 +69,7 @@ org.bigdesk.store.share.importing.event.DataImportDone.prototype.getNumberOfFile
  */
 org.bigdesk.store.share.importing.event.DataImportProgress = function(progress) {
 
-    goog.events.Event.call(this, org.bigdesk.store.share.importing.ImportingHandler.EventType.DATA_IMPORT_PROGRESS);
+    goog.events.Event.call(this, org.bigdesk.store.share.importing.event.EventType.DATA_IMPORT_PROGRESS);
 
     /**
      * @type {!number}

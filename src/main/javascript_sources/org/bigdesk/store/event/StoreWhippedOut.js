@@ -21,6 +21,7 @@
 
 goog.provide('org.bigdesk.store.event.StoreWhippedOut');
 
+goog.require('org.bigdesk.store.event.EventType');
 goog.require('goog.events.Event');
 
 /**
@@ -30,7 +31,7 @@ goog.require('goog.events.Event');
  */
 org.bigdesk.store.event.StoreWhippedOut = function() {
 
-    goog.events.Event.call(this, org.bigdesk.store.Manager.EventType.STORE_WHIPPED_OUT);
+    goog.events.Event.call(this, org.bigdesk.store.event.EventType.STORE_WHIPPED_OUT);
 
     /**
      * @type {!number}
