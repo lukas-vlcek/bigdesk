@@ -17,6 +17,19 @@
 /**
  * @fileoverview Externs for used functions from d3.v3 (3.0.4)
  * @author Lukas Vlcek (lukas.vlcek@gmail.com)
+ * @externs
  */
 
-function d3() {};
+// see https://github.com/iplabs/closure-compiler/tree/master/contrib/externs
+
+/**
+ * @type {Object}
+ * @const
+ */
+var d3 = {};
+
+/**
+ * @param {!(string|Object)} selector
+ * @return {*}
+ */
+d3.select = function(selector) {};
