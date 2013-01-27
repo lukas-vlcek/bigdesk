@@ -113,6 +113,7 @@ org.bigdesk.store.share.importing.ImportingHandler.prototype.importData = functi
         if (totalParts == 0) {
             progress = 1;
             thiz_.dispatchEvent(new DataImportProgress(progress));
+            thiz_.dispatchEvent(new DataImportDone(partsProcessed, "Finished importing ["+totalParts+"] data files."));
             return;
         }
 
@@ -131,17 +132,24 @@ org.bigdesk.store.share.importing.ImportingHandler.prototype.importData = functi
                 if (goog.object.containsKey(partFile, 'uri')) {
                     var uri = partFile['uri'];
                     thiz_.log.info("Importing file: ["+part+"]["+uri+"]");
-                    if (sourceType == StoreSourceType.FILE_LIST) {
-                        var file = thiz_.findFileByName(uri, opt_filelist);
-                        if (file != null) {
-                            var deferred = goog.fs.FileReader.readAsText(file);
-                            deferred.addCallback(function(result){
-                                thiz_.pushIntoStore(store, part, result, partFile);
-                                partsProcessed += 1;
-                            });
-                            deferredFileList.push(deferred);
-                        }
+
+                    switch (sourceType) {
+                        case StoreSourceType.FILE_LIST:
+                            var file = thiz_.findFileByName(uri, opt_filelist);
+                            if (file != null) {
+                                var deferred = goog.fs.FileReader.readAsText(file);
+                                deferred.addCallback(function(result){
+                                    thiz_.pushIntoStore(store, part, result, partFile);
+                                    partsProcessed += 1;
+                                });
+                                deferredFileList.push(deferred);
+                            }
+                            break;
+                        default:
+                            thiz_.log.warning('Unknown source type ['+sourceType+']');
+                            break;
                     }
+
                 } else {
                     thiz_.log.warning("Importing error: Missing 'uri' parameter in ["+part+"]["+partFile+"]");
                     // ignore, skip...
@@ -155,7 +163,7 @@ org.bigdesk.store.share.importing.ImportingHandler.prototype.importData = functi
             var deferredList = new goog.async.DeferredList(deferredFileList);
             deferredList.addCallback(function(results){
                 if (partsProcessed == totalParts) {
-                    thiz_.dispatchEvent(new DataImportDone(partsProcessed, "Finished import of "+totalParts+" data files."));
+                    thiz_.dispatchEvent(new DataImportDone(partsProcessed, "Finished importing ["+totalParts+"] data files."));
                 }
                 // TODO, if doing FileList import it can happen that manifest refers to more
                 // files then is available in FileList (user did not select all files).
