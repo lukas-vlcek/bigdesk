@@ -5,3 +5,6 @@
 src/main/javascript
 
 target/
+
+# ignore pyc files
+closure-library-r2388/closure/bin/build/*.pyc
