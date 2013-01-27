@@ -224,7 +224,7 @@ org.bigdesk.store.Store.prototype.dropItemStartingFrom_ = function(timestamp, co
         { timestamp: timestamp },
         org.bigdesk.store.Store.prototype.timestampsCompareOnlyGreater);
     if (index >= 0) {
-        var dropped = /** @type {!Array.<number>} */ goog.array.slice(context[arrayName], index);
+        var dropped = /** @type {!Array.<number>} */ (goog.array.slice(context[arrayName], index));
         context[arrayName] = goog.array.slice(context[arrayName], 0, index);
         return dropped;
     } else {

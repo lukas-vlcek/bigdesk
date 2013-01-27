@@ -125,7 +125,7 @@ org.bigdesk.store.share.importing.ImportingHandler.prototype.importData = functi
         // import individual parts and report progress
         goog.array.forEach(parts, function(part){
 
-            var deferredFileList = /** @type {!Array.<!goog.async.Deferred>} */ [];
+            var deferredFileList = /** @type {!Array.<!goog.async.Deferred>} */ ([]);
 
             goog.array.forEach(manifestStore[part], function(partFile) {
 

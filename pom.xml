@@ -56,10 +56,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <jsframework.version>1.14.0</jsframework.version>
+        <jsframework.version>1.15.1</jsframework.version>
         <jstd.plugin.version>1.3.2.5</jstd.plugin.version>
 
-        <closure.library.version>r2180</closure.library.version>
+        <closure.library.version>r2388</closure.library.version>
         <!-- Compilation level is set in profile -->
         <!-- <closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level> -->
 

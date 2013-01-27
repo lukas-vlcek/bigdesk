@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<!--
+Copyright 2012 The Closure Library Authors. All Rights Reserved.
+
+Use of this source code is governed by the Apache License, Version 2.0.
+See the COPYING file for details.
+-->
+<head>
+<title>Closure Unit Tests - goog.labs.mock</title>
+<script src="../../base.js"></script>
+<script>
+
+goog.require('goog.labs.mock');
+goog.require('goog.testing.jsunit');
+goog.require('goog.labs.testing.GreaterThanMatcher');
+goog.require('goog.labs.testing.LessThanMatcher');
+
+</script>
+</head>
+<body>
+<script>
+
+var ParentClass = function() {};
+ParentClass.prototype.method1 = function() {};
+ParentClass.prototype.x = 1;
+
+var ChildClass = function() {};
+goog.inherits(ChildClass, ParentClass);
+ChildClass.prototype.method2 = function() {};
+ChildClass.prototype.y = 2;
+
+function testParentClass() {
+  var parentMock = goog.labs.mock(ParentClass);
+
+  assertNotUndefined(parentMock.method1);
+  assertUndefined(parentMock.method1());
+  assertUndefined(parentMock.method2);
+  assertUndefined(parentMock.x);
+  assertUndefined(parentMock.y);
+}
+
+function testChildClass() {
+  var childMock = goog.labs.mock(ChildClass);
+
+  assertNotUndefined(childMock.method1);
+  assertUndefined(childMock.method1());
+  assertNotUndefined(childMock.method2);
+  assertUndefined(childMock.method2());
+  assertUndefined(childMock.x);
+  assertUndefined(childMock.y);
+}
+
+function testParentClassInstance() {
+  var parentMock = goog.labs.mock(new ParentClass());
+
+  assertNotUndefined(parentMock.method1);
+  assertUndefined(parentMock.method1());
+  assertUndefined(parentMock.method2);
+  assertUndefined(parentMock.x);
+  assertUndefined(parentMock.y);
+}
+
+function testChildClassInstance() {
+  var childMock = goog.labs.mock(new ChildClass());
+
+  assertNotUndefined(childMock.method1);
+  assertUndefined(childMock.method1());
+  assertNotUndefined(childMock.method2);
+  assertUndefined(childMock.method2());
+  assertUndefined(childMock.x);
+  assertUndefined(childMock.y);
+}
+
+function testNonEnumerableProperties() {
+  var mockObject = goog.labs.mock({});
+  assertNotUndefined(mockObject.toString);
+  goog.labs.mock.when(mockObject).toString().then(function() {
+    return 'toString';
+  });
+  assertEquals('toString', mockObject.toString());
+}
+
+function testBasicStubbing() {
+  var obj = {
+    method1: function(i) {
+      return 2 * i;
+    },
+    method2: function(i, str) {
+      return str;
+    },
+    method3: function(x) {
+      return x;
+    }
+  };
+
+  var mockObj = goog.labs.mock(obj);
+  goog.labs.mock.when(mockObj).method1(2).then(function(i) {return i;});
+
+  assertEquals(4, obj.method1(2));
+  assertEquals(2, mockObj.method1(2));
+  assertUndefined(mockObj.method1(4));
+
+  goog.labs.mock.when(mockObj).method2(1, 'hi').then(function(i) {return 'oh'});
+  assertEquals('hi', obj.method2(1, 'hi'));
+  assertEquals('oh', mockObj.method2(1, 'hi'));
+  assertUndefined(mockObj.method2(3, 'foo'));
+
+  goog.labs.mock.when(mockObj).method3(4).thenReturn(10);
+  assertEquals(4, obj.method3(4));
+  assertEquals(10, mockObj.method3(4));
+  goog.labs.mock.verify(mockObj).method3(4);
+  assertUndefined(mockObj.method3(5));
+}
+
+function testMockFunctions() {
+  function x(i) { return i; }
+
+  var mockedFunc = goog.labs.mockFunction(x);
+  goog.labs.mock.when(mockedFunc)(100).thenReturn(10);
+  goog.labs.mock.when(mockedFunc)(50).thenReturn(25);
+
+  assertEquals(100, x(100));
+  assertEquals(10, mockedFunc(100));
+  assertEquals(25, mockedFunc(50));
+}
+
+function testSpying() {
+  var obj = {
+    method1: function(i) {
+      return 2 * i;
+    },
+    method2: function(i) {
+      return 5 * i;
+    }
+  };
+
+  var spyObj = goog.labs.mock.spy(obj);
+  goog.labs.mock.when(spyObj).method1(2).thenReturn(5);
+
+  assertEquals(2, obj.method1(1));
+  assertEquals(5, spyObj.method1(2));
+  goog.labs.mock.verify(spyObj).method1(2);
+  assertEquals(2, spyObj.method1(1));
+  goog.labs.mock.verify(spyObj).method1(1);
+  assertEquals(20, spyObj.method2(4));
+  goog.labs.mock.verify(spyObj).method2(4);
+}
+
+function testVerifyForObjects() {
+  var obj = {
+    method1: function(i) {
+      return 2 * i;
+    },
+    method2: function(i) {
+      return 5 * i;
+    }
+  };
+
+  var mockObj = goog.labs.mock(obj);
+  goog.labs.mock.when(mockObj).method1(2).thenReturn(5);
+
+  assertEquals(5, mockObj.method1(2));
+  goog.labs.mock.verify(mockObj).method1(2);
+  var e = assertThrows(goog.bind(goog.labs.mock.verify(mockObj).method1, 2));
+  assertTrue(e instanceof goog.labs.mock.VerificationError);
+}
+
+function testVerifyForFunctions() {
+  function func(i) {
+    return i;
+  }
+  var mockFunc = goog.labs.mockFunction(func);
+  goog.labs.mock.when(mockFunc)(2).thenReturn(55);
+  assertEquals(55, mockFunc(2));
+  goog.labs.mock.verify(mockFunc)(2);
+
+  var e = assertThrows(goog.bind(goog.labs.mock.verify(mockFunc), 3));
+  assertTrue(e instanceof goog.labs.mock.VerificationError);
+}
+
+function testMatchers() {
+  var obj = {
+    method1: function(i) {
+      return 2 * i;
+    },
+    method2: function(i) {
+      return 5 * i;
+    }
+  };
+
+  var mockObj = goog.labs.mock(obj);
+
+  goog.labs.mock.when(mockObj).method1(greaterThan(4)).thenReturn(100);
+  goog.labs.mock.when(mockObj).method1(lessThan(4)).thenReturn(40);
+
+  assertEquals(100, mockObj.method1(5));
+  assertEquals(100, mockObj.method1(6));
+  assertEquals(40, mockObj.method1(2));
+  assertEquals(40, mockObj.method1(1));
+  assertUndefined(mockObj.method1(4));
+}
+
+function testVerifyForUnmockedMethods() {
+  var Task = function() {};
+  Task.prototype.run = function() {};
+
+  var mockTask = goog.labs.mock(Task);
+  mockTask.run();
+
+  goog.labs.mock.verify(mockTask).run();
+}
+
+</script>
+</body>
+</html>

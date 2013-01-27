@@ -114,7 +114,7 @@ org.bigdesk.net.XhrService.prototype.getNodesStats = function(callback, opt_time
         undefined,undefined,
         this.XHR_REQUEST_PRIORITY,
         function(e){
-            var event = /** @type goog.net.XhrManager.Event */ e;
+            var event = /** @type goog.net.XhrManager.Event */ (e);
             var response = event.target.getResponseJson();
             response = goog.isDef(response) ? response : {};
             callback(timestamp, response);
@@ -136,7 +136,7 @@ org.bigdesk.net.XhrService.prototype.getNodesInfo = function(callback, opt_times
         undefined,undefined,
         this.XHR_REQUEST_PRIORITY,
         function(e){
-            var event = /** @type goog.net.XhrManager.Event */ e;
+            var event = /** @type goog.net.XhrManager.Event */ (e);
             var response = event.target.getResponseJson();
             response = goog.isDef(response) ? response : {};
             callback(timestamp, response);
