@@ -15,7 +15,7 @@
  */
 
 /**
- * @fileoverview Externs for used functions from d3.v3 (3.0.4)
+ * @fileoverview Externs for d3 (3.0.4)
  * @author Lukas Vlcek (lukas.vlcek@gmail.com)
  * @externs
  */
@@ -29,7 +29,54 @@
 var d3 = {};
 
 /**
- * @param {!(string|Object)} selector
- * @return {*}
+ * @see https://github.com/mbostock/d3/wiki/Selections#wiki-d3_select
+ * @param {!(string|Node)} selector
+ * @return {Array.<HTMLElement>}
  */
 d3.select = function(selector) {};
+
+/**
+ * @see https://github.com/mbostock/d3/wiki/Selections#wiki-d3_selectAll
+ * @param {!(string|Node)} selector
+ * @return {Array.<HTMLElement>}
+ */
+d3.selectAll = function(selector) {};
+
+/**
+ * @see https://github.com/mbostock/d3/wiki/Selections#wiki-data
+ * @param {(Array|function(...): Array)=} opt_value is an array of data values
+ * @param {Function=} opt_key
+ * @return {Array.<HTMLElement>}
+ */
+d3.data = function(opt_value, opt_key) {};
+
+d3.enter = function() {};
+d3.append = function() {};
+d3.text = function() {};
+
+/**
+ * @see https://github.com/mbostock/d3/wiki/Transitions#wiki-d3_transition
+ * @param {Array.<HTMLElement>} opt_selection
+ * @return {Array.<HTMLElement>}
+ */
+d3.transition = function(opt_selection) {};
+
+/**
+ * Transition.
+ * @interface */
+function transition() {};
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-delay
+transition.prototype.delay;
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-duration
+transition.prototype.duration;
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-ease
+transition.prototype.ease;
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-attr
+transition.prototype.attr;
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-attrTween
+transition.prototype.attrTween;
