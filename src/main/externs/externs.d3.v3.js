@@ -24,47 +24,82 @@
 
 /**
  * @type {Object}
+ * @see https://github.com/mbostock/d3/wiki/API-Reference
  * @const
  */
 var d3 = {};
 
-/**
- * @see https://github.com/mbostock/d3/wiki/Selections#wiki-d3_select
- * @param {!(string|Node)} selector
- * @return {Array.<HTMLElement>}
- */
-d3.select = function(selector) {};
+d3.prototype.transition;
+d3.prototype.layout;
+d3.prototype.scale;
+d3.prototype.svg;
 
 /**
- * @see https://github.com/mbostock/d3/wiki/Selections#wiki-d3_selectAll
- * @param {!(string|Node)} selector
- * @return {Array.<HTMLElement>}
- */
-d3.selectAll = function(selector) {};
+ * Selection.
+ * @see https://github.com/mbostock/d3/wiki/Selections
+ * @interface */
+function selection() {}
 
-/**
- * @see https://github.com/mbostock/d3/wiki/Selections#wiki-data
- * @param {(Array|function(...): Array)=} opt_value is an array of data values
- * @param {Function=} opt_key
- * @return {Array.<HTMLElement>}
- */
-d3.data = function(opt_value, opt_key) {};
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-d3_select
+selection.prototype.select;
 
-d3.enter = function() {};
-d3.append = function() {};
-d3.text = function() {};
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-d3_selectAll
+selection.prototype.selectAll;
 
-/**
- * @see https://github.com/mbostock/d3/wiki/Transitions#wiki-d3_transition
- * @param {Array.<HTMLElement>} opt_selection
- * @return {Array.<HTMLElement>}
- */
-d3.transition = function(opt_selection) {};
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-attr
+selection.prototype.attr;
+
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-classed
+selection.prototype.classed;
+
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-style
+selection.prototype.style;
+
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-property
+selection.prototype.property;
+
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-text
+selection.prototype.text;
+
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-html
+selection.prototype.html;
+
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-append
+selection.prototype.append;
+
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-insert
+selection.prototype.insert;
+
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-remove
+selection.prototype.remove;
+
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-data
+selection.prototype.data;
+
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-enter
+selection.prototype.enter;
+
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-exit
+selection.prototype.exit;
+
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-filter
+selection.prototype.filter;
+
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-sort
+selection.prototype.sort;
+
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-order
+selection.prototype.order;
+
+// @see https://github.com/mbostock/d3/wiki/Selections#wiki-on
+selection.prototype.on;
+
 
 /**
  * Transition.
+ * @see https://github.com/mbostock/d3/wiki/Transitions
  * @interface */
-function transition() {};
+function transition() {}
 
 // @see https://github.com/mbostock/d3/wiki/Transitions#wiki-delay
 transition.prototype.delay;
@@ -80,3 +115,72 @@ transition.prototype.attr;
 
 // @see https://github.com/mbostock/d3/wiki/Transitions#wiki-attrTween
 transition.prototype.attrTween;
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-each
+transition.prototype.each;
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-style
+transition.prototype.style;
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-styleTween
+transition.prototype.styleTween;
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-text
+transition.prototype.text;
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-tween
+transition.prototype.tween;
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-remove
+transition.prototype.remove;
+
+
+/**
+ * Scale.
+ * @see https://github.com/mbostock/d3/wiki/Scales
+ * @interface */
+function scale() {}
+
+// @see https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-category20
+scale.prototype.category20;
+
+/**
+ * Layout.
+ * @see https://github.com/mbostock/d3/wiki/Layouts
+ * @interface */
+function layout() {}
+
+layout.prototype.pie;
+
+/**
+ * Pie.
+ * @see https://github.com/mbostock/d3/wiki/Pie-Layout
+ * @interface */
+function pie() {}
+
+// @see https://github.com/mbostock/d3/wiki/Pie-Layout#wiki-sort
+pie.prototype.sort;
+
+
+/**
+ * SVG.
+ * @see https://github.com/mbostock/d3/wiki/SVG-Shapes
+ * @interface
+ */
+function svg() {}
+
+svg.prototype.arc;
+
+
+/**
+ * Arc Shape generator.
+ * @see https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-arc
+ * @interface
+ */
+function arc() {}
+
+// @see https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-arc_innerRadius
+arc.prototype.innerRadius;
+
+// @see https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-arc_outerRadius
+arc.prototype.outerRadius;
