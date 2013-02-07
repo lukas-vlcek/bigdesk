@@ -4,14 +4,14 @@ All JSON data pulled form Elasticsearch is stored in the `Store`. Store is typic
 by client, instead client creates instance of `Manager` which is in charge of the store lifecycle.
 
 ```
-    var configuration =
-    {
-        endpoint: 'http://localhost:9200'
-    };
+var configuration =
+{
+    endpoint: 'http://localhost:9200'
+};
 
-    var manager = new org.bigdesk.store.Manager(configuration);
+var manager = new org.bigdesk.store.Manager(configuration);
 
-    manager.start();
-    // ...
-    manager.stop();
+manager.start();
+// ...
+manager.stop();
 ```

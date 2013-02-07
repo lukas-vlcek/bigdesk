@@ -63,7 +63,6 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceProvider) {
     this.config = {
         endpoint: 'http://localhost:9200',
         net_service_provider: 'xhr',
-        jsonp: false,
         delay: 4000,
         window: 10000
     };
@@ -269,29 +268,6 @@ org.bigdesk.store.Manager.prototype.getNodesStatsCount = function() {
  */
 org.bigdesk.store.Manager.prototype.getNodesInfoCount = function() {
     return this.store.nodesInfos.length;
-};
-
-/**
- *
- * @param {boolean} flag
- * @return {org.bigdesk.store.Manager}
- */
-org.bigdesk.store.Manager.prototype.setJsonp = function(flag) {
-    if (this.running) {
-        throw new Error('Manager is running now. Stop the manager first.');
-    }
-    this.config.jsonp = flag;
-    // TODO switch to xhrManager or jsonp
-    // ...
-    return this;
-};
-
-/**
- *
- * @return {boolean}
- */
-org.bigdesk.store.Manager.prototype.isJsonp = function() {
-    return this.config.jsonp;
 };
 
 /**

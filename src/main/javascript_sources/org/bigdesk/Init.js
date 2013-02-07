@@ -34,15 +34,14 @@ goog.require('goog.debug.ErrorHandler');
 {
     var configuration =
     {
-        endpoint: 'http://localhost:9200',
-        jsonp: false
+        endpoint: 'http://localhost:9200'
     };
 
     var manager = new org.bigdesk.store.Manager(configuration);
 
     manager
         .stop()
-//        .setJsonp(false) // false by default
+        // ...
         .start();
 
 }
