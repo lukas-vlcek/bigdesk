@@ -15,7 +15,7 @@
  */
 
 goog.require('org.bigdesk.store.Store');
-goog.require('org.bigdesk.store.share.importing.ImportingHandler');
+goog.require('org.bigdesk.store.snapshot.importing.ImportingHandler');
 
 //goog.require('goog.string.path');
 
@@ -24,7 +24,7 @@ goog.require('goog.testing.jsunit');
 var testImportHandler = function () {
 
     var store = new org.bigdesk.store.Store();
-    var importHandler = new org.bigdesk.store.share.importing.ImportingHandler();
+    var importHandler = new org.bigdesk.store.snapshot.importing.ImportingHandler();
 
 //    var baseUri = goog.string.path.dirname(window.location.href)+'/';
 

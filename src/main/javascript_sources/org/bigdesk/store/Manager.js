@@ -31,8 +31,8 @@ goog.provide('org.bigdesk.store.Manager');
 goog.require('org.bigdesk.store.event.StoreWhippedOut');
 goog.require('org.bigdesk.store.event.DataAdd');
 goog.require('org.bigdesk.store.event.DataRemove');
-goog.require('org.bigdesk.store.share.importing.event.DataImportProgress');
-goog.require('org.bigdesk.store.share.importing.event.DataImportDone');
+goog.require('org.bigdesk.store.snapshot.importing.event.DataImportProgress');
+goog.require('org.bigdesk.store.snapshot.importing.event.DataImportDone');
 
 goog.require('org.bigdesk.store.Store');
 
@@ -290,11 +290,11 @@ org.bigdesk.store.Manager.prototype.importData = function(importHandler) {
         this.dispatchEvent(new org.bigdesk.store.event.StoreWhippedOut());
 
 //      importData and report progress
-        this.dispatchEvent(new org.bigdesk.store.share.importing.event.DataImportProgress(0));
-        this.dispatchEvent(new org.bigdesk.store.share.importing.event.DataImportProgress(0.5));
-        this.dispatchEvent(new org.bigdesk.store.share.importing.event.DataImportProgress(1));
+        this.dispatchEvent(new org.bigdesk.store.snapshot.importing.event.DataImportProgress(0));
+        this.dispatchEvent(new org.bigdesk.store.snapshot.importing.event.DataImportProgress(0.5));
+        this.dispatchEvent(new org.bigdesk.store.snapshot.importing.event.DataImportProgress(1));
 
-        this.dispatchEvent(new org.bigdesk.store.share.importing.event.DataImportDone(0));
+        this.dispatchEvent(new org.bigdesk.store.snapshot.importing.event.DataImportDone(0));
 //    } catch (e) {
 //        log
 //        fire error event

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-goog.provide('org.bigdesk.store.share.importing.event.EventType');
+goog.provide('org.bigdesk.store.snapshot.importing.event.EventType');
 
 goog.require('goog.events');
 
@@ -22,7 +22,7 @@ goog.require('goog.events');
  * Events fired by the ImportingHandler.
  * @enum {string}
  */
-org.bigdesk.store.share.importing.event.EventType = {
+org.bigdesk.store.snapshot.importing.event.EventType = {
     DATA_IMPORT_DONE     : goog.events.getUniqueId('data_import_done'),
     DATA_IMPORT_PROGRESS : goog.events.getUniqueId('data_import_progress')
 };

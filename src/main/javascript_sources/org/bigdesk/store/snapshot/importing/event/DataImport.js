@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-goog.provide('org.bigdesk.store.share.importing.event.DataImportDone');
-goog.provide('org.bigdesk.store.share.importing.event.DataImportProgress');
+goog.provide('org.bigdesk.store.snapshot.importing.event.DataImportDone');
+goog.provide('org.bigdesk.store.snapshot.importing.event.DataImportProgress');
 
-goog.require('org.bigdesk.store.share.importing.event.EventType');
+goog.require('org.bigdesk.store.snapshot.importing.event.EventType');
 goog.require('goog.events.Event');
 
 /**
@@ -27,9 +27,9 @@ goog.require('goog.events.Event');
  * @constructor
  * @extends {goog.events.Event}
  */
-org.bigdesk.store.share.importing.event.DataImportDone = function(number_of_files, opt_message) {
+org.bigdesk.store.snapshot.importing.event.DataImportDone = function(number_of_files, opt_message) {
 
-    goog.events.Event.call(this, org.bigdesk.store.share.importing.event.EventType.DATA_IMPORT_DONE);
+    goog.events.Event.call(this, org.bigdesk.store.snapshot.importing.event.EventType.DATA_IMPORT_DONE);
 
     /**
      * @type {!number}
@@ -44,12 +44,12 @@ org.bigdesk.store.share.importing.event.DataImportDone = function(number_of_file
     this.opt_message_ = opt_message || '';
 
 };
-goog.inherits(org.bigdesk.store.share.importing.event.DataImportDone, goog.events.Event);
+goog.inherits(org.bigdesk.store.snapshot.importing.event.DataImportDone, goog.events.Event);
 
 /**
  * @return {string}
  */
-org.bigdesk.store.share.importing.event.DataImportDone.prototype.getMessage = function() {
+org.bigdesk.store.snapshot.importing.event.DataImportDone.prototype.getMessage = function() {
     return this.opt_message_;
 };
 
@@ -57,7 +57,7 @@ org.bigdesk.store.share.importing.event.DataImportDone.prototype.getMessage = fu
  * How many files were imported.
  * @return {!number}
  */
-org.bigdesk.store.share.importing.event.DataImportDone.prototype.getNumberOfFiles = function() {
+org.bigdesk.store.snapshot.importing.event.DataImportDone.prototype.getNumberOfFiles = function() {
     return this.number_of_files_;
 };
 
@@ -67,9 +67,9 @@ org.bigdesk.store.share.importing.event.DataImportDone.prototype.getNumberOfFile
  * @constructor
  * @extends {goog.events.Event}
  */
-org.bigdesk.store.share.importing.event.DataImportProgress = function(progress) {
+org.bigdesk.store.snapshot.importing.event.DataImportProgress = function(progress) {
 
-    goog.events.Event.call(this, org.bigdesk.store.share.importing.event.EventType.DATA_IMPORT_PROGRESS);
+    goog.events.Event.call(this, org.bigdesk.store.snapshot.importing.event.EventType.DATA_IMPORT_PROGRESS);
 
     /**
      * @type {!number}
@@ -78,13 +78,13 @@ org.bigdesk.store.share.importing.event.DataImportProgress = function(progress) 
     this.progress_ = progress;
 
 };
-goog.inherits(org.bigdesk.store.share.importing.event.DataImportProgress, goog.events.Event);
+goog.inherits(org.bigdesk.store.snapshot.importing.event.DataImportProgress, goog.events.Event);
 
 /**
  * Progress of data import. Range: <0,1>
  * @return {!number}
  */
-org.bigdesk.store.share.importing.event.DataImportProgress.prototype.getProgress = function() {
+org.bigdesk.store.snapshot.importing.event.DataImportProgress.prototype.getProgress = function() {
     return this.progress_;
 };
 

@@ -19,12 +19,12 @@
  * @author Lukas Vlcek (lukas.vlcek@gmail.com)
  */
 
-goog.provide('org.bigdesk.store.share.importing.ImportingHandler');
-goog.provide('org.bigdesk.store.share.importing.StoreSourceType');
-goog.provide('org.bigdesk.store.share.importing.StorePart');
+goog.provide('org.bigdesk.store.snapshot.importing.ImportingHandler');
+goog.provide('org.bigdesk.store.snapshot.importing.StoreSourceType');
+goog.provide('org.bigdesk.store.snapshot.importing.StorePart');
 
-goog.require('org.bigdesk.store.share.importing.event.DataImportProgress');
-goog.require('org.bigdesk.store.share.importing.event.DataImportDone');
+goog.require('org.bigdesk.store.snapshot.importing.event.DataImportProgress');
+goog.require('org.bigdesk.store.snapshot.importing.event.DataImportDone');
 
 goog.require('goog.net.Jsonp');
 
@@ -46,20 +46,20 @@ goog.require('goog.debug.Logger');
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-org.bigdesk.store.share.importing.ImportingHandler = function() {
+org.bigdesk.store.snapshot.importing.ImportingHandler = function() {
     goog.events.EventTarget.call(this);
 
     /** @private */
-    this.log = goog.debug.Logger.getLogger('org.bigdesk.store.share.importing.ImportingHandler');
+    this.log = goog.debug.Logger.getLogger('org.bigdesk.store.snapshot.importing.ImportingHandler');
 
     this.thiz_ = this;
 
 };
-goog.inherits(org.bigdesk.store.share.importing.ImportingHandler, goog.events.EventTarget);
+goog.inherits(org.bigdesk.store.snapshot.importing.ImportingHandler, goog.events.EventTarget);
 
 /** @inheritDoc */
-org.bigdesk.store.share.importing.ImportingHandler.prototype.disposeInternal = function() {
-    org.bigdesk.store.share.importing.ImportingHandler.superClass_.disposeInternal.call(this);
+org.bigdesk.store.snapshot.importing.ImportingHandler.prototype.disposeInternal = function() {
+    org.bigdesk.store.snapshot.importing.ImportingHandler.superClass_.disposeInternal.call(this);
 };
 
 /**
@@ -69,12 +69,12 @@ org.bigdesk.store.share.importing.ImportingHandler.prototype.disposeInternal = f
  * @param {FileList=} opt_filelist FileList containing Files with the data (used only if 'source_type' is set to 'FileList')
  * TODO consider returning Deferred (instead of firing DataImportDone event)
  */
-org.bigdesk.store.share.importing.ImportingHandler.prototype.importData = function(store, manifest, opt_filelist) {
+org.bigdesk.store.snapshot.importing.ImportingHandler.prototype.importData = function(store, manifest, opt_filelist) {
 
     // shortcuts
-    var DataImportProgress = org.bigdesk.store.share.importing.event.DataImportProgress;
-    var DataImportDone     = org.bigdesk.store.share.importing.event.DataImportDone;
-    var StoreSourceType    = org.bigdesk.store.share.importing.StoreSourceType;
+    var DataImportProgress = org.bigdesk.store.snapshot.importing.event.DataImportProgress;
+    var DataImportDone     = org.bigdesk.store.snapshot.importing.event.DataImportDone;
+    var StoreSourceType    = org.bigdesk.store.snapshot.importing.StoreSourceType;
     var thiz_ = this;
 
     if (goog.object.containsKey(manifest, 'store') && goog.isObject(manifest['store'])) {
@@ -102,7 +102,7 @@ org.bigdesk.store.share.importing.ImportingHandler.prototype.importData = functi
         this.dispatchEvent(new DataImportProgress(progress));
 
         // first get number of total parts and its files in manifest (needed to track total progress)
-        var parts = goog.object.getValues(org.bigdesk.store.share.importing.StorePart);
+        var parts = goog.object.getValues(org.bigdesk.store.snapshot.importing.StorePart);
         goog.array.forEach(parts, function(part){
             if (goog.isArray(manifestStore[part])) {
                 totalParts += manifestStore[part].length;
@@ -189,7 +189,7 @@ org.bigdesk.store.share.importing.ImportingHandler.prototype.importData = functi
  * @param {!String} fileName
  * @private
  */
-org.bigdesk.store.share.importing.ImportingHandler.prototype.pushIntoStore = function(store, part, fileContent, fileName) {
+org.bigdesk.store.snapshot.importing.ImportingHandler.prototype.pushIntoStore = function(store, part, fileContent, fileName) {
 
     var json;
     try {
@@ -200,7 +200,7 @@ org.bigdesk.store.share.importing.ImportingHandler.prototype.pushIntoStore = fun
         return;
     }
 
-    var StorePart = org.bigdesk.store.share.importing.StorePart;
+    var StorePart = org.bigdesk.store.snapshot.importing.StorePart;
     /** @type {function(number, !Object):boolean} */ var addFunction;
     switch (part) {
         case StorePart.NODES_STATS:
@@ -232,7 +232,7 @@ org.bigdesk.store.share.importing.ImportingHandler.prototype.pushIntoStore = fun
  * @return {File|null} file found in fileList having this name
  * @private
  */
-org.bigdesk.store.share.importing.ImportingHandler.prototype.findFileByName = function(name, fileList) {
+org.bigdesk.store.snapshot.importing.ImportingHandler.prototype.findFileByName = function(name, fileList) {
     if (!goog.isDefAndNotNull(fileList)) { return null; }
     // just in case browser passes full path
     var p_ = Math.max(name.lastIndexOf('/'), name.lastIndexOf('\\'));
@@ -253,7 +253,7 @@ org.bigdesk.store.share.importing.ImportingHandler.prototype.findFileByName = fu
  * Supported types of store types.
  * @enum {string}
  */
-org.bigdesk.store.share.importing.StoreSourceType = {
+org.bigdesk.store.snapshot.importing.StoreSourceType = {
     FILE_LIST: "FileList"
 };
 
@@ -261,7 +261,7 @@ org.bigdesk.store.share.importing.StoreSourceType = {
  * Parts of store that we try to import.
  * @enum {string}
  */
-org.bigdesk.store.share.importing.StorePart = {
+org.bigdesk.store.snapshot.importing.StorePart = {
     NODES_STATS: "nodes_stats",
     NODES_INFO : "nodes_info"
 };

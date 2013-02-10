@@ -18,7 +18,7 @@
 <html>
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Test for org.bigdesk.store.share.importing.ImportingHandler using FileList (requires user interaction)</title>
+    <title>Test for org.bigdesk.store.snapshot.importing.ImportingHandler using FileList (requires user interaction)</title>
     <script src="../../../../../../../../closure-library-r2388/closure/goog/base.js"></script>
     <script src="importingHandler_test_deps.js"></script>
     <script type="text/javascript">
@@ -26,8 +26,8 @@
     goog.require('goog.dom');
     goog.require('goog.events');
     goog.require('org.bigdesk.store.Store');
-    goog.require('org.bigdesk.store.share.importing.ImportingHandler');
-    goog.require('org.bigdesk.store.share.importing.event.EventType');
+    goog.require('org.bigdesk.store.snapshot.importing.ImportingHandler');
+    goog.require('org.bigdesk.store.snapshot.importing.event.EventType');
     goog.require('goog.testing.ContinuationTestCase');
     goog.require('goog.testing.jsunit');
     </script>
@@ -75,7 +75,7 @@ Countdown to test timeout: <span id="count"></span>s.
                 callback);
 
         var store = new org.bigdesk.store.Store();
-        var importingHandler = new org.bigdesk.store.share.importing.ImportingHandler();
+        var importingHandler = new org.bigdesk.store.snapshot.importing.ImportingHandler();
         var selectedFiles = 0;
 
         function callback(e) {
@@ -89,7 +89,7 @@ Countdown to test timeout: <span id="count"></span>s.
         var progress = -1;
         goog.events.listen(
                 importingHandler,
-                org.bigdesk.store.share.importing.event.EventType.DATA_IMPORT_PROGRESS,
+                org.bigdesk.store.snapshot.importing.event.EventType.DATA_IMPORT_PROGRESS,
                 function(e) {
                     console.log("progress", e.getProgress());
                     assertTrue(progress < e.getProgress());
@@ -99,7 +99,7 @@ Countdown to test timeout: <span id="count"></span>s.
 
         goog.events.listenOnce(
                 importingHandler,
-                org.bigdesk.store.share.importing.event.EventType.DATA_IMPORT_DONE,
+                org.bigdesk.store.snapshot.importing.event.EventType.DATA_IMPORT_DONE,
                 function(e) {
                     assertEquals('All selected files were processed', selectedFiles, e.getNumberOfFiles());
 
@@ -122,7 +122,7 @@ Countdown to test timeout: <span id="count"></span>s.
                 }
         );
 
-        waitForEvent(importingHandler, org.bigdesk.store.share.importing.event.EventType.DATA_IMPORT_DONE,
+        waitForEvent(importingHandler, org.bigdesk.store.snapshot.importing.event.EventType.DATA_IMPORT_DONE,
                 function() {
                     // noop, this is to make sure test does not finish until data import is done
                     // which also means that asserts in listener are executed (that is what we need)
