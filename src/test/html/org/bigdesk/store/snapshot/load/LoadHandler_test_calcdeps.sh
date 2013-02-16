@@ -5,6 +5,6 @@
 --path ./../../../../../../../main/javascript_sources/org/bigdesk/net \
 --path ./../../../../../../../main/javascript_sources/org/bigdesk/store \
 --output_mode deps \
-> importingHandler_test_deps.js
+> LoadHandler_test_deps.js
 
-echo "Generated file: importingHandler_test_deps.js"
+echo "Generated file: LoadHandler_test_deps.js"

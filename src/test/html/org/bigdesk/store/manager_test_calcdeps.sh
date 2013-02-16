@@ -6,6 +6,6 @@
 --path ./../../../../../main/javascript_sources/org/bigdesk/net \
 --path ./../../../../../test/javascript_sources/org/bigdesk/net \
 --output_mode deps \
-> manager_test_deps.js
+> Manager_test_deps.js
 
-echo "Generated file: manager_test_deps.js"
+echo "Generated file: Manager_test_deps.js"

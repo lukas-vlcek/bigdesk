@@ -14,7 +14,7 @@
   --output_mode='list' \
   --output_file=./rawlist \
   \
-  --namespace="test.org.bigdesk.store.importing.FileListImportingAsyncTest"
+  --namespace="test.org.bigdesk.store.snapshot.load.FileListAsyncTest"
 
 # prepare the output for the jsTestDriver.conf format
 # put the following output into the 'load:' section

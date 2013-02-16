@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-goog.provide('org.bigdesk.store.snapshot.importing.event.EventType');
+goog.provide('org.bigdesk.store.snapshot.load.event.EventType');
 
 goog.require('goog.events');
 
 /**
- * Events fired by the ImportingHandler.
+ * Events fired by the LoadHandler.
  * @enum {string}
  */
-org.bigdesk.store.snapshot.importing.event.EventType = {
-    DATA_IMPORT_DONE     : goog.events.getUniqueId('data_import_done'),
-    DATA_IMPORT_PROGRESS : goog.events.getUniqueId('data_import_progress')
+org.bigdesk.store.snapshot.load.event.EventType = {
+    SNAPSHOT_LOAD_DONE     : goog.events.getUniqueId('snapshot_load_done'),
+    SNAPSHOT_LOAD_PROGRESS : goog.events.getUniqueId('snapshot_load_progress')
 };

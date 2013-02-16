@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-goog.provide("test.org.bigdesk.store.importing.FileListImportingAsyncTest");
+goog.provide("test.org.bigdesk.store.snapshot.load.FileListAsyncTest");
 
 goog.require('goog.dom');
 goog.require('goog.events');
@@ -40,7 +40,7 @@ goog.require('goog.fs.FileReader.ReadyState');
  * For some useful tips:
  * {@see https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications}
  */
-AsyncTestCase('FileListImportingAsyncTest', {
+AsyncTestCase('FileListLoadAsyncTest', {
 
     hasFileAPI: function() {
         return (window.File && window.FileReader && window.FileList && window.Blob);

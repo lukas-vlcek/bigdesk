@@ -18,16 +18,16 @@
 <html>
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Test for org.bigdesk.store.snapshot.importing.ImportingHandler using FileList (requires user interaction)</title>
+    <title>Test for org.bigdesk.store.snapshot.load.LoadHandler using FileList (requires user interaction)</title>
     <script src="../../../../../../../../closure-library-r2388/closure/goog/base.js"></script>
-    <script src="importingHandler_test_deps.js"></script>
+    <script src="LoadHandler_test_deps.js"></script>
     <script type="text/javascript">
     goog.require('goog.array');
     goog.require('goog.dom');
     goog.require('goog.events');
     goog.require('org.bigdesk.store.Store');
-    goog.require('org.bigdesk.store.snapshot.importing.ImportingHandler');
-    goog.require('org.bigdesk.store.snapshot.importing.event.EventType');
+    goog.require('org.bigdesk.store.snapshot.load.LoadHandler');
+    goog.require('org.bigdesk.store.snapshot.load.event.EventType');
     goog.require('goog.testing.ContinuationTestCase');
     goog.require('goog.testing.jsunit');
     </script>
@@ -55,7 +55,7 @@ Countdown to test timeout: <span id="count"></span>s.
     }
     // ----
 
-    function testFileListImporting() {
+    function testFileListload() {
 
         var countSpan = goog.dom.getElement('count');
         var count_down = goog.testing.ContinuationTestCase.MAX_TIMEOUT;
@@ -75,7 +75,7 @@ Countdown to test timeout: <span id="count"></span>s.
                 callback);
 
         var store = new org.bigdesk.store.Store();
-        var importingHandler = new org.bigdesk.store.snapshot.importing.ImportingHandler();
+        var loadHandler = new org.bigdesk.store.snapshot.load.LoadHandler();
         var selectedFiles = 0;
 
         function callback(e) {
@@ -83,13 +83,13 @@ Countdown to test timeout: <span id="count"></span>s.
             var fileList = e.target.files;
             selectedFiles = fileList.length;
             assert(fileList instanceof FileList);
-            importingHandler.importData(store, prepareMaifest(fileList), fileList);
+            loadHandler.importData(store, prepareManifest(fileList), fileList);
         }
 
         var progress = -1;
         goog.events.listen(
-                importingHandler,
-                org.bigdesk.store.snapshot.importing.event.EventType.DATA_IMPORT_PROGRESS,
+                loadHandler,
+                org.bigdesk.store.snapshot.load.event.EventType.SNAPSHOT_LOAD_PROGRESS,
                 function(e) {
                     console.log("progress", e.getProgress());
                     assertTrue(progress < e.getProgress());
@@ -98,8 +98,8 @@ Countdown to test timeout: <span id="count"></span>s.
         );
 
         goog.events.listenOnce(
-                importingHandler,
-                org.bigdesk.store.snapshot.importing.event.EventType.DATA_IMPORT_DONE,
+                loadHandler,
+                org.bigdesk.store.snapshot.load.event.EventType.SNAPSHOT_LOAD_DONE,
                 function(e) {
                     assertEquals('All selected files were processed', selectedFiles, e.getNumberOfFiles());
 
@@ -115,14 +115,14 @@ Countdown to test timeout: <span id="count"></span>s.
 
         waitForEvent(input, goog.events.EventType.CHANGE,
                 function() {
-                    // set timeout to original value (in case more tests are run in one session)
-                    goog.testing.ContinuationTestCase.MAX_TIMEOUT = original_timeout;
                     clearInterval(intervalId);
                     countSpan.innerHTML = 'n/a ';
+                    // set timeout to original value (in case more tests are run in one session)
+                    goog.testing.ContinuationTestCase.MAX_TIMEOUT = original_timeout;
                 }
         );
 
-        waitForEvent(importingHandler, org.bigdesk.store.snapshot.importing.event.EventType.DATA_IMPORT_DONE,
+        waitForEvent(loadHandler, org.bigdesk.store.snapshot.load.event.EventType.SNAPSHOT_LOAD_DONE,
                 function() {
                     // noop, this is to make sure test does not finish until data import is done
                     // which also means that asserts in listener are executed (that is what we need)
@@ -137,7 +137,7 @@ Countdown to test timeout: <span id="count"></span>s.
      * @return {!Object}
      * @private
      */
-    function prepareMaifest(fileList) {
+    function prepareManifest(fileList) {
 
         return {
 

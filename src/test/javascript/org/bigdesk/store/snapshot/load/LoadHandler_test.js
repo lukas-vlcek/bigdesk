@@ -15,7 +15,7 @@
  */
 
 goog.require('org.bigdesk.store.Store');
-goog.require('org.bigdesk.store.snapshot.importing.ImportingHandler');
+goog.require('org.bigdesk.store.snapshot.load.LoadHandler');
 
 //goog.require('goog.string.path');
 
@@ -24,7 +24,7 @@ goog.require('goog.testing.jsunit');
 var testImportHandler = function () {
 
     var store = new org.bigdesk.store.Store();
-    var importHandler = new org.bigdesk.store.snapshot.importing.ImportingHandler();
+    var loadHandler = new org.bigdesk.store.snapshot.load.LoadHandler();
 
 //    var baseUri = goog.string.path.dirname(window.location.href)+'/';
 
@@ -51,7 +51,7 @@ var testImportHandler = function () {
 
     assertEquals("store is empty", 0, store.nodesStats.length);
 
-    importHandler.importData(store, manifest);
+    loadHandler.importData(store, manifest);
 
 //    assertEquals("six items were imported", 6, store.nodesStats.length);
 //    assertArrayEquals("array should be sorted",
