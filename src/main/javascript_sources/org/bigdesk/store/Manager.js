@@ -64,7 +64,7 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceProvider) {
         endpoint: 'http://localhost:9200',
         net_service_provider: 'xhr',
         delay: 4000,
-        window: 10000
+        window: 60000
     };
 
     if (goog.isDef(opt_config)) {
@@ -143,7 +143,7 @@ org.bigdesk.store.Manager.prototype.disposeInternal = function() {
 org.bigdesk.store.Manager.prototype.processNodesStatsDelay = function(timestamp, data) {
     this.dropFromNodesStats(timestamp - this.config.window);
     this.addIntoNodesStats(timestamp, data);
-    this.delay_nodesStats.start();
+    this.delay_nodesStats.start(this.config.delay);
 };
 
 /**
@@ -190,7 +190,7 @@ org.bigdesk.store.Manager.prototype.dropFromNodesStats = function(timestamp) {
 org.bigdesk.store.Manager.prototype.processNodesInfoDelay = function(timestamp, data) {
     this.dropFromNodesInfo(timestamp - this.config.window);
     this.addIntoNodesInfo(timestamp, data);
-    this.delay_nodesInfo.start();
+    this.delay_nodesInfo.start(this.config.delay);
 };
 
 /**
@@ -255,7 +255,7 @@ org.bigdesk.store.Manager.prototype.start = function() {
 };
 
 /**
- *
+ * Number of data items in nodes stats.
  * @return {!number}
  */
 org.bigdesk.store.Manager.prototype.getNodesStatsCount = function() {
@@ -263,11 +263,22 @@ org.bigdesk.store.Manager.prototype.getNodesStatsCount = function() {
 };
 
 /**
- *
+ * Number of data items in nodes info.
  * @return {!number}
  */
 org.bigdesk.store.Manager.prototype.getNodesInfoCount = function() {
     return this.store.nodesInfos.length;
+};
+
+/**
+ * Update the delay interval.
+ * @param {!number} interval (in milliseconds)
+ */
+org.bigdesk.store.Manager.prototype.updateDelay = function(interval) {
+    var r_ = this.running;
+    if (r_) {this.stop()}
+    this.config.delay = interval;
+    if (r_) {this.start()}
 };
 
 /**
@@ -279,9 +290,9 @@ org.bigdesk.store.Manager.prototype.getConfiguration = function() {
 };
 
 /**
- * Imports data into Store from external source.
+ * Load data into Store.
  */
-org.bigdesk.store.Manager.prototype.importData = function(importHandler) {
+org.bigdesk.store.Manager.prototype.importData = function(loadHandler) {
 //    stop
     this.stop();
 //    lock
@@ -289,7 +300,7 @@ org.bigdesk.store.Manager.prototype.importData = function(importHandler) {
 //      delete all data from store
         this.dispatchEvent(new org.bigdesk.store.event.StoreWhippedOut());
 
-//      importData and report progress
+//      loadData and report progress
         this.dispatchEvent(new org.bigdesk.store.snapshot.load.event.SnapshotLoadProgress(0));
         this.dispatchEvent(new org.bigdesk.store.snapshot.load.event.SnapshotLoadProgress(0.5));
         this.dispatchEvent(new org.bigdesk.store.snapshot.load.event.SnapshotLoadProgress(1));
@@ -304,14 +315,14 @@ org.bigdesk.store.Manager.prototype.importData = function(importHandler) {
 };
 
 /**
- * Exports data from Store.
+ * Save Store data.
  */
-org.bigdesk.store.Manager.prototype.exportData = function(exportHandler) {
+org.bigdesk.store.Manager.prototype.exportData = function(saveHandler) {
 //    stop
     this.stop();
 //    lock
 //    try {
-//        exportData and report progress
+//        saveData and report progress
 //    } catch (e) {
 //        log
 //        fire error event
