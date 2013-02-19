@@ -24,6 +24,7 @@ goog.provide('org.bigdesk.net.XhrService');
 
 goog.require('org.bigdesk.net.Service');
 
+goog.require('goog.string.path');
 goog.require('goog.string');
 
 goog.require('goog.net.XhrManager');
@@ -70,7 +71,7 @@ org.bigdesk.net.XhrService = function(uri) {
      * @private
      * @const
      */
-    this.NODES_STATS_URL_ = goog.Uri.parse(this.uri.getPath() + "/_nodes/stats").toString();
+    this.NODES_STATS_URL_ = goog.string.path.normalizePath(this.uri.toString()) + "/_nodes/stats";
     /**
      * Code used to identify 'nodes stats' request in xhrManager.
      * @type {!string}
@@ -83,7 +84,7 @@ org.bigdesk.net.XhrService = function(uri) {
      * @private
      * @const
      */
-    this.NODES_INFO_URL_ = goog.Uri.parse(this.uri.getPath() + "/_nodes").toString();
+    this.NODES_INFO_URL_ = goog.string.path.normalizePath(this.uri.toString()) + "/_nodes";
     /**
      * Code used to identify 'nodes info' request in xhrManager.
      * @type {!string}
