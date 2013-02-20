@@ -52,7 +52,7 @@ org.bigdesk.net.XhrService = function(uri) {
      * @type {goog.Uri}
      * @private
      */
-    this.uri = uri;
+    this.uri_ = uri;
 
     /**
      * @type {goog.net.XhrManager}
@@ -71,7 +71,7 @@ org.bigdesk.net.XhrService = function(uri) {
      * @private
      * @const
      */
-    this.NODES_STATS_URL_ = goog.string.path.normalizePath(this.uri.toString()) + "/_nodes/stats";
+    this.NODES_STATS_URL_ = goog.string.path.normalizePath(this.uri_.toString()) + "/_nodes/stats";
     /**
      * Code used to identify 'nodes stats' request in xhrManager.
      * @type {!string}
@@ -84,7 +84,7 @@ org.bigdesk.net.XhrService = function(uri) {
      * @private
      * @const
      */
-    this.NODES_INFO_URL_ = goog.string.path.normalizePath(this.uri.toString()) + "/_nodes";
+    this.NODES_INFO_URL_ = goog.string.path.normalizePath(this.uri_.toString()) + "/_nodes";
     /**
      * Code used to identify 'nodes info' request in xhrManager.
      * @type {!string}
@@ -97,7 +97,7 @@ org.bigdesk.net.XhrService = function(uri) {
      * @private
      * @const
      */
-    this.CLUSTER_STATE_URL_ = goog.string.path.normalizePath(this.uri.toString()) + "/_cluster/state";
+    this.CLUSTER_STATE_URL_ = goog.string.path.normalizePath(this.uri_.toString()) + "/_cluster/state";
     /**
      * Code used to identify 'cluster state' request in xhrManager.
      * @type {!string}
@@ -111,63 +111,40 @@ goog.inherits(org.bigdesk.net.XhrService, goog.Disposable);
 /** @inheritDoc */
 org.bigdesk.net.XhrService.prototype.disposeInternal = function() {
     org.bigdesk.net.XhrService.superClass_.disposeInternal.call(this);
-    delete this.uri;
+    delete this.uri_;
     goog.dispose(this.xhrManager);
 };
 
 /** @inheritDoc */
 org.bigdesk.net.XhrService.prototype.getNodesStats = function(callback, opt_timestamp) {
-
-    var timestamp = opt_timestamp || goog.now();
-
-    this.xhrManager.abort(this.NODES_STATS_ID_, true);
-    this.xhrManager.send(
-        this.NODES_STATS_ID_,
-        this.NODES_STATS_URL_,
-        'GET',
-        undefined,undefined,
-        this.XHR_REQUEST_PRIORITY,
-        function(e){
-            var event = /** @type goog.net.XhrManager.Event */ (e);
-            var response = event.target.getResponseJson();
-            response = goog.isDef(response) ? response : {};
-            callback(timestamp, response);
-        },
-        0 //max retries
-    );
+    this.getData_(this.NODES_STATS_ID_, this.NODES_STATS_URL_, callback, opt_timestamp);
 };
 
 /** @inheritDoc */
 org.bigdesk.net.XhrService.prototype.getNodesInfo = function(callback, opt_timestamp) {
-
-    var timestamp = opt_timestamp || goog.now();
-
-    this.xhrManager.abort(this.NODES_INFO_ID_, true);
-    this.xhrManager.send(
-        this.NODES_INFO_ID_,
-        this.NODES_INFO_URL_,
-        'GET',
-        undefined,undefined,
-        this.XHR_REQUEST_PRIORITY,
-        function(e){
-            var event = /** @type goog.net.XhrManager.Event */ (e);
-            var response = event.target.getResponseJson();
-            response = goog.isDef(response) ? response : {};
-            callback(timestamp, response);
-        },
-        0 //max retries
-    );
+    this.getData_(this.NODES_INFO_ID_, this.NODES_INFO_URL_, callback, opt_timestamp);
 };
 
 /** @inheritDoc */
 org.bigdesk.net.XhrService.prototype.getClusterStates = function(callback, opt_timestamp) {
+    this.getData_(this.CLUSTER_STATE_ID_, this.CLUSTER_STATE_URL_, callback, opt_timestamp);
+};
+
+/**
+ * @param {!string} rest_call_id
+ * @param {!string} rest_call_url
+ * @param {!function(!number, !Object)} callback
+ * @param {number=} opt_timestamp
+ * @private
+ */
+org.bigdesk.net.XhrService.prototype.getData_ = function(rest_call_id, rest_call_url, callback, opt_timestamp) {
 
     var timestamp = opt_timestamp || goog.now();
 
-    this.xhrManager.abort(this.CLUSTER_STATE_ID_, true);
+    this.xhrManager.abort(rest_call_id, true);
     this.xhrManager.send(
-        this.CLUSTER_STATE_ID_,
-        this.CLUSTER_STATE_URL_,
+        rest_call_id,
+        rest_call_url,
         'GET',
         undefined,undefined,
         this.XHR_REQUEST_PRIORITY,
