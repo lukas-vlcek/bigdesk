@@ -83,7 +83,6 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceProvider) {
      * @private
      */
     this.netService = this.serviceProvider.getService(this.config.net_service_provider,endpointUri);
-//    this.xhrService = new org.bigdesk.net.XhrService(endpointUri);
 
     /**
      * @type {boolean}
@@ -97,21 +96,27 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceProvider) {
      */
     this.store = new org.bigdesk.store.Store();
 
+    /** @private */
+    this.evnts_ = org.bigdesk.store.event.EventType;
+
     var thiz_ = this;
 
-    this.delay_nodesStats = new goog.async.Delay(
+    /** @private */
+    this.delay_nodesStats_ = new goog.async.Delay(
         function(){
             thiz_.netService.getNodesStats(goog.bind(thiz_.processNodesStatsDelay, thiz_))
         },
         this.config.delay);
 
-    this.delay_nodesInfo = new goog.async.Delay(
+    /** @private */
+    this.delay_nodesInfo_ = new goog.async.Delay(
         function(){
             thiz_.netService.getNodesInfo(goog.bind(thiz_.processNodesInfoDelay, thiz_))
         },
         this.config.delay);
 
-    this.delay_clusterStates = new goog.async.Delay(
+    /** @private */
+    this.delay_clusterStates_ = new goog.async.Delay(
         function(){
             thiz_.netService.getClusterStates(goog.bind(thiz_.processClusterStatesDelay, thiz_))
         },
@@ -125,19 +130,79 @@ org.bigdesk.store.Manager.prototype.disposeInternal = function() {
     org.bigdesk.store.Manager.superClass_.disposeInternal.call(this);
 
     // Dispose of all Disposable objects owned by this class.
-    this.delay_nodesStats.dispose();
-    this.delay_nodesInfo.dispose();
-    this.delay_clusterStates.dispose();
+    this.delay_nodesStats_.dispose();
+    this.delay_nodesInfo_.dispose();
+    this.delay_clusterStates_.dispose();
 
     // Remove listeners added by this class.
-
     // Remove references to COM objects.
-
     // Remove references to DOM nodes, which are COM objects in IE.
+
     delete this.store;
     delete this.netService;
     delete this.running;
     delete this.config;
+    delete this.evnts_;
+};
+
+/**
+ * Stop all delays in the manager.
+ * @return {org.bigdesk.store.Manager}
+ */
+org.bigdesk.store.Manager.prototype.stop = function() {
+    if (this.running) {
+        this.delay_nodesStats_.stop();
+        this.delay_nodesInfo_.stop();
+        this.delay_clusterStates_.stop();
+        this.running = false;
+    }
+    return this;
+};
+
+/**
+ * Start all delays in the manager.
+ * @return {org.bigdesk.store.Manager}
+ */
+org.bigdesk.store.Manager.prototype.start = function() {
+    if (!this.running) {
+        this.running = true;
+        // request data right now (so we do not have to wait for delay to get first data)
+        this.delay_nodesStats_.fire();
+        this.delay_nodesInfo_.fire();
+        this.delay_clusterStates_.fire();
+    }
+    return this;
+};
+
+
+/**
+ * Called when a new nodes stats data is retrieved.
+ * @param {!number} timestamp
+ * @param {!Object} data
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.addIntoNodesStats = function(timestamp, data) {
+    this.addData_(goog.bind(this.store.addNodesStats, this.store), this.evnts_.NODES_STATS_ADD, timestamp, data);
+};
+
+/**
+ * Called when a new nodes info data is retrieved.
+ * @param {!number} timestamp
+ * @param {!Object} data
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.addIntoNodesInfo = function(timestamp, data) {
+    this.addData_(goog.bind(this.store.addNodesInfo,this.store), this.evnts_.NODES_INFO_ADD, timestamp, data);
+};
+
+/**
+ * Called when a new cluster state data is retrieved.
+ * @param {!number} timestamp
+ * @param {!Object} data
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.addIntoClusterStates = function(timestamp, data) {
+    this.addData_(goog.bind(this.store.addClusterState,this.store), this.evnts_.CLUSTER_STATE_ADD, timestamp, data);
 };
 
 /**
@@ -150,25 +215,7 @@ org.bigdesk.store.Manager.prototype.disposeInternal = function() {
 org.bigdesk.store.Manager.prototype.processNodesStatsDelay = function(timestamp, data) {
     this.dropNodesStatsStartingFrom(timestamp - this.config.window);
     this.addIntoNodesStats(timestamp, data);
-    this.delay_nodesStats.start(this.config.delay);
-};
-
-/**
- * Called when a new nodes stats data is retrieved.
- * @param {!number} timestamp
- * @param {!Object} data
- * @protected
- */
-org.bigdesk.store.Manager.prototype.addIntoNodesStats = function(timestamp, data) {
-    if (goog.isNumber(timestamp) && goog.isObject(data)) {
-        this.store.addNodesStats(timestamp, data);
-        var event = new org.bigdesk.store.event.DataAdd(org.bigdesk.store.event.EventType.NODES_STATS_ADD, timestamp, data);
-        this.dispatchEvent(event);
-    } else {
-        this.log.warning('Something went wrong when adding new nodes stats');
-        this.log.finer('timestamp: ' + timestamp);
-        this.log.finer('data: ' + goog.debug.expose(data));
-    }
+    this.delay_nodesStats_.start(this.config.delay);
 };
 
 /**
@@ -179,7 +226,7 @@ org.bigdesk.store.Manager.prototype.addIntoNodesStats = function(timestamp, data
 org.bigdesk.store.Manager.prototype.dropNodesStatsStartingFrom = function(timestamp) {
     if (goog.isNumber(timestamp)) {
         var dropped = this.store.dropNodesStatsStartingFrom(timestamp);
-        var event = new org.bigdesk.store.event.DataRemove(org.bigdesk.store.event.EventType.NODES_STATS_REMOVE, dropped);
+        var event = new org.bigdesk.store.event.DataRemove(this.evnts_.NODES_STATS_REMOVE, dropped);
         this.dispatchEvent(event);
     } else {
         this.log.warning('Something went wrong when dropping data from nodes stats');
@@ -197,25 +244,7 @@ org.bigdesk.store.Manager.prototype.dropNodesStatsStartingFrom = function(timest
 org.bigdesk.store.Manager.prototype.processNodesInfoDelay = function(timestamp, data) {
     this.dropFromNodesInfo(timestamp - this.config.window);
     this.addIntoNodesInfo(timestamp, data);
-    this.delay_nodesInfo.start(this.config.delay);
-};
-
-/**
- * Called when a new nodes info data is retrieved.
- * @param {!number} timestamp
- * @param {!Object} data
- * @protected
- */
-org.bigdesk.store.Manager.prototype.addIntoNodesInfo = function(timestamp, data) {
-    if (goog.isNumber(timestamp) && goog.isObject(data)) {
-        this.store.addNodesInfo(timestamp, data);
-        var event = new org.bigdesk.store.event.DataAdd(org.bigdesk.store.event.EventType.NODES_INFO_ADD, timestamp, data);
-        this.dispatchEvent(event);
-    } else {
-        this.log.warning('Something went wrong when adding new nodes info');
-        this.log.finer('timestamp: ' + timestamp);
-        this.log.finer('data: ' + goog.debug.expose(data));
-    }
+    this.delay_nodesInfo_.start(this.config.delay);
 };
 
 /**
@@ -226,7 +255,7 @@ org.bigdesk.store.Manager.prototype.addIntoNodesInfo = function(timestamp, data)
 org.bigdesk.store.Manager.prototype.dropFromNodesInfo = function(timestamp) {
     if (goog.isNumber(timestamp)) {
         var dropped = this.store.dropNodesInfosStartingFrom(timestamp);
-        var event = new org.bigdesk.store.event.DataRemove(org.bigdesk.store.event.EventType.NODES_INFO_REMOVE, dropped);
+        var event = new org.bigdesk.store.event.DataRemove(this.evnts_.NODES_INFO_REMOVE, dropped);
         this.dispatchEvent(event);
     } else {
         this.log.warning('Something went wrong when dropping data from nodes info');
@@ -244,25 +273,7 @@ org.bigdesk.store.Manager.prototype.dropFromNodesInfo = function(timestamp) {
 org.bigdesk.store.Manager.prototype.processClusterStatesDelay = function(timestamp, data) {
     this.dropFromClusterStates(timestamp - this.config.window);
     this.addIntoClusterStates(timestamp, data);
-    this.delay_clusterStates.start(this.config.delay);
-};
-
-/**
- * Called when a new cluster state data is retrieved.
- * @param {!number} timestamp
- * @param {!Object} data
- * @protected
- */
-org.bigdesk.store.Manager.prototype.addIntoClusterStates = function(timestamp, data) {
-    if (goog.isNumber(timestamp) && goog.isObject(data)) {
-        this.store.addClusterState(timestamp, data);
-        var event = new org.bigdesk.store.event.DataAdd(org.bigdesk.store.event.EventType.CLUSTER_STATE_ADD, timestamp, data);
-        this.dispatchEvent(event);
-    } else {
-        this.log.warning('Something went wrong when adding new cluster state');
-        this.log.finer('timestamp: ' + timestamp);
-        this.log.finer('data: ' + goog.debug.expose(data));
-    }
+    this.delay_clusterStates_.start(this.config.delay);
 };
 
 /**
@@ -273,41 +284,12 @@ org.bigdesk.store.Manager.prototype.addIntoClusterStates = function(timestamp, d
 org.bigdesk.store.Manager.prototype.dropFromClusterStates = function(timestamp) {
     if (goog.isNumber(timestamp)) {
         var dropped = this.store.dropClusterStatesStaringFrom(timestamp);
-        var event = new org.bigdesk.store.event.DataRemove(org.bigdesk.store.event.EventType.CLUSTER_STATE_REMOVE, dropped);
+        var event = new org.bigdesk.store.event.DataRemove(this.evnts_.CLUSTER_STATE_REMOVE, dropped);
         this.dispatchEvent(event);
     } else {
         this.log.warning('Something went wrong when dropping data from cluster states');
         this.log.finer('timestamp: ' + timestamp);
     }
-};
-
-/**
- *
- * @return {org.bigdesk.store.Manager}
- */
-org.bigdesk.store.Manager.prototype.stop = function() {
-    if (this.running) {
-        this.delay_nodesStats.stop();
-        this.delay_nodesInfo.stop();
-        this.delay_clusterStates.stop();
-        this.running = false;
-    }
-    return this;
-};
-
-/**
- *
- * @return {org.bigdesk.store.Manager}
- */
-org.bigdesk.store.Manager.prototype.start = function() {
-    if (!this.running) {
-        this.running = true;
-        // request data right now (so we do not have to wait for delay to get first data)
-        this.delay_nodesStats.fire();
-        this.delay_nodesInfo.fire();
-        this.delay_clusterStates.fire();
-    }
-    return this;
 };
 
 /**
@@ -393,4 +375,32 @@ org.bigdesk.store.Manager.prototype.exportData = function(saveHandler) {
 //    } finally {
 //        unlock
 //    }
+};
+
+/**
+ *
+ * @param {!function(!number, !Object): boolean} functionToCall
+ * @param {!string} eventId
+ * @param {!number} timestamp
+ * @param {!Object} data
+ * @param {function=} opt_function function to extract timestamp from the data
+ * @private
+ */
+org.bigdesk.store.Manager.prototype.addData_ = function(functionToCall, eventId, timestamp, data, opt_function) {
+    if (goog.isNumber(timestamp) && goog.isObject(data)) {
+        var t_ = timestamp;
+        if (goog.isFunction(opt_function)) {
+            try {
+                t_ = opt_function(data);
+            } catch(e) {
+                // ignore, use timestamp instead
+            }
+        }
+        functionToCall(t_, data);
+        this.dispatchEvent(new org.bigdesk.store.event.DataAdd(eventId, t_, data));
+    } else {
+        this.log.warning('Something went wrong when adding new data');
+        this.log.finer('timestamp: ' + timestamp);
+        this.log.finer('data: ' + goog.debug.expose(data));
+    }
 };
