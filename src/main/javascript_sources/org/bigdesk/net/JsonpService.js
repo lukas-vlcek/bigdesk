@@ -44,3 +44,10 @@ org.bigdesk.net.JsonpService.prototype.getNodesInfo = function (callback, opt_ti
     var data = {};
     callback(timestamp, data);
 };
+
+/** @inheritDoc */
+org.bigdesk.net.JsonpService.prototype.getClusterStates = function(callback, opt_timestamp) {
+    var timestamp = opt_timestamp || goog.now();
+    var data = {};
+    callback(timestamp, data);
+};

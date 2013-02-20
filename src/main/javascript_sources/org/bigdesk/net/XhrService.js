@@ -92,6 +92,19 @@ org.bigdesk.net.XhrService = function(uri) {
      */
     this.NODES_INFO_ID_ = goog.string.hashCode(this.NODES_INFO_URL_).toString(10);
 
+    /**
+     * @type {!string}
+     * @private
+     * @const
+     */
+    this.CLUSTER_STATE_URL_ = goog.string.path.normalizePath(this.uri.toString()) + "/_cluster/state";
+    /**
+     * Code used to identify 'cluster state' request in xhrManager.
+     * @type {!string}
+     * @const
+     */
+    this.CLUSTER_STATE_ID_ = goog.string.hashCode(this.CLUSTER_STATE_URL_).toString(10);
+
 };
 goog.inherits(org.bigdesk.net.XhrService, goog.Disposable);
 
@@ -133,6 +146,28 @@ org.bigdesk.net.XhrService.prototype.getNodesInfo = function(callback, opt_times
     this.xhrManager.send(
         this.NODES_INFO_ID_,
         this.NODES_INFO_URL_,
+        'GET',
+        undefined,undefined,
+        this.XHR_REQUEST_PRIORITY,
+        function(e){
+            var event = /** @type goog.net.XhrManager.Event */ (e);
+            var response = event.target.getResponseJson();
+            response = goog.isDef(response) ? response : {};
+            callback(timestamp, response);
+        },
+        0 //max retries
+    );
+};
+
+/** @inheritDoc */
+org.bigdesk.net.XhrService.prototype.getClusterStates = function(callback, opt_timestamp) {
+
+    var timestamp = opt_timestamp || goog.now();
+
+    this.xhrManager.abort(this.CLUSTER_STATE_ID_, true);
+    this.xhrManager.send(
+        this.CLUSTER_STATE_ID_,
+        this.CLUSTER_STATE_URL_,
         'GET',
         undefined,undefined,
         this.XHR_REQUEST_PRIORITY,

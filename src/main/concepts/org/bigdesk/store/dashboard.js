@@ -61,6 +61,9 @@ org.bigdesk.store.Dashboard = function(element, start_button, stop_button, inter
     this.nodeStatsAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.NODES_STATS_ADD, function() {
         console.log('node stats add', manager.getNodesStatsCount());
     });
+    this.clusterStateAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.CLUSTER_STATE_ADD, function() {
+        console.log('cluster state add', manager.getClusterStatesCount());
+    });
 };
 goog.inherits(org.bigdesk.store.Dashboard, goog.events.EventTarget);
 
@@ -73,6 +76,7 @@ org.bigdesk.store.Dashboard.prototype.disposeInternal = function() {
     goog.events.unlistenByKey(this.intervalId_);
     goog.events.unlistenByKey(this.nodeInfoAddId_);
     goog.events.unlistenByKey(this.nodeStatsAddId_);
+    goog.events.unlistenByKey(this.clusterStateAddId_);
 
     delete this.element_;
     delete this.start_;
