@@ -48,11 +48,15 @@ org.bigdesk.store.Store = function() {
     /** @type {goog.array.ArrayLike} */
     this.indexSegments = [];
 
+    /** @type {goog.array.ArrayLike} */
+    this.hotThreads = [];
+
     /** @private */ this.setNodesStats     = goog.bind(function(a){this.nodesStats=a},this);
     /** @private */ this.setNodesInfos     = goog.bind(function(a){this.nodesInfos=a},this);
     /** @private */ this.setClusterStates  = goog.bind(function(a){this.clusterStates=a},this);
     /** @private */ this.setClusterHealths = goog.bind(function(a){this.clusterHealths=a},this);
     /** @private */ this.setIndexSegments  = goog.bind(function(a){this.indexSegments=a},this);
+    /** @private */ this.setHotThreads     = goog.bind(function(a){this.hotThreads=a},this);
 };
 goog.inherits(org.bigdesk.store.Store, goog.Disposable);
 
@@ -65,12 +69,14 @@ org.bigdesk.store.Store.prototype.disposeInternal = function() {
     delete this.setClusterStates;
     delete this.setClusterHealths;
     delete this.setIndexSegments;
+    delete this.setHotThreads;
 
     delete this.nodesStats;
     delete this.nodesInfos;
     delete this.clusterStates;
     delete this.clusterHealths;
     delete this.indexSegments;
+    delete this.hotThreads;
 };
 
 /**
@@ -166,6 +172,25 @@ org.bigdesk.store.Store.prototype.addIndexSegments = function(timestamp, indexSe
  */
 org.bigdesk.store.Store.prototype.dropIndexSegmentsStaringFrom = function(timestamp) {
     return this.dropItemStartingFrom_(timestamp, this.indexSegments, this.setIndexSegments);
+};
+
+/**
+ * Add a new item into hotThreads.
+ * @param {!number} timestamp
+ * @param {!Object} hotThreads
+ * @return {boolean}
+ */
+org.bigdesk.store.Store.prototype.addHotThreads = function(timestamp, hotThreads) {
+    return this.addItem_(timestamp, hotThreads, this.hotThreads);
+};
+
+/**
+ * Remove all items from hotThreads older then timestamp (including).
+ * @param {!number} timestamp
+ * @return {!Array.<number>} array with dropped timestamps
+ */
+org.bigdesk.store.Store.prototype.dropHotThreadsStaringFrom = function(timestamp) {
+    return this.dropItemStartingFrom_(timestamp, this.hotThreads, this.setHotThreads);
 };
 
 /**
