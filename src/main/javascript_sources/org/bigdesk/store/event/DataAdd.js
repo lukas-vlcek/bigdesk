@@ -28,11 +28,11 @@ goog.require('goog.events.Event');
  *
  * @param {!string} type
  * @param {!number} timestamp
- * @param {!Object} json
+ * @param {!Object|!string} data
  * @constructor
  * @extends {goog.events.Event}
  */
-org.bigdesk.store.event.DataAdd = function(type, timestamp, json) {
+org.bigdesk.store.event.DataAdd = function(type, timestamp, data) {
 
     goog.events.Event.call(this, type);
 
@@ -43,19 +43,19 @@ org.bigdesk.store.event.DataAdd = function(type, timestamp, json) {
     this.timestamp_ = timestamp;
 
     /**
-     * @type {!Object}
+     * @type {!Object|!string}
      * @private
      */
-    this.json_ = json;
+    this.data_ = data;
 };
 goog.inherits(org.bigdesk.store.event.DataAdd, goog.events.Event);
 
 /**
  *
- * @return {!Object}
+ * @return {!Object|!string}
  */
 org.bigdesk.store.event.DataAdd.prototype.getData = function() {
-    return this.json_;
+    return this.data_;
 };
 
 /**
