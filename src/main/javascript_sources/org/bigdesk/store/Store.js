@@ -47,12 +47,25 @@ org.bigdesk.store.Store = function() {
 
     /** @type {goog.array.ArrayLike} */
     this.indexSegments = [];
+
+    /** @private */ this.setNodesStats     = goog.bind(function(a){this.nodesStats=a},this);
+    /** @private */ this.setNodesInfos     = goog.bind(function(a){this.nodesInfos=a},this);
+    /** @private */ this.setClusterStates  = goog.bind(function(a){this.clusterStates=a},this);
+    /** @private */ this.setClusterHealths = goog.bind(function(a){this.clusterHealths=a},this);
+    /** @private */ this.setIndexSegments  = goog.bind(function(a){this.indexSegments=a},this);
 };
 goog.inherits(org.bigdesk.store.Store, goog.Disposable);
 
 /** @inheritDoc */
 org.bigdesk.store.Store.prototype.disposeInternal = function() {
     org.bigdesk.store.Store.superClass_.disposeInternal.call(this);
+
+    delete this.setNodesStats;
+    delete this.setNodesInfos;
+    delete this.setClusterStates;
+    delete this.setClusterHealths;
+    delete this.setIndexSegments;
+
     delete this.nodesStats;
     delete this.nodesInfos;
     delete this.clusterStates;
@@ -67,7 +80,7 @@ org.bigdesk.store.Store.prototype.disposeInternal = function() {
  * @return {boolean} True if an element was inserted.
  */
 org.bigdesk.store.Store.prototype.addNodesStats = function(timestamp, nodesStats) {
-    return this.addItem_(timestamp, nodesStats, this, 'nodesStats');
+    return this.addItem_(timestamp, nodesStats, this.nodesStats);
 };
 
 /**
@@ -76,7 +89,7 @@ org.bigdesk.store.Store.prototype.addNodesStats = function(timestamp, nodesStats
  * @return {!Array.<number>} array with dropped timestamps
  */
 org.bigdesk.store.Store.prototype.dropNodesStatsStartingFrom = function(timestamp) {
-    return this.dropItemStartingFrom_(timestamp, this, 'nodesStats');
+    return this.dropItemStartingFrom_(timestamp, this.nodesStats, this.setNodesStats);
 };
 
 /**
@@ -86,7 +99,7 @@ org.bigdesk.store.Store.prototype.dropNodesStatsStartingFrom = function(timestam
  * @return {boolean}
  */
 org.bigdesk.store.Store.prototype.addNodesInfo = function(timestamp, nodesInfo) {
-    return this.addItem_(timestamp, nodesInfo, this, 'nodesInfos');
+    return this.addItem_(timestamp, nodesInfo, this.nodesInfos);
 };
 
 /**
@@ -95,7 +108,7 @@ org.bigdesk.store.Store.prototype.addNodesInfo = function(timestamp, nodesInfo) 
  * @return {!Array.<number>} array with dropped timestamps
  */
 org.bigdesk.store.Store.prototype.dropNodesInfosStartingFrom = function(timestamp) {
-    return this.dropItemStartingFrom_(timestamp, this, 'nodesInfos');
+    return this.dropItemStartingFrom_(timestamp, this.nodesInfos, this.setNodesInfos);
 };
 
 /**
@@ -105,7 +118,7 @@ org.bigdesk.store.Store.prototype.dropNodesInfosStartingFrom = function(timestam
  * @return {boolean}
  */
 org.bigdesk.store.Store.prototype.addClusterState = function(timestamp, clusterState) {
-    return this.addItem_(timestamp, clusterState, this, 'clusterStates');
+    return this.addItem_(timestamp, clusterState, this.clusterStates);
 };
 
 /**
@@ -114,7 +127,7 @@ org.bigdesk.store.Store.prototype.addClusterState = function(timestamp, clusterS
  * @return {!Array.<number>} array with dropped timestamps
  */
 org.bigdesk.store.Store.prototype.dropClusterStatesStaringFrom = function(timestamp) {
-    return this.dropItemStartingFrom_(timestamp, this, 'clusterStates');
+    return this.dropItemStartingFrom_(timestamp, this.clusterStates, this.setClusterStates);
 };
 
 /**
@@ -124,7 +137,7 @@ org.bigdesk.store.Store.prototype.dropClusterStatesStaringFrom = function(timest
  * @return {boolean}
  */
 org.bigdesk.store.Store.prototype.addClusterHealth = function(timestamp, clusterHealth) {
-    return this.addItem_(timestamp, clusterHealth, this, 'clusterHealths');
+    return this.addItem_(timestamp, clusterHealth, this.clusterHealths);
 };
 
 /**
@@ -133,7 +146,7 @@ org.bigdesk.store.Store.prototype.addClusterHealth = function(timestamp, cluster
  * @return {!Array.<number>} array with dropped timestamps
  */
 org.bigdesk.store.Store.prototype.dropClusterHealthsStaringFrom = function(timestamp) {
-    return this.dropItemStartingFrom_(timestamp, this, 'clusterHealths');
+    return this.dropItemStartingFrom_(timestamp, this.clusterHealths, this.setClusterHealths);
 };
 
 /**
@@ -143,7 +156,7 @@ org.bigdesk.store.Store.prototype.dropClusterHealthsStaringFrom = function(times
  * @return {boolean}
  */
 org.bigdesk.store.Store.prototype.addIndexSegments = function(timestamp, indexSegments) {
-    return this.addItem_(timestamp, indexSegments, this, 'indexSegments');
+    return this.addItem_(timestamp, indexSegments, this.indexSegments);
 };
 
 /**
@@ -152,7 +165,7 @@ org.bigdesk.store.Store.prototype.addIndexSegments = function(timestamp, indexSe
  * @return {!Array.<number>} array with dropped timestamps
  */
 org.bigdesk.store.Store.prototype.dropIndexSegmentsStaringFrom = function(timestamp) {
-    return this.dropItemStartingFrom_(timestamp, this, 'indexSegments');
+    return this.dropItemStartingFrom_(timestamp, this.indexSegments, this.setIndexSegments);
 };
 
 /**
@@ -185,47 +198,46 @@ org.bigdesk.store.Store.prototype.timestampsCompareOnlyGreater = function(a, b) 
 /**
  * @param {!number} timestamp
  * @param {!Object} item
- * @param {!Object} context
- * @param {!string} arrayName
+ * @param {goog.array.ArrayLike} array
  * @return {boolean} insert succeeded?
  * @private
  */
-org.bigdesk.store.Store.prototype.addItem_ = function(timestamp, item, context, arrayName) {
+org.bigdesk.store.Store.prototype.addItem_ = function(timestamp, item, array) {
     if (!goog.isNumber(timestamp)) { throw new Error("timestamp must be a number") }
     if (!goog.isObject(item)) { throw new Error("item must be an object") }
     var newArrayElement = { timestamp: timestamp, value: item };
     // We assume an array is sorted (descending) so we can optimize here.
     // First we check the first element's timestamp, if it is less then incoming
     // timestamp we can insert new value at the first position in the array.
-    if (context[arrayName].length > 0 && context[arrayName][0].timestamp < timestamp) {
-        context[arrayName].unshift(newArrayElement);
+    if (array.length > 0 && array[0].timestamp < timestamp) {
+        array.unshift(newArrayElement);
         return true;
     } else {
     // else we do binary insert
         return goog.array.binaryInsert(
-            context[arrayName],
+            array,
             newArrayElement,
-            org.bigdesk.store.Store.prototype.timestampsCompare
+            this.timestampsCompare
         );
     }
 };
 
 /**
  * @param {!number} timestamp
- * @param {!Object} context
- * @param {!string} arrayName
+ * @param {goog.array.ArrayLike} array
+ * @param {!function(goog.array.ArrayLike)} setParentArray function to set array in parent
  * @return {!Array.<number>} array with dropped timestamps
  * @private
  */
-org.bigdesk.store.Store.prototype.dropItemStartingFrom_ = function(timestamp, context, arrayName) {
+org.bigdesk.store.Store.prototype.dropItemStartingFrom_ = function(timestamp, array, setParentArray) {
     if (!goog.isNumber(timestamp)) { throw new Error("timestamp must be a number") }
     var index = goog.array.binarySearch(
-        context[arrayName],
+        array,
         { timestamp: timestamp },
-        org.bigdesk.store.Store.prototype.timestampsCompareOnlyGreater);
+        this.timestampsCompareOnlyGreater);
     if (index >= 0) {
-        var dropped = /** @type {!Array.<number>} */ (goog.array.slice(context[arrayName], index));
-        context[arrayName] = goog.array.slice(context[arrayName], 0, index);
+        var dropped = /** @type {!Array.<number>} */ (goog.array.slice(array, index));
+        setParentArray(goog.array.slice(array, 0, index));
         return dropped;
     } else {
         return [];
