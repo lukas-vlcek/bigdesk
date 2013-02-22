@@ -51,3 +51,24 @@ org.bigdesk.net.JsonpService.prototype.getClusterStates = function(callback, opt
     var data = {};
     callback(timestamp, data);
 };
+
+/** @inheritDoc */
+org.bigdesk.net.JsonpService.prototype.getClusterHealth = function(callback, opt_timestamp) {
+    var timestamp = opt_timestamp || goog.now();
+    var data = {};
+    callback(timestamp, data);
+};
+
+/** @inheritDoc */
+org.bigdesk.net.JsonpService.prototype.getIndexSegments = function(callback, opt_timestamp) {
+    var timestamp = opt_timestamp || goog.now();
+    var data = {};
+    callback(timestamp, data);
+};
+
+/** @inheritDoc */
+org.bigdesk.net.JsonpService.prototype.getHotThreads = function(callback, opt_timestamp) {
+    var timestamp = opt_timestamp || goog.now();
+    var data = {};
+    callback(timestamp, data);
+};

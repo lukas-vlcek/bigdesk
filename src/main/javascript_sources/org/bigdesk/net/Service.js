@@ -48,3 +48,30 @@ org.bigdesk.net.Service.prototype.getNodesInfo = function(callback, opt_timestam
  * @param {number=} opt_timestamp
  */
 org.bigdesk.net.Service.prototype.getClusterStates = function(callback, opt_timestamp) {};
+
+/**
+ * Request for ClusterHealth data.
+ * The first parameter if callback function which is passed 'timestamp' and 'json response' data.
+ * The second optional parameter is value of timestamp. If not provided goog.now() is used instead.
+ * @param {!function(!number, !Object)} callback
+ * @param {number=} opt_timestamp
+ */
+org.bigdesk.net.Service.prototype.getClusterHealth = function(callback, opt_timestamp) {};
+
+/**
+ * Request for IndexSegments data.
+ * The first parameter if callback function which is passed 'timestamp' and 'json response' data.
+ * The second optional parameter is value of timestamp. If not provided goog.now() is used instead.
+ * @param {!function(!number, !Object)} callback
+ * @param {number=} opt_timestamp
+ */
+org.bigdesk.net.Service.prototype.getIndexSegments = function(callback, opt_timestamp) {};
+
+/**
+ * Request for HotThreads data.
+ * The first parameter if callback function which is passed 'timestamp' and 'json response' data.
+ * The second optional parameter is value of timestamp. If not provided goog.now() is used instead.
+ * @param {!function(!number, !Object)} callback
+ * @param {number=} opt_timestamp
+ */
+org.bigdesk.net.Service.prototype.getHotThreads = function(callback, opt_timestamp) {};

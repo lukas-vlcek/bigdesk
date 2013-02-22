@@ -105,6 +105,44 @@ org.bigdesk.net.XhrService = function(uri) {
      */
     this.CLUSTER_STATE_ID_ = goog.string.hashCode(this.CLUSTER_STATE_URL_).toString(10);
 
+    /**
+     * @type {!string}
+     * @private
+     * @const
+     */
+    this.CLUSTER_HEALTH_URL_ = goog.string.path.normalizePath(this.uri_.toString()) + "/_cluster/health";
+    /**
+     * Code used to identify 'cluster health' request in xhrManager.
+     * @type {!string}
+     * @const
+     */
+    this.CLUSTER_HEALTH_ID_ = goog.string.hashCode(this.CLUSTER_HEALTH_URL_).toString(10);
+
+    /**
+     * @type {!string}
+     * @private
+     * @const
+     */
+    this.INDEX_SEGMENTS_URL_ = goog.string.path.normalizePath(this.uri_.toString()) + "/_segments";
+    /**
+     * Code used to identify 'cluster health' request in xhrManager.
+     * @type {!string}
+     * @const
+     */
+    this.INDEX_SEGMENTS_ID_ = goog.string.hashCode(this.INDEX_SEGMENTS_URL_).toString(10);
+
+    /**
+     * @type {!string}
+     * @private
+     * @const
+     */
+    this.HOT_THREADS_URL_ = goog.string.path.normalizePath(this.uri_.toString()) + "/_nodes/hot_threads";
+    /**
+     * Code used to identify 'cluster health' request in xhrManager.
+     * @type {!string}
+     * @const
+     */
+    this.HOT_THREADS_ID_ = goog.string.hashCode(this.HOT_THREADS_URL_).toString(10);
 };
 goog.inherits(org.bigdesk.net.XhrService, goog.Disposable);
 
@@ -130,15 +168,32 @@ org.bigdesk.net.XhrService.prototype.getClusterStates = function(callback, opt_t
     this.getData_(this.CLUSTER_STATE_ID_, this.CLUSTER_STATE_URL_, callback, opt_timestamp);
 };
 
+/** @inheritDoc */
+org.bigdesk.net.XhrService.prototype.getClusterHealth = function(callback, opt_timestamp) {
+    this.getData_(this.CLUSTER_HEALTH_ID_, this.CLUSTER_HEALTH_URL_, callback, opt_timestamp);
+};
+
+/** @inheritDoc */
+org.bigdesk.net.XhrService.prototype.getIndexSegments = function(callback, opt_timestamp) {
+    this.getData_(this.INDEX_SEGMENTS_ID_, this.INDEX_SEGMENTS_URL_, callback, opt_timestamp);
+};
+
+/** @inheritDoc */
+org.bigdesk.net.XhrService.prototype.getHotThreads = function(callback, opt_timestamp) {
+    this.getData_(this.HOT_THREADS_ID_, this.HOT_THREADS_URL_, callback, opt_timestamp, true);
+};
+
 /**
  * @param {!string} rest_call_id
  * @param {!string} rest_call_url
  * @param {!function(!number, !Object)} callback
  * @param {number=} opt_timestamp
+ * @param {boolean=} opt_raw_text if 'true' get raw text otherwise extract JSON object
  * @private
  */
-org.bigdesk.net.XhrService.prototype.getData_ = function(rest_call_id, rest_call_url, callback, opt_timestamp) {
+org.bigdesk.net.XhrService.prototype.getData_ = function(rest_call_id, rest_call_url, callback, opt_timestamp, opt_raw_text) {
 
+    var text_ = (goog.isDefAndNotNull(opt_raw_text) && goog.isBoolean(opt_raw_text)) ? opt_raw_text : false;
     var timestamp = opt_timestamp || goog.now();
 
     this.xhrManager.abort(rest_call_id, true);
@@ -150,7 +205,7 @@ org.bigdesk.net.XhrService.prototype.getData_ = function(rest_call_id, rest_call
         this.XHR_REQUEST_PRIORITY,
         function(e){
             var event = /** @type goog.net.XhrManager.Event */ (e);
-            var response = event.target.getResponseJson();
+            var response = text_ ? event.target.getResponseText() : event.target.getResponseJson();
             response = goog.isDef(response) ? response : {};
             callback(timestamp, response);
         },
