@@ -177,7 +177,7 @@ org.bigdesk.store.Store.prototype.dropIndexSegmentsStaringFrom = function(timest
 /**
  * Add a new item into hotThreads.
  * @param {!number} timestamp
- * @param {!Object} hotThreads
+ * @param {!string} hotThreads
  * @return {boolean}
  */
 org.bigdesk.store.Store.prototype.addHotThreads = function(timestamp, hotThreads) {
@@ -222,14 +222,14 @@ org.bigdesk.store.Store.prototype.timestampsCompareOnlyGreater = function(a, b) 
 
 /**
  * @param {!number} timestamp
- * @param {!Object} item
+ * @param {!Object|!string} item
  * @param {goog.array.ArrayLike} array
  * @return {boolean} insert succeeded?
  * @private
  */
 org.bigdesk.store.Store.prototype.addItem_ = function(timestamp, item, array) {
     if (!goog.isNumber(timestamp)) { throw new Error("timestamp must be a number") }
-    if (!goog.isObject(item)) { throw new Error("item must be an object") }
+    if (!goog.isObject(item) && !goog.isString(item)) { throw new Error("item must be an object") }
     var newArrayElement = { timestamp: timestamp, value: item };
     // We assume an array is sorted (descending) so we can optimize here.
     // First we check the first element's timestamp, if it is less then incoming

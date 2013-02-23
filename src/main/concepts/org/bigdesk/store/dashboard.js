@@ -55,14 +55,23 @@ org.bigdesk.store.Dashboard = function(element, start_button, stop_button, inter
         manager.updateDelay(newDelay);
     }, false, this.interval_);
 
-    this.nodeInfoAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.NODES_INFO_ADD, function() {
-        console.log('node info add', manager.getNodesInfoCount());
+    this.nodeInfoAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.NODES_INFO_ADD, function(t) {
+        console.log('node info', t.getData(), manager.getNodesInfoCount());
     });
-    this.nodeStatsAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.NODES_STATS_ADD, function() {
-        console.log('node stats add', manager.getNodesStatsCount());
+    this.nodeStatsAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.NODES_STATS_ADD, function(t) {
+        console.log('node stats', t.getData(), manager.getNodesStatsCount());
     });
-    this.clusterStateAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.CLUSTER_STATE_ADD, function() {
-        console.log('cluster state add', manager.getClusterStatesCount());
+    this.clusterStateAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.CLUSTER_STATE_ADD, function(t) {
+        console.log('cluster state', t.getData(), manager.getClusterStatesCount());
+    });
+    this.clusterHealthAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.CLUSTER_HEALTH_ADD, function(t) {
+        console.log('cluster health', t.getData(), manager.getClusterHealthCount());
+    });
+    this.indexSegmentsAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.INDEX_SEGMENTS_ADD, function(t) {
+        console.log('index segments', t.getData(), manager.getIndexSegmentsCount());
+    });
+    this.hotThreadsAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.HOT_THREADS_ADD, function(t) {
+        console.log('hot threads', manager.getHotThreadsCount());
     });
 };
 goog.inherits(org.bigdesk.store.Dashboard, goog.events.EventTarget);
@@ -74,9 +83,13 @@ org.bigdesk.store.Dashboard.prototype.disposeInternal = function() {
     goog.events.unlistenByKey(this.startId_);
     goog.events.unlistenByKey(this.stopId_);
     goog.events.unlistenByKey(this.intervalId_);
+
     goog.events.unlistenByKey(this.nodeInfoAddId_);
     goog.events.unlistenByKey(this.nodeStatsAddId_);
     goog.events.unlistenByKey(this.clusterStateAddId_);
+    goog.events.unlistenByKey(this.clusterHealthAddId_);
+    goog.events.unlistenByKey(this.indexSegmentsAddId_);
+    goog.events.unlistenByKey(this.hotThreadsAddId_);
 
     delete this.element_;
     delete this.start_;
@@ -93,20 +106,23 @@ org.bigdesk.store.Dashboard.prototype.prepareHTML = function() {
     var clusterStateDiv  = goog.dom.createElement(goog.dom.TagName.DIV);
     var clusterHealthDiv = goog.dom.createElement(goog.dom.TagName.DIV);
     var indexSegmentsDiv = goog.dom.createElement(goog.dom.TagName.DIV);
+    var hotThreadsDiv    = goog.dom.createElement(goog.dom.TagName.DIV);
 
     this.prepareStorePartHTML(nodesInfoDiv, 'Nodes Info');
     this.prepareStorePartHTML(nodesStatsDiv, 'Nodes Stats');
     this.prepareStorePartHTML(clusterStateDiv, 'Cluster State');
     this.prepareStorePartHTML(clusterHealthDiv, 'Cluster Health');
     this.prepareStorePartHTML(indexSegmentsDiv, 'Index Segments');
+    this.prepareStorePartHTML(hotThreadsDiv, 'Hot Threads');
 
     goog.dom.setProperties(nodesInfoDiv,    { 'class':'storePart', 'id':'nodesInfoDiv' });
     goog.dom.setProperties(nodesStatsDiv,   { 'class':'storePart', 'id':'nodesStatsDiv' });
     goog.dom.setProperties(clusterStateDiv, { 'class':'storePart', 'id':'clusterStateDiv' });
     goog.dom.setProperties(clusterHealthDiv,{ 'class':'storePart', 'id':'clusterHealthDiv' });
     goog.dom.setProperties(indexSegmentsDiv,{ 'class':'storePart', 'id':'indexSegmentsDiv' });
+    goog.dom.setProperties(hotThreadsDiv,   { 'class':'storePart', 'id':'hotThreadsDiv' });
 
-    goog.dom.append(this.element_, [nodesInfoDiv, nodesStatsDiv, clusterStateDiv, clusterHealthDiv, indexSegmentsDiv]);
+    goog.dom.append(this.element_, [nodesInfoDiv, nodesStatsDiv, clusterStateDiv, clusterHealthDiv, indexSegmentsDiv, hotThreadsDiv]);
 };
 
 /**

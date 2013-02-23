@@ -121,6 +121,27 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceProvider) {
             thiz_.netService.getClusterStates(goog.bind(thiz_.processClusterStatesDelay, thiz_))
         },
         this.config.delay);
+
+    /** @private */
+    this.delay_clusterHealth_ = new goog.async.Delay(
+        function(){
+            thiz_.netService.getClusterHealth(goog.bind(thiz_.processClusterHealthDelay, thiz_))
+        },
+        this.config.delay);
+
+    /** @private */
+    this.delay_indexSegments_ = new goog.async.Delay(
+        function(){
+            thiz_.netService.getIndexSegments(goog.bind(thiz_.processIndexSegmentsDelay, thiz_))
+        },
+        this.config.delay);
+
+    /** @private */
+    this.delay_hotThreads_ = new goog.async.Delay(
+        function(){
+            thiz_.netService.getHotThreads(goog.bind(thiz_.processHotThreadsDelay, thiz_))
+        },
+        this.config.delay);
 };
 goog.inherits(org.bigdesk.store.Manager, goog.events.EventTarget);
 
@@ -133,6 +154,9 @@ org.bigdesk.store.Manager.prototype.disposeInternal = function() {
     this.delay_nodesStats_.dispose();
     this.delay_nodesInfo_.dispose();
     this.delay_clusterStates_.dispose();
+    this.delay_clusterHealth_.dispose();
+    this.delay_indexSegments_.dispose();
+    this.delay_hotThreads_.dispose();
 
     // Remove listeners added by this class.
     // Remove references to COM objects.
@@ -154,6 +178,9 @@ org.bigdesk.store.Manager.prototype.stop = function() {
         this.delay_nodesStats_.stop();
         this.delay_nodesInfo_.stop();
         this.delay_clusterStates_.stop();
+        this.delay_clusterHealth_.stop();
+        this.delay_indexSegments_.stop();
+        this.delay_hotThreads_.stop();
         this.running = false;
     }
     return this;
@@ -170,6 +197,9 @@ org.bigdesk.store.Manager.prototype.start = function() {
         this.delay_nodesStats_.fire();
         this.delay_nodesInfo_.fire();
         this.delay_clusterStates_.fire();
+        this.delay_clusterHealth_.fire();
+        this.delay_indexSegments_.fire();
+        this.delay_hotThreads_.fire();
     }
     return this;
 };
@@ -203,6 +233,36 @@ org.bigdesk.store.Manager.prototype.addIntoNodesInfo = function(timestamp, data)
  */
 org.bigdesk.store.Manager.prototype.addIntoClusterStates = function(timestamp, data) {
     this.addData_(goog.bind(this.store.addClusterState,this.store), this.evnts_.CLUSTER_STATE_ADD, timestamp, data);
+};
+
+/**
+ * Called when a new cluster health data is retrieved.
+ * @param {!number} timestamp
+ * @param {!Object} data
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.addIntoClusterHealths = function(timestamp, data) {
+    this.addData_(goog.bind(this.store.addClusterHealth,this.store), this.evnts_.CLUSTER_HEALTH_ADD, timestamp, data);
+};
+
+/**
+ * Called when a new index segments data is retrieved.
+ * @param {!number} timestamp
+ * @param {!Object} data
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.addIntoIndexSegments = function(timestamp, data) {
+    this.addData_(goog.bind(this.store.addIndexSegments,this.store), this.evnts_.INDEX_SEGMENTS_ADD, timestamp, data);
+};
+
+/**
+ * Called when a new hot threads data is retrieved.
+ * @param {!number} timestamp
+ * @param {!string} data
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.addIntoHotThreads = function(timestamp, data) {
+    this.addData_(goog.bind(this.store.addHotThreads,this.store), this.evnts_.HOT_THREADS_ADD, timestamp, data);
 };
 
 /**
@@ -293,6 +353,93 @@ org.bigdesk.store.Manager.prototype.dropFromClusterStates = function(timestamp) 
 };
 
 /**
+ * Called from cluster health delay. Once a new data is received from the service point
+ * it first drops old data, then adds a new data and resets the delay.
+ * @param {!number} timestamp
+ * @param {!Object} data
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.processClusterHealthDelay = function(timestamp, data) {
+    this.dropFromClusterHealths(timestamp - this.config.window);
+    this.addIntoClusterHealths(timestamp, data);
+    this.delay_clusterHealth_.start(this.config.delay);
+};
+
+/**
+ * Drop data from cluster healths.
+ * @param {!number} timestamp
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.dropFromClusterHealths = function(timestamp) {
+    if (goog.isNumber(timestamp)) {
+        var dropped = this.store.dropClusterHealthsStaringFrom(timestamp);
+        var event = new org.bigdesk.store.event.DataRemove(this.evnts_.CLUSTER_HEALTH_REMOVE, dropped);
+        this.dispatchEvent(event);
+    } else {
+        this.log.warning('Something went wrong when dropping data from cluster healths');
+        this.log.finer('timestamp: ' + timestamp);
+    }
+};
+
+/**
+ * Called from index segments delay. Once a new data is received from the service point
+ * it first drops old data, then adds a new data and resets the delay.
+ * @param {!number} timestamp
+ * @param {!Object} data
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.processIndexSegmentsDelay = function(timestamp, data) {
+    this.dropFromIndexSegments(timestamp - this.config.window);
+    this.addIntoIndexSegments(timestamp, data);
+    this.delay_indexSegments_.start(this.config.delay);
+};
+
+/**
+ * Drop data from index segments.
+ * @param {!number} timestamp
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.dropFromIndexSegments = function(timestamp) {
+    if (goog.isNumber(timestamp)) {
+        var dropped = this.store.dropIndexSegmentsStaringFrom(timestamp);
+        var event = new org.bigdesk.store.event.DataRemove(this.evnts_.INDEX_SEGMENTS_REMOVE, dropped);
+        this.dispatchEvent(event);
+    } else {
+        this.log.warning('Something went wrong when dropping data from index segments');
+        this.log.finer('timestamp: ' + timestamp);
+    }
+};
+
+/**
+ * Called from hot threads delay. Once a new data is received from the service point
+ * it first drops old data, then adds a new data and resets the delay.
+ * @param {!number} timestamp
+ * @param {!string} data
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.processHotThreadsDelay = function(timestamp, data) {
+    this.dropFromHotThreads(timestamp - this.config.window);
+    this.addIntoHotThreads(timestamp, data);
+    this.delay_hotThreads_.start(this.config.delay);
+};
+
+/**
+ * Drop data from hot threads.
+ * @param {!number} timestamp
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.dropFromHotThreads = function(timestamp) {
+    if (goog.isNumber(timestamp)) {
+        var dropped = this.store.dropHotThreadsStaringFrom(timestamp);
+        var event = new org.bigdesk.store.event.DataRemove(this.evnts_.HOT_THREADS_REMOVE, dropped);
+        this.dispatchEvent(event);
+    } else {
+        this.log.warning('Something went wrong when dropping data from hot segments');
+        this.log.finer('timestamp: ' + timestamp);
+    }
+};
+
+/**
  * Number of data items in nodes stats.
  * @return {!number}
  */
@@ -314,6 +461,30 @@ org.bigdesk.store.Manager.prototype.getNodesInfoCount = function() {
  */
 org.bigdesk.store.Manager.prototype.getClusterStatesCount = function() {
     return this.store.clusterStates.length;
+};
+
+/**
+ * Number of data items in cluster health.
+ * @return {!number}
+ */
+org.bigdesk.store.Manager.prototype.getClusterHealthCount = function() {
+    return this.store.clusterHealths.length;
+};
+
+/**
+ * Number of data items in index segments.
+ * @return {!number}
+ */
+org.bigdesk.store.Manager.prototype.getIndexSegmentsCount = function() {
+    return this.store.indexSegments.length;
+};
+
+/**
+ * Number of data items in hot threads.
+ * @return {!number}
+ */
+org.bigdesk.store.Manager.prototype.getHotThreadsCount = function() {
+    return this.store.hotThreads.length;
 };
 
 /**
@@ -382,12 +553,12 @@ org.bigdesk.store.Manager.prototype.exportData = function(saveHandler) {
  * @param {!function(!number, !Object): boolean} functionToCall
  * @param {!string} eventId
  * @param {!number} timestamp
- * @param {!Object} data
+ * @param {!Object|!string} data
  * @param {function=} opt_function function to extract timestamp from the data
  * @private
  */
 org.bigdesk.store.Manager.prototype.addData_ = function(functionToCall, eventId, timestamp, data, opt_function) {
-    if (goog.isNumber(timestamp) && goog.isObject(data)) {
+    if (goog.isNumber(timestamp) && (goog.isObject(data) || goog.isString(data))) {
         var t_ = timestamp;
         if (goog.isFunction(opt_function)) {
             try {
