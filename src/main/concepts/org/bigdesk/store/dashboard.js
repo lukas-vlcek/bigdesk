@@ -56,21 +56,27 @@ org.bigdesk.store.Dashboard = function(element, start_button, stop_button, inter
     }, false, this.interval_);
 
     this.nodeInfoAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.NODES_INFO_ADD, function(t) {
-        console.log('node info', t.getData(), manager.getNodesInfoCount());
+//        console.log('node info', t.getData(), manager.getNodesInfoCount());
+        console.log('node info', manager.getNodesInfoCount());
     });
     this.nodeStatsAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.NODES_STATS_ADD, function(t) {
-        console.log('node stats', t.getData(), manager.getNodesStatsCount());
+//        console.log('node stats', t.getData(), manager.getNodesStatsCount());
+        console.log('node stats', manager.getNodesStatsCount());
     });
     this.clusterStateAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.CLUSTER_STATE_ADD, function(t) {
-        console.log('cluster state', t.getData(), manager.getClusterStatesCount());
+//        console.log('cluster state', t.getData(), manager.getClusterStatesCount());
+        console.log('cluster state', manager.getClusterStatesCount());
     });
     this.clusterHealthAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.CLUSTER_HEALTH_ADD, function(t) {
-        console.log('cluster health', t.getData(), manager.getClusterHealthCount());
+//        console.log('cluster health', t.getData(), manager.getClusterHealthCount());
+        console.log('cluster health', manager.getClusterHealthCount());
     });
     this.indexSegmentsAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.INDEX_SEGMENTS_ADD, function(t) {
-        console.log('index segments', t.getData(), manager.getIndexSegmentsCount());
+//        console.log('index segments', t.getData(), manager.getIndexSegmentsCount());
+        console.log('index segments', manager.getIndexSegmentsCount());
     });
     this.hotThreadsAddId_ = goog.events.listen(manager, org.bigdesk.store.event.EventType.HOT_THREADS_ADD, function(t) {
+//        console.log('hot threads', t.getData(),  manager.getHotThreadsCount());
         console.log('hot threads', manager.getHotThreadsCount());
     });
 };
@@ -101,53 +107,54 @@ org.bigdesk.store.Dashboard.prototype.disposeInternal = function() {
  */
 org.bigdesk.store.Dashboard.prototype.prepareHTML = function() {
 
-    var nodesInfoDiv     = goog.dom.createElement(goog.dom.TagName.DIV);
-    var nodesStatsDiv    = goog.dom.createElement(goog.dom.TagName.DIV);
-    var clusterStateDiv  = goog.dom.createElement(goog.dom.TagName.DIV);
-    var clusterHealthDiv = goog.dom.createElement(goog.dom.TagName.DIV);
-    var indexSegmentsDiv = goog.dom.createElement(goog.dom.TagName.DIV);
-    var hotThreadsDiv    = goog.dom.createElement(goog.dom.TagName.DIV);
+    var storeParts = [
+        {name:'Nodes Info',     id:'nodeInfo'},
+        {name:'Nodes Stats',    id:'nodeStats'},
+        {name:'Cluster State',  id:'clusterState'},
+        {name:'Cluster Health', id:'clusterSegments'},
+        {name:'Index Segments', id:'indexSegments'},
+        {name:'Hot Threads',    id:'notThreads'}
+    ];
 
-    this.prepareStorePartHTML(nodesInfoDiv, 'Nodes Info');
-    this.prepareStorePartHTML(nodesStatsDiv, 'Nodes Stats');
-    this.prepareStorePartHTML(clusterStateDiv, 'Cluster State');
-    this.prepareStorePartHTML(clusterHealthDiv, 'Cluster Health');
-    this.prepareStorePartHTML(indexSegmentsDiv, 'Index Segments');
-    this.prepareStorePartHTML(hotThreadsDiv, 'Hot Threads');
+    var margin = {top: 10, right: 20, bottom: 30, left: 20},
+        width = 560 - margin.left - margin.right,
+        height = 300 - margin.top - margin.bottom;
 
-    goog.dom.setProperties(nodesInfoDiv,    { 'class':'storePart', 'id':'nodesInfoDiv' });
-    goog.dom.setProperties(nodesStatsDiv,   { 'class':'storePart', 'id':'nodesStatsDiv' });
-    goog.dom.setProperties(clusterStateDiv, { 'class':'storePart', 'id':'clusterStateDiv' });
-    goog.dom.setProperties(clusterHealthDiv,{ 'class':'storePart', 'id':'clusterHealthDiv' });
-    goog.dom.setProperties(indexSegmentsDiv,{ 'class':'storePart', 'id':'indexSegmentsDiv' });
-    goog.dom.setProperties(hotThreadsDiv,   { 'class':'storePart', 'id':'hotThreadsDiv' });
+    var x = d3.scale.linear()
+        .domain([0, 100])
+        .range([0, width])
+        .nice();
 
-    goog.dom.append(this.element_, [nodesInfoDiv, nodesStatsDiv, clusterStateDiv, clusterHealthDiv, indexSegmentsDiv, hotThreadsDiv]);
-};
+    var y = d3.scale.ordinal()
+        .domain(d3.range(storeParts.length))
+        .rangeRoundBands([0, height], .2);
 
-/**
- *
- * @param {!Element} parent
- * @param {!string} description
- * @return {!Element}
- * @private
- */
-org.bigdesk.store.Dashboard.prototype.prepareStorePartHTML = function(parent, description) {
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
 
-    var count = goog.dom.createElement(goog.dom.TagName.DIV);
-    goog.dom.setProperties(count, {'class':'partCount'});
-    goog.dom.append(count, goog.dom.createTextNode("0"));
+    var svg = d3.select(this.element_).append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var desc = goog.dom.createElement(goog.dom.TagName.DIV);
-    goog.dom.setProperties(desc, {'class':'partDescription'});
-    goog.dom.append(desc, goog.dom.createTextNode(description));
+    svg.selectAll(".storePart")
+        .data(storeParts)
+      .enter().append("rect")
+        .attr("class", "storePart" )
+        .attr("id", function(d) { return d.id; } )
+        .attr("x", function() { return 0; })
+        .attr("y", function(d, i) { return y(i); })
+        .attr("width", function() { return width; })
+        .attr("height", y.rangeBand());
 
-    var clear = goog.dom.createElement(goog.dom.TagName.DIV);
-    goog.dom.setProperties(clear, {'class':'partClear'});
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(" + 0 + "," + height + ")")
+        .call(xAxis);
 
-    goog.dom.append(parent,[
-        desc, count, clear
-    ]);
-
-    return parent;
+    var parts = {};
+    svg.selectAll('.storePart').datum(function(){parts[this.id]=this});
+    console.log(parts);
 };

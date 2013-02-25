@@ -15,25 +15,19 @@
  */
 
 .storePart {
-    position: relative;
-    border: 0;
-    margin: 12pt;
+    fill: #0066cc;
+}
+
+.axis text {
+    /*font: 10px sans-serif;*/
+    font-size: 10pt;
     font-family: Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
-    /*-webkit-text-stroke: 0.35px*/
 }
 
-.storePart .partCount {
-    font-size: 14pt;
-    /*float: left;*/
-}
-
-.storePart .partDescription {
-    font-size: 14pt;
-    color: #0066cc;;
-    /*float: left;*/
-}
-
-.storePart .partClear {
-    clear: left;
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
 }
