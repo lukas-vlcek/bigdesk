@@ -170,6 +170,14 @@ org.bigdesk.store.Manager.prototype.disposeInternal = function() {
 };
 
 /**
+ * If Manager is running return true.
+ * @return {boolean}
+ */
+org.bigdesk.store.Manager.prototype.isRunning = function() {
+    return this.running;
+};
+
+/**
  * Stop all delays in the manager.
  * @return {org.bigdesk.store.Manager}
  */
@@ -496,6 +504,14 @@ org.bigdesk.store.Manager.prototype.updateDelay = function(interval) {
     if (r_) {this.stop()}
     this.config.delay = interval;
     if (r_) {this.start()}
+};
+
+/**
+ * Returns endpoint value.
+ * @return {String}
+ */
+org.bigdesk.store.Manager.prototype.getEndpointUri = function() {
+    return this.config.endpoint;
 };
 
 /**
