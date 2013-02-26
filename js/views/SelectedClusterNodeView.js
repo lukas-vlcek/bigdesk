@@ -76,6 +76,10 @@ var SelectedClusterNodeView = Backbone.View.extend({
                 var chart_jvmHeapMem = bigdesk_charts.jvmHeapMem.chart(d3.select("#svg_jvmHeapMem"));
                 var chart_jvmNonHeapMem = bigdesk_charts.jvmNonHeapMem.chart(d3.select("#svg_jvmNonHeapMem"));
                 var chart_jvmGC = bigdesk_charts.jvmGC.chart(d3.select("#svg_jvmGC"));
+				var chart_threadpoolSearch = bigdesk_charts.threadpoolSearch.chart(d3.select("#svg_threadpoolSearch"));
+				var chart_threadpoolIndex = bigdesk_charts.threadpoolIndex.chart(d3.select("#svg_threadpoolIndex"));
+				var chart_threadpoolBulk = bigdesk_charts.threadpoolBulk.chart(d3.select("#svg_threadpoolBulk"));
+				var chart_threadpoolRefresh = bigdesk_charts.threadpoolRefresh.chart(d3.select("#svg_threadpoolRefresh"));
                 var chart_osCpu = bigdesk_charts.osCpu.chart(d3.select("#svg_osCpu"));
                 var chart_osMem = bigdesk_charts.osMem.chart(d3.select("#svg_osMem"));
                 var chart_osSwap = bigdesk_charts.osSwap.chart(d3.select("#svg_osSwap"));
@@ -244,6 +248,91 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             $("#jvm_non_heap_mem_used").text("n/a");
                         }
                     });
+
+					// --------------------------------------------
+					// Threadpool Search
+					
+                    _.defer(function(){
+                        var threadpool_search_count = bigdesk_charts.threadpoolSearch.series1(stats);
+                        var threadpool_search_peak = bigdesk_charts.threadpoolSearch.series2(stats);
+                        var threadpool_search_queue = bigdesk_charts.threadpoolSearch.series3(stats);
+
+                        try { chart_threadpoolSearch.animate(animatedCharts).update(threadpool_search_count, threadpool_search_peak, threadpool_search_queue); } catch (ignore) {}
+
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#tp_search_count").text(stats_the_latest.node.thread_pool.search.active);
+                            $("#tp_search_peak").text(stats_the_latest.node.thread_pool.search.largest);
+                            $("#tp_search_queue").text(stats_the_latest.node.thread_pool.search.queue);
+                        } else {
+                            $("#tp_search_count").text("n/a");
+                            $("#tp_search_peak").text("n/a");
+                            $("#tp_search_queue").text("n/a");
+                        }
+                    });
+
+					// --------------------------------------------
+					// Threadpool Index
+					
+                    _.defer(function(){
+                        var threadpool_index_count = bigdesk_charts.threadpoolIndex.series1(stats);
+                        var threadpool_index_peak = bigdesk_charts.threadpoolIndex.series2(stats);
+                        var threadpool_index_queue = bigdesk_charts.threadpoolIndex.series3(stats);
+
+                        try { chart_threadpoolIndex.animate(animatedCharts).update(threadpool_index_count, threadpool_index_peak, threadpool_index_queue); } catch (ignore) {}
+
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#tp_index_count").text(stats_the_latest.node.thread_pool.index.active);
+                            $("#tp_index_peak").text(stats_the_latest.node.thread_pool.index.largest);
+                            $("#tp_index_queue").text(stats_the_latest.node.thread_pool.index.queue);
+                        } else {
+                            $("#tp_index_count").text("n/a");
+                            $("#tp_index_peak").text("n/a");
+                            $("#tp_index_queue").text("n/a");
+                        }
+                    });
+
+					// --------------------------------------------
+					// Threadpool Bulk 
+					
+                    _.defer(function(){
+                        var threadpool_bulk_count = bigdesk_charts.threadpoolBulk.series1(stats);
+                        var threadpool_bulk_peak = bigdesk_charts.threadpoolBulk.series2(stats);
+                        var threadpool_bulk_queue = bigdesk_charts.threadpoolBulk.series3(stats);
+
+                        try { chart_threadpoolBulk.animate(animatedCharts).update(threadpool_bulk_count, threadpool_bulk_peak, threadpool_bulk_queue); } catch (ignore) {}
+
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#tp_bulk_count").text(stats_the_latest.node.thread_pool.bulk.active);
+                            $("#tp_bulk_peak").text(stats_the_latest.node.thread_pool.bulk.largest);
+                            $("#tp_bulk_queue").text(stats_the_latest.node.thread_pool.bulk.queue);
+                        } else {
+                            $("#tp_bulk_count").text("n/a");
+                            $("#tp_bulk_peak").text("n/a");
+                            $("#tp_bulk_queue").text("n/a");
+                        }
+                    });
+					
+					// --------------------------------------------
+					// Threadpool Refresh 
+					
+                    _.defer(function(){
+                        var threadpool_refresh_count = bigdesk_charts.threadpoolRefresh.series1(stats);
+                        var threadpool_refresh_peak = bigdesk_charts.threadpoolRefresh.series2(stats);
+                        var threadpool_refresh_queue = bigdesk_charts.threadpoolRefresh.series3(stats);
+
+                        try { chart_threadpoolRefresh.animate(animatedCharts).update(threadpool_refresh_count, threadpool_refresh_peak, threadpool_refresh_queue); } catch (ignore) {}
+
+                        if (stats_the_latest && stats_the_latest.node) {
+                            $("#tp_refresh_count").text(stats_the_latest.node.thread_pool.refresh.active);
+                            $("#tp_refresh_peak").text(stats_the_latest.node.thread_pool.refresh.largest);
+                            $("#tp_refresh_queue").text(stats_the_latest.node.thread_pool.refresh.queue);
+                        } else {
+                            $("#tp_refresh_count").text("n/a");
+                            $("#tp_refresh_peak").text("n/a");
+                            $("#tp_refresh_queue").text("n/a");
+                        }
+                    });
+						
 
                     // --------------------------------------------
                     // OS Info
@@ -934,6 +1023,54 @@ var SelectedClusterNodeView = Backbone.View.extend({
         $(jvmColCharts1).append(jvmpCharts1);
         $(jvmColCharts2).append(jvmpCharts2);
 
+        // ThreadPool title
+
+        var tpTitleP = this.make("p", {}, "<h2>Thread Pools</h2>");
+        var tpTitleCol = this.make("div", {"class":"twelvecol last"});
+        var rowtpTitle = this.make("div", {"class":"row nodeDetail newSection"});
+
+        $(rowtpTitle).append(tpTitleCol);
+        $(tpTitleCol).append(tpTitleP);
+
+		// Threadpool row for charts
+
+        var tpSearch = Mustache.render(templates.selectedClusterNode.threadPoolSearch, jsonModel);
+        var tpIndex = Mustache.render(templates.selectedClusterNode.threadPoolIndex, jsonModel);
+
+        var tppCharts1 = this.make("p", {},
+            "<div style='overflow: auto;'>" +
+                "<svg width='100%' height='160'>" +
+                    "<svg id='svg_threadpoolSearch' clip_id='clip_threadpoolSearch' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMid' viewBox='0 0 250 160'/>" +
+                    "<svg id='svg_threadpoolIndex' clip_id='clip_threadpoolIndex' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMid' viewBox='0 0 250 160'/>" +
+                "</svg>" +
+                "<div width='46.5%' style='margin-left: 0%; float: left;'>" + tpSearch + "</div>" +
+                "<div width='46.5%' style='margin-left: 54%;'>" + tpIndex + "</div>" +
+            "</div>"
+        );
+
+		var tpBulk = Mustache.render(templates.selectedClusterNode.threadPoolBulk, jsonModel);
+        var tpRefresh = Mustache.render(templates.selectedClusterNode.threadPoolRefresh, jsonModel);
+
+        var tppCharts2 = this.make("p", {},
+            "<div style='overflow: auto;'>" +
+                "<svg width='100%' height='160'>" +
+                    "<svg id='svg_threadpoolBulk' clip_id='clip_threadpoolBulk' width='46.5%' height='100%' x='0' y='0' preserveAspectRatio='xMinYMid' viewBox='0 0 250 160'/>" +
+                    "<svg id='svg_threadpoolRefresh' clip_id='clip_threadpoolRefresh' width='46.5%' height='100%' x='54%' y='0' preserveAspectRatio='xMinYMid' viewBox='0 0 250 160'/>" +
+                "</svg>" +
+                "<div width='46.5%' style='margin-left: 0%; float: left;'>" + tpBulk + "</div>" +
+                "<div width='46.5%' style='margin-left: 54%;'>" + tpRefresh + "</div>" +
+            "</div>"
+        );
+
+        var tpColCharts1 = this.make("div", {"class":"sixcol"});
+        var tpColCharts2 = this.make("div", {"class":"sixcol last"});
+
+        var rowTpCharts = this.make("div", {"class":"row nodeDetail"});
+
+        $(rowTpCharts).append(tpColCharts1, tpColCharts2);
+        $(tpColCharts1).append(tppCharts1);
+        $(tpColCharts2).append(tppCharts2);
+
         // OS title
 
         var osTitleP = this.make("p", {}, "<h2>OS</h2>");
@@ -1170,6 +1307,9 @@ var SelectedClusterNodeView = Backbone.View.extend({
             rowJvmTitle,
             rowJvmInfo,
             rowJvmCharts,
+
+			rowtpTitle,
+			rowTpCharts,
 
             rowOsTitle,
             rowOSInfo,

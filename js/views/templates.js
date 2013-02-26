@@ -106,6 +106,30 @@ var templates = {
             "<div>Total count: <span id='jvm_gc_count'>n/a</span></div>"
         ].join(""),
 
+		threadPoolSearch: [
+            "<div>Queue: <span id='tp_search_queue'>n/a</span></div>",
+			"<div>Peak: <span id='tp_search_peak'>n/a</span></div>",
+            "<div>Count: <span id='tp_search_count'>n/a</span></div>"
+		].join(""),
+
+		threadPoolIndex: [
+            "<div>Queue: <span id='tp_index_queue'>n/a</span></div>",
+			"<div>Peak: <span id='tp_index_peak'>n/a</span></div>",
+            "<div>Count: <span id='tp_index_count'>n/a</span></div>"
+		].join(""),
+
+		threadPoolBulk: [
+            "<div>Queue: <span id='tp_bulk_queue'>n/a</span></div>",
+			"<div>Peak: <span id='tp_bulk_peak'>n/a</span></div>",
+            "<div>Count: <span id='tp_bulk_count'>n/a</span></div>"
+		].join(""),
+
+		threadPoolRefresh: [
+            "<div>Queue: <span id='tp_refresh_queue'>n/a</span></div>",
+			"<div>Peak: <span id='tp_refresh_peak'>n/a</span></div>",
+            "<div>Count: <span id='tp_refresh_count'>n/a</span></div>"
+		].join(""),
+
         fileDescriptorsTemplate: [
             "<div>Max: {{process.max_file_descriptors}}</div>",
             "<div>Open: <span id='open_file_descriptors'>n/a</span></div>"
