@@ -28,6 +28,7 @@
 
 goog.provide('org.bigdesk.store.Manager');
 
+goog.require('org.bigdesk.store.event.ManagerDisposed');
 goog.require('org.bigdesk.store.event.StoreWhippedOut');
 goog.require('org.bigdesk.store.event.DataAdd');
 goog.require('org.bigdesk.store.event.DataRemove');
@@ -104,42 +105,60 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceProvider) {
     /** @private */
     this.delay_nodesStats_ = new goog.async.Delay(
         function(){
-            thiz_.netService.getNodesStats(goog.bind(thiz_.processNodesStatsDelay, thiz_))
+            thiz_.netService.getNodesStats(
+                goog.bind(thiz_.processNodesStatsDelay, thiz_),
+                goog.bind(thiz_.processNodesStatsDelayError, thiz_)
+            )
         },
         this.config.delay);
 
     /** @private */
     this.delay_nodesInfo_ = new goog.async.Delay(
         function(){
-            thiz_.netService.getNodesInfo(goog.bind(thiz_.processNodesInfoDelay, thiz_))
+            thiz_.netService.getNodesInfo(
+                goog.bind(thiz_.processNodesInfoDelay, thiz_),
+                goog.bind(thiz_.processNodesInfoDelayError, thiz_)
+            )
         },
         this.config.delay);
 
     /** @private */
     this.delay_clusterStates_ = new goog.async.Delay(
         function(){
-            thiz_.netService.getClusterStates(goog.bind(thiz_.processClusterStatesDelay, thiz_))
+            thiz_.netService.getClusterStates(
+                goog.bind(thiz_.processClusterStatesDelay, thiz_),
+                goog.bind(thiz_.processClusterStatesDelayError, thiz_)
+            )
         },
         this.config.delay);
 
     /** @private */
     this.delay_clusterHealth_ = new goog.async.Delay(
         function(){
-            thiz_.netService.getClusterHealth(goog.bind(thiz_.processClusterHealthDelay, thiz_))
+            thiz_.netService.getClusterHealth(
+                goog.bind(thiz_.processClusterHealthDelay, thiz_),
+                goog.bind(thiz_.processClusterHealthDelayError, thiz_)
+            )
         },
         this.config.delay);
 
     /** @private */
     this.delay_indexSegments_ = new goog.async.Delay(
         function(){
-            thiz_.netService.getIndexSegments(goog.bind(thiz_.processIndexSegmentsDelay, thiz_))
+            thiz_.netService.getIndexSegments(
+                goog.bind(thiz_.processIndexSegmentsDelay, thiz_),
+                goog.bind(thiz_.processIndexSegmentsDelayError, thiz_)
+            )
         },
         this.config.delay);
 
     /** @private */
     this.delay_hotThreads_ = new goog.async.Delay(
         function(){
-            thiz_.netService.getHotThreads(goog.bind(thiz_.processHotThreadsDelay, thiz_))
+            thiz_.netService.getHotThreads(
+                goog.bind(thiz_.processHotThreadsDelay, thiz_),
+                goog.bind(thiz_.processHotThreadsDelayError, thiz_)
+            )
         },
         this.config.delay);
 };
@@ -149,6 +168,9 @@ goog.inherits(org.bigdesk.store.Manager, goog.events.EventTarget);
 org.bigdesk.store.Manager.prototype.disposeInternal = function() {
     // Call the superclass's disposeInternal() method.
     org.bigdesk.store.Manager.superClass_.disposeInternal.call(this);
+
+    var event =  new org.bigdesk.store.event.ManagerDisposed();
+    this.dispatchEvent(event);
 
     // Dispose of all Disposable objects owned by this class.
     this.delay_nodesStats_.dispose();
@@ -200,7 +222,6 @@ org.bigdesk.store.Manager.prototype.stop = function() {
  */
 org.bigdesk.store.Manager.prototype.start = function() {
     if (!this.running) {
-        this.running = true;
         // request data right now (so we do not have to wait for delay to get first data)
         this.delay_nodesStats_.fire();
         this.delay_nodesInfo_.fire();
@@ -208,6 +229,7 @@ org.bigdesk.store.Manager.prototype.start = function() {
         this.delay_clusterHealth_.fire();
         this.delay_indexSegments_.fire();
         this.delay_hotThreads_.fire();
+        this.running = true;
     }
     return this;
 };
@@ -287,6 +309,18 @@ org.bigdesk.store.Manager.prototype.processNodesStatsDelay = function(timestamp,
 };
 
 /**
+ * Called from nodes stats delay if service fails getting the response.
+ * @param {!number} timestamp
+ * @param {!Object} errObject
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.processNodesStatsDelayError = function(timestamp, errObject) {
+    this.log.severe("error getting nodes stats");
+    this.log.finer('timestamp: ' + timestamp);
+    this.delay_nodesStats_.start(this.config.delay);
+};
+
+/**
  * Drop data from nodes stats.
  * @param {!number} timestamp
  * @protected
@@ -316,6 +350,19 @@ org.bigdesk.store.Manager.prototype.processNodesInfoDelay = function(timestamp, 
 };
 
 /**
+ * Called from nodes info delay if service fails getting the response.
+ * @param {!number} timestamp
+ * @param {!Object} errObject
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.processNodesInfoDelayError = function(timestamp, errObject) {
+    this.log.severe("error getting nodes info");
+    this.log.finer('timestamp: ' + timestamp);
+    this.delay_nodesInfo_.start(this.config.delay);
+};
+
+
+/**
  * Drop data from nodes info.
  * @param {!number} timestamp
  * @protected
@@ -341,6 +388,18 @@ org.bigdesk.store.Manager.prototype.dropFromNodesInfo = function(timestamp) {
 org.bigdesk.store.Manager.prototype.processClusterStatesDelay = function(timestamp, data) {
     this.dropFromClusterStates(timestamp - this.config.window);
     this.addIntoClusterStates(timestamp, data);
+    this.delay_clusterStates_.start(this.config.delay);
+};
+
+/**
+ * Called from cluster stats delay if service fails getting the response.
+ * @param {!number} timestamp
+ * @param {!Object} errObject
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.processClusterStatesDelayError = function(timestamp, errObject) {
+    this.log.severe("error getting cluster stats");
+    this.log.finer('timestamp: ' + timestamp);
     this.delay_clusterStates_.start(this.config.delay);
 };
 
@@ -374,6 +433,18 @@ org.bigdesk.store.Manager.prototype.processClusterHealthDelay = function(timesta
 };
 
 /**
+ * Called from cluster health delay if service fails getting the response.
+ * @param {!number} timestamp
+ * @param {!Object} errObject
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.processClusterHealthDelayError = function(timestamp, errObject) {
+    this.log.severe("error getting cluster health");
+    this.log.finer('timestamp: ' + timestamp);
+    this.delay_clusterHealth_.start(this.config.delay);
+};
+
+/**
  * Drop data from cluster healths.
  * @param {!number} timestamp
  * @protected
@@ -403,6 +474,18 @@ org.bigdesk.store.Manager.prototype.processIndexSegmentsDelay = function(timesta
 };
 
 /**
+ * Called from index segments delay if service fails getting the response.
+ * @param {!number} timestamp
+ * @param {!Object} errObject
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.processIndexSegmentsDelayError = function(timestamp, errObject) {
+    this.log.severe("error getting index segments");
+    this.log.finer('timestamp: ' + timestamp);
+    this.delay_indexSegments_.start(this.config.delay);
+};
+
+/**
  * Drop data from index segments.
  * @param {!number} timestamp
  * @protected
@@ -428,6 +511,18 @@ org.bigdesk.store.Manager.prototype.dropFromIndexSegments = function(timestamp) 
 org.bigdesk.store.Manager.prototype.processHotThreadsDelay = function(timestamp, data) {
     this.dropFromHotThreads(timestamp - this.config.window);
     this.addIntoHotThreads(timestamp, data);
+    this.delay_hotThreads_.start(this.config.delay);
+};
+
+/**
+ * Called from hot threads delay if service fails getting the response.
+ * @param {!number} timestamp
+ * @param {!Object} errObject
+ * @protected
+ */
+org.bigdesk.store.Manager.prototype.processHotThreadsDelayError = function(timestamp, errObject) {
+    this.log.severe("error getting hot threads");
+    this.log.finer('timestamp: ' + timestamp);
     this.delay_hotThreads_.start(this.config.delay);
 };
 

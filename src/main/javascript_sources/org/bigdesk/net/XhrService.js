@@ -154,44 +154,45 @@ org.bigdesk.net.XhrService.prototype.disposeInternal = function() {
 };
 
 /** @inheritDoc */
-org.bigdesk.net.XhrService.prototype.getNodesStats = function(callback, opt_timestamp) {
-    this.getData_(this.NODES_STATS_ID_, this.NODES_STATS_URL_, callback, opt_timestamp);
+org.bigdesk.net.XhrService.prototype.getNodesStats = function(callback, opt_errback, opt_timestamp) {
+    this.getData_(this.NODES_STATS_ID_, this.NODES_STATS_URL_, callback, opt_errback, opt_timestamp);
 };
 
 /** @inheritDoc */
-org.bigdesk.net.XhrService.prototype.getNodesInfo = function(callback, opt_timestamp) {
-    this.getData_(this.NODES_INFO_ID_, this.NODES_INFO_URL_, callback, opt_timestamp);
+org.bigdesk.net.XhrService.prototype.getNodesInfo = function(callback, opt_errback, opt_timestamp) {
+    this.getData_(this.NODES_INFO_ID_, this.NODES_INFO_URL_, callback, opt_errback, opt_timestamp);
 };
 
 /** @inheritDoc */
-org.bigdesk.net.XhrService.prototype.getClusterStates = function(callback, opt_timestamp) {
-    this.getData_(this.CLUSTER_STATE_ID_, this.CLUSTER_STATE_URL_, callback, opt_timestamp);
+org.bigdesk.net.XhrService.prototype.getClusterStates = function(callback, opt_errback, opt_timestamp) {
+    this.getData_(this.CLUSTER_STATE_ID_, this.CLUSTER_STATE_URL_, callback, opt_errback, opt_timestamp);
 };
 
 /** @inheritDoc */
-org.bigdesk.net.XhrService.prototype.getClusterHealth = function(callback, opt_timestamp) {
-    this.getData_(this.CLUSTER_HEALTH_ID_, this.CLUSTER_HEALTH_URL_, callback, opt_timestamp);
+org.bigdesk.net.XhrService.prototype.getClusterHealth = function(callback, opt_errback, opt_timestamp) {
+    this.getData_(this.CLUSTER_HEALTH_ID_, this.CLUSTER_HEALTH_URL_, callback, opt_errback, opt_timestamp);
 };
 
 /** @inheritDoc */
-org.bigdesk.net.XhrService.prototype.getIndexSegments = function(callback, opt_timestamp) {
-    this.getData_(this.INDEX_SEGMENTS_ID_, this.INDEX_SEGMENTS_URL_, callback, opt_timestamp);
+org.bigdesk.net.XhrService.prototype.getIndexSegments = function(callback, opt_errback, opt_timestamp) {
+    this.getData_(this.INDEX_SEGMENTS_ID_, this.INDEX_SEGMENTS_URL_, callback, opt_errback, opt_timestamp);
 };
 
 /** @inheritDoc */
-org.bigdesk.net.XhrService.prototype.getHotThreads = function(callback, opt_timestamp) {
-    this.getData_(this.HOT_THREADS_ID_, this.HOT_THREADS_URL_, callback, opt_timestamp, true);
+org.bigdesk.net.XhrService.prototype.getHotThreads = function(callback, opt_errback, opt_timestamp) {
+    this.getData_(this.HOT_THREADS_ID_, this.HOT_THREADS_URL_, callback, opt_errback, opt_timestamp, true);
 };
 
 /**
  * @param {!string} rest_call_id
  * @param {!string} rest_call_url
  * @param {!function(!number, !Object)} callback
+ * @param {!function(!number, !Object)} opt_errback
  * @param {number=} opt_timestamp
  * @param {boolean=} opt_raw_text if 'true' get raw text otherwise extract JSON object
  * @private
  */
-org.bigdesk.net.XhrService.prototype.getData_ = function(rest_call_id, rest_call_url, callback, opt_timestamp, opt_raw_text) {
+org.bigdesk.net.XhrService.prototype.getData_ = function(rest_call_id, rest_call_url, callback, opt_errback, opt_timestamp, opt_raw_text) {
 
     var text_ = (goog.isDefAndNotNull(opt_raw_text) && goog.isBoolean(opt_raw_text)) ? opt_raw_text : false;
     var timestamp = opt_timestamp || goog.now();
@@ -205,9 +206,15 @@ org.bigdesk.net.XhrService.prototype.getData_ = function(rest_call_id, rest_call
         this.XHR_REQUEST_PRIORITY,
         function(e){
             var event = /** @type goog.net.XhrManager.Event */ (e);
-            var response = text_ ? event.target.getResponseText() : event.target.getResponseJson();
-            response = goog.isDef(response) ? response : {};
-            callback(timestamp, response);
+            if (event.target.isSuccess()){
+                var response = text_ ? event.target.getResponseText() : event.target.getResponseJson();
+                response = goog.isDef(response) ? response : {};
+                callback(timestamp, response);
+            } else {
+                if (goog.isFunction(opt_errback)) {
+                    opt_errback(timestamp, event.target);
+                }
+            }
         },
         0 //max retries
     );

@@ -24,6 +24,8 @@ goog.require('goog.events');
  */
 org.bigdesk.store.event.EventType = {
 
+    MANAGER_DISPOSED      : goog.events.getUniqueId('manager_disposed'),
+
     STORE_WHIPPED_OUT     : goog.events.getUniqueId('store_whipped_out'),
 
     NODES_STATS_ADD       : goog.events.getUniqueId('nodes_stats_add'),

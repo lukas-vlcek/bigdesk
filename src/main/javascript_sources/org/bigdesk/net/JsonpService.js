@@ -32,42 +32,42 @@ goog.require('org.bigdesk.net.Service');
 org.bigdesk.net.JsonpService = function(){};
 
 /** @inheritDoc */
-org.bigdesk.net.JsonpService.prototype.getNodesStats = function (callback, opt_timestamp) {
+org.bigdesk.net.JsonpService.prototype.getNodesStats = function (callback, opt_errback, opt_timestamp) {
     var timestamp = opt_timestamp || goog.now();
     var data = {};
     callback(timestamp, data);
 };
 
 /** @inheritDoc */
-org.bigdesk.net.JsonpService.prototype.getNodesInfo = function (callback, opt_timestamp) {
+org.bigdesk.net.JsonpService.prototype.getNodesInfo = function (callback, opt_errback, opt_timestamp) {
     var timestamp = opt_timestamp || goog.now();
     var data = {};
     callback(timestamp, data);
 };
 
 /** @inheritDoc */
-org.bigdesk.net.JsonpService.prototype.getClusterStates = function(callback, opt_timestamp) {
+org.bigdesk.net.JsonpService.prototype.getClusterStates = function(callback, opt_errback, opt_timestamp) {
     var timestamp = opt_timestamp || goog.now();
     var data = {};
     callback(timestamp, data);
 };
 
 /** @inheritDoc */
-org.bigdesk.net.JsonpService.prototype.getClusterHealth = function(callback, opt_timestamp) {
+org.bigdesk.net.JsonpService.prototype.getClusterHealth = function(callback, opt_errback, opt_timestamp) {
     var timestamp = opt_timestamp || goog.now();
     var data = {};
     callback(timestamp, data);
 };
 
 /** @inheritDoc */
-org.bigdesk.net.JsonpService.prototype.getIndexSegments = function(callback, opt_timestamp) {
+org.bigdesk.net.JsonpService.prototype.getIndexSegments = function(callback, opt_errback, opt_timestamp) {
     var timestamp = opt_timestamp || goog.now();
     var data = {};
     callback(timestamp, data);
 };
 
 /** @inheritDoc */
-org.bigdesk.net.JsonpService.prototype.getHotThreads = function(callback, opt_timestamp) {
+org.bigdesk.net.JsonpService.prototype.getHotThreads = function(callback, opt_errback, opt_timestamp) {
     var timestamp = opt_timestamp || goog.now();
     var data = {};
     callback(timestamp, data);

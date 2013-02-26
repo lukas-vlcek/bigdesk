@@ -25,53 +25,71 @@ org.bigdesk.net.Service = function() {};
 /**
  * Request for NodesStats data.
  * The first parameter if callback function which is passed 'timestamp' and 'json response' data.
- * The second optional parameter is value of timestamp. If not provided goog.now() is used instead.
+ * The second parameter if errback function which is called when the request is not successful, it
+ * is passed 'timestamp' and 'some' object.
+ * The third optional parameter is value of timestamp. If not provided goog.now() is used instead.
  * @param {!function(!number, !Object)} callback
+ * @param {!function(!number, !Object)} opt_errback
  * @param {number=} opt_timestamp
  */
-org.bigdesk.net.Service.prototype.getNodesStats = function(callback, opt_timestamp) {};
+org.bigdesk.net.Service.prototype.getNodesStats = function(callback, opt_errback, opt_timestamp) {};
 
 /**
  * Request for NodesInfo data.
  * The first parameter if callback function which is passed 'timestamp' and 'json response' data.
- * The second optional parameter is value of timestamp. If not provided goog.now() is used instead.
+ * The second parameter if errback function which is called when the request is not successful, it
+ * is passed 'timestamp' and 'some' object.
+ * The third optional parameter is value of timestamp. If not provided goog.now() is used instead.
  * @param {!function(!number, !Object)} callback
+ * @param {!function(!number, !Object)} opt_errback
  * @param {number=} opt_timestamp
  */
-org.bigdesk.net.Service.prototype.getNodesInfo = function(callback, opt_timestamp) {};
+org.bigdesk.net.Service.prototype.getNodesInfo = function(callback, opt_errback, opt_timestamp) {};
 
 /**
  * Request for ClusterState data.
  * The first parameter if callback function which is passed 'timestamp' and 'json response' data.
- * The second optional parameter is value of timestamp. If not provided goog.now() is used instead.
+ * The second parameter if errback function which is called when the request is not successful, it
+ * is passed 'timestamp' and 'some' object.
+ * The third optional parameter is value of timestamp. If not provided goog.now() is used instead.
  * @param {!function(!number, !Object)} callback
+ * @param {!function(!number, !Object)} opt_errback
  * @param {number=} opt_timestamp
  */
-org.bigdesk.net.Service.prototype.getClusterStates = function(callback, opt_timestamp) {};
+org.bigdesk.net.Service.prototype.getClusterStates = function(callback, opt_errback, opt_timestamp) {};
 
 /**
  * Request for ClusterHealth data.
  * The first parameter if callback function which is passed 'timestamp' and 'json response' data.
- * The second optional parameter is value of timestamp. If not provided goog.now() is used instead.
+ * The second parameter if errback function which is called when the request is not successful, it
+ * is passed 'timestamp' and 'some' object.
+ * The third optional parameter is value of timestamp. If not provided goog.now() is used instead.
  * @param {!function(!number, !Object)} callback
+ * @param {!function(!number, !Object)} opt_errback
  * @param {number=} opt_timestamp
  */
-org.bigdesk.net.Service.prototype.getClusterHealth = function(callback, opt_timestamp) {};
+org.bigdesk.net.Service.prototype.getClusterHealth = function(callback, opt_errback, opt_timestamp) {};
 
 /**
  * Request for IndexSegments data.
  * The first parameter if callback function which is passed 'timestamp' and 'json response' data.
- * The second optional parameter is value of timestamp. If not provided goog.now() is used instead.
+ * The second parameter if errback function which is called when the request is not successful, it
+ * is passed 'timestamp' and 'some' object.
+ * The third optional parameter is value of timestamp. If not provided goog.now() is used instead.
  * @param {!function(!number, !Object)} callback
+ * @param {!function(!number, !Object)} opt_errback
  * @param {number=} opt_timestamp
  */
-org.bigdesk.net.Service.prototype.getIndexSegments = function(callback, opt_timestamp) {};
+org.bigdesk.net.Service.prototype.getIndexSegments = function(callback, opt_errback, opt_timestamp) {};
 
 /**
  * Request for HotThreads data.
  * The first parameter if callback function which is passed 'timestamp' and 'json response' data.
- * The second optional parameter is value of timestamp. If not provided goog.now() is used instead.
+ * The second parameter if errback function which is called when the request is not successful, it
+ * is passed 'timestamp' and 'some' object.
+ * The third optional parameter is value of timestamp. If not provided goog.now() is used instead.
  * @param {!function(!number, !Object)} callback
+ * @param {!function(!number, !Object)} opt_errback
  * @param {number=} opt_timestamp
  */
-org.bigdesk.net.Service.prototype.getHotThreads = function(callback, opt_timestamp) {};
+org.bigdesk.net.Service.prototype.getHotThreads = function(callback, opt_errback, opt_timestamp) {};
