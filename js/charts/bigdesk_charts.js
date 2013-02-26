@@ -98,7 +98,6 @@ bigdesk_charts.jvmThreads = {
                 caption: "Threads",
                 series1: "Count",
                 series2: "Peak",
-                series3: "Search",
                 margin_left: 5,
                 margin_bottom: 6,
                 width: 60})
@@ -122,7 +121,6 @@ bigdesk_charts.jvmThreads = {
             }
         })
     }
-
 };
 
 bigdesk_charts.jvmHeapMem = {
