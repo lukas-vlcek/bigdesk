@@ -305,7 +305,9 @@ org.bigdesk.store.Manager.prototype.addIntoHotThreads = function(timestamp, data
 org.bigdesk.store.Manager.prototype.processNodesStatsDelay = function(timestamp, data) {
     this.dropNodesStatsStartingFrom(timestamp - this.config.window);
     this.addIntoNodesStats(timestamp, data);
-    this.delay_nodesStats_.start(this.config.delay);
+    if (this.isRunning()) {
+        this.delay_nodesStats_.start(this.config.delay);
+    }
 };
 
 /**
@@ -317,7 +319,9 @@ org.bigdesk.store.Manager.prototype.processNodesStatsDelay = function(timestamp,
 org.bigdesk.store.Manager.prototype.processNodesStatsDelayError = function(timestamp, errObject) {
     this.log.severe("error getting nodes stats");
     this.log.finer('timestamp: ' + timestamp);
-    this.delay_nodesStats_.start(this.config.delay);
+    if (this.isRunning()) {
+        this.delay_nodesStats_.start(this.config.delay);
+    }
 };
 
 /**
@@ -346,7 +350,9 @@ org.bigdesk.store.Manager.prototype.dropNodesStatsStartingFrom = function(timest
 org.bigdesk.store.Manager.prototype.processNodesInfoDelay = function(timestamp, data) {
     this.dropFromNodesInfo(timestamp - this.config.window);
     this.addIntoNodesInfo(timestamp, data);
-    this.delay_nodesInfo_.start(this.config.delay);
+    if (this.isRunning()) {
+        this.delay_nodesInfo_.start(this.config.delay);
+    }
 };
 
 /**
@@ -358,7 +364,9 @@ org.bigdesk.store.Manager.prototype.processNodesInfoDelay = function(timestamp, 
 org.bigdesk.store.Manager.prototype.processNodesInfoDelayError = function(timestamp, errObject) {
     this.log.severe("error getting nodes info");
     this.log.finer('timestamp: ' + timestamp);
-    this.delay_nodesInfo_.start(this.config.delay);
+    if (this.isRunning()) {
+        this.delay_nodesInfo_.start(this.config.delay);
+    }
 };
 
 
@@ -388,7 +396,9 @@ org.bigdesk.store.Manager.prototype.dropFromNodesInfo = function(timestamp) {
 org.bigdesk.store.Manager.prototype.processClusterStatesDelay = function(timestamp, data) {
     this.dropFromClusterStates(timestamp - this.config.window);
     this.addIntoClusterStates(timestamp, data);
-    this.delay_clusterStates_.start(this.config.delay);
+    if (this.isRunning()) {
+        this.delay_clusterStates_.start(this.config.delay);
+    }
 };
 
 /**
@@ -400,7 +410,9 @@ org.bigdesk.store.Manager.prototype.processClusterStatesDelay = function(timesta
 org.bigdesk.store.Manager.prototype.processClusterStatesDelayError = function(timestamp, errObject) {
     this.log.severe("error getting cluster stats");
     this.log.finer('timestamp: ' + timestamp);
-    this.delay_clusterStates_.start(this.config.delay);
+    if (this.isRunning()) {
+        this.delay_clusterStates_.start(this.config.delay);
+    }
 };
 
 /**
@@ -429,7 +441,9 @@ org.bigdesk.store.Manager.prototype.dropFromClusterStates = function(timestamp) 
 org.bigdesk.store.Manager.prototype.processClusterHealthDelay = function(timestamp, data) {
     this.dropFromClusterHealths(timestamp - this.config.window);
     this.addIntoClusterHealths(timestamp, data);
-    this.delay_clusterHealth_.start(this.config.delay);
+    if (this.isRunning()) {
+        this.delay_clusterHealth_.start(this.config.delay);
+    }
 };
 
 /**
@@ -441,7 +455,9 @@ org.bigdesk.store.Manager.prototype.processClusterHealthDelay = function(timesta
 org.bigdesk.store.Manager.prototype.processClusterHealthDelayError = function(timestamp, errObject) {
     this.log.severe("error getting cluster health");
     this.log.finer('timestamp: ' + timestamp);
-    this.delay_clusterHealth_.start(this.config.delay);
+    if (this.isRunning()) {
+        this.delay_clusterHealth_.start(this.config.delay);
+    }
 };
 
 /**
@@ -470,7 +486,9 @@ org.bigdesk.store.Manager.prototype.dropFromClusterHealths = function(timestamp)
 org.bigdesk.store.Manager.prototype.processIndexSegmentsDelay = function(timestamp, data) {
     this.dropFromIndexSegments(timestamp - this.config.window);
     this.addIntoIndexSegments(timestamp, data);
-    this.delay_indexSegments_.start(this.config.delay);
+    if (this.isRunning()) {
+        this.delay_indexSegments_.start(this.config.delay);
+    }
 };
 
 /**
@@ -482,7 +500,9 @@ org.bigdesk.store.Manager.prototype.processIndexSegmentsDelay = function(timesta
 org.bigdesk.store.Manager.prototype.processIndexSegmentsDelayError = function(timestamp, errObject) {
     this.log.severe("error getting index segments");
     this.log.finer('timestamp: ' + timestamp);
-    this.delay_indexSegments_.start(this.config.delay);
+    if (this.isRunning()) {
+        this.delay_indexSegments_.start(this.config.delay);
+    }
 };
 
 /**
@@ -511,7 +531,9 @@ org.bigdesk.store.Manager.prototype.dropFromIndexSegments = function(timestamp) 
 org.bigdesk.store.Manager.prototype.processHotThreadsDelay = function(timestamp, data) {
     this.dropFromHotThreads(timestamp - this.config.window);
     this.addIntoHotThreads(timestamp, data);
-    this.delay_hotThreads_.start(this.config.delay);
+    if (this.isRunning()) {
+        this.delay_hotThreads_.start(this.config.delay);
+    }
 };
 
 /**
@@ -523,7 +545,9 @@ org.bigdesk.store.Manager.prototype.processHotThreadsDelay = function(timestamp,
 org.bigdesk.store.Manager.prototype.processHotThreadsDelayError = function(timestamp, errObject) {
     this.log.severe("error getting hot threads");
     this.log.finer('timestamp: ' + timestamp);
-    this.delay_hotThreads_.start(this.config.delay);
+    if (this.isRunning()) {
+        this.delay_hotThreads_.start(this.config.delay);
+    }
 };
 
 /**
