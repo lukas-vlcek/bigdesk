@@ -80,7 +80,7 @@
 
     <div id="controls">
         <div>
-            <input id="endpoint" type="text" value="http://localhost:9200" disabled>
+            <input id="endpoint" type="text" value="http://localhost:9200">
             <div class="beat"></div>
             <div class="clear"></div>
         </div>
@@ -101,15 +101,10 @@
         var dashboard_element = goog.dom.getElement('dashboard');
         var start_button      = goog.dom.getElement('start');
         var stop_button       = goog.dom.getElement('stop');
-        var endpoint          = goog.dom.getElement('endpoint').value;
+        var endpoint          = goog.dom.getElement('endpoint');
         var interval          = goog.dom.getElement('interval');
 
-        var conf = {
-            endpoint: endpoint,
-            delay: interval.value
-        }
-
-        var dashboard = new org.bigdesk.store.Dashboard(dashboard_element, start_button, stop_button, interval, conf);
+        var dashboard = new org.bigdesk.store.Dashboard(dashboard_element, endpoint, start_button, stop_button, interval);
     </script>
 </body>
 </html>
