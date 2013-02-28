@@ -42,3 +42,7 @@ These tests are driven by configuration file called [`jsTestDriver.conf`](https:
 The typical process of implementing a new javascript test is to add a new test under `src/test/javascript` package. Then implement a new `src/test/html` wrapper for it (which allows quick and immediate execution of the test).
 
 If web browser is required, then add a new test under `src/test/jeTestDriver` package.
+
+# General tips
+
+Writing Fast, Memory-Efficient JavaScript - <http://coding.smashingmagazine.com/2012/11/05/writing-fast-memory-efficient-javascript/>
