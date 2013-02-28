@@ -32,6 +32,7 @@ goog.require('org.bigdesk.store.event.ManagerDisposed');
 goog.require('org.bigdesk.store.event.StoreWhippedOut');
 goog.require('org.bigdesk.store.event.DataAdd');
 goog.require('org.bigdesk.store.event.DataRemove');
+goog.require('org.bigdesk.store.event.RequestError');
 goog.require('org.bigdesk.store.snapshot.load.event.SnapshotLoadProgress');
 goog.require('org.bigdesk.store.snapshot.load.event.SnapshotLoadDone');
 
@@ -317,6 +318,8 @@ org.bigdesk.store.Manager.prototype.processNodesStatsDelay = function(timestamp,
  * @protected
  */
 org.bigdesk.store.Manager.prototype.processNodesStatsDelayError = function(timestamp, errObject) {
+    var event = new org.bigdesk.store.event.RequestError(errObject);
+    this.dispatchEvent(event);
     this.log.severe("error getting nodes stats");
     this.log.finer('timestamp: ' + timestamp);
     if (this.isRunning()) {
@@ -362,13 +365,14 @@ org.bigdesk.store.Manager.prototype.processNodesInfoDelay = function(timestamp, 
  * @protected
  */
 org.bigdesk.store.Manager.prototype.processNodesInfoDelayError = function(timestamp, errObject) {
+    var event = new org.bigdesk.store.event.RequestError(errObject);
+    this.dispatchEvent(event);
     this.log.severe("error getting nodes info");
     this.log.finer('timestamp: ' + timestamp);
     if (this.isRunning()) {
         this.delay_nodesInfo_.start(this.config.delay);
     }
 };
-
 
 /**
  * Drop data from nodes info.
@@ -408,6 +412,8 @@ org.bigdesk.store.Manager.prototype.processClusterStatesDelay = function(timesta
  * @protected
  */
 org.bigdesk.store.Manager.prototype.processClusterStatesDelayError = function(timestamp, errObject) {
+    var event = new org.bigdesk.store.event.RequestError(errObject);
+    this.dispatchEvent(event);
     this.log.severe("error getting cluster stats");
     this.log.finer('timestamp: ' + timestamp);
     if (this.isRunning()) {
@@ -453,6 +459,8 @@ org.bigdesk.store.Manager.prototype.processClusterHealthDelay = function(timesta
  * @protected
  */
 org.bigdesk.store.Manager.prototype.processClusterHealthDelayError = function(timestamp, errObject) {
+    var event = new org.bigdesk.store.event.RequestError(errObject);
+    this.dispatchEvent(event);
     this.log.severe("error getting cluster health");
     this.log.finer('timestamp: ' + timestamp);
     if (this.isRunning()) {
@@ -498,6 +506,8 @@ org.bigdesk.store.Manager.prototype.processIndexSegmentsDelay = function(timesta
  * @protected
  */
 org.bigdesk.store.Manager.prototype.processIndexSegmentsDelayError = function(timestamp, errObject) {
+    var event = new org.bigdesk.store.event.RequestError(errObject);
+    this.dispatchEvent(event);
     this.log.severe("error getting index segments");
     this.log.finer('timestamp: ' + timestamp);
     if (this.isRunning()) {
@@ -543,6 +553,8 @@ org.bigdesk.store.Manager.prototype.processHotThreadsDelay = function(timestamp,
  * @protected
  */
 org.bigdesk.store.Manager.prototype.processHotThreadsDelayError = function(timestamp, errObject) {
+    var event = new org.bigdesk.store.event.RequestError(errObject);
+    this.dispatchEvent(event);
     this.log.severe("error getting hot threads");
     this.log.finer('timestamp: ' + timestamp);
     if (this.isRunning()) {
