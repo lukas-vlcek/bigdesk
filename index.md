@@ -2,7 +2,7 @@
 layout: default
 ---
 
-In simple words **bigdesk** makes it very easy to see how your elasticsearch cluster is doing. Just install it as an [elasticsearch plugin](#elasticsearch_plugin), [download locally](#download_locally) or run [online from the web](#online_from_the_web), then point it to the elasticsearch node REST endpoint and **have fun**. 
+In simple words **bigdesk** makes it very easy to see how your Elasticsearch cluster is doing. Just install it as an [elasticsearch plugin](#elasticsearch_plugin), [download locally](#download_locally) or run [online from the web](#online_from_the_web), then point it to the Elasticsearch node REST endpoint and **have fun**. 
 
 *****
 
@@ -29,9 +29,16 @@ In simple words **bigdesk** makes it very easy to see how your elasticsearch clu
 	</div>
 </section>
 
-It pulls data from elasticsearch REST API and turns it into charts.
+It pulls data from Elasticsearch REST API and turns it into charts.
 
-Currently, bigdesk **master** supports elasticsearch **0.19** and **0.20** (if you are using elasticsearch **0.17** and **0.18** then use bigdesk **1.0.0**).
+Bigdesk supports the following versions of Elasticsearch:
+
+<table>
+	<tr><th>Bigdesk</th><th>Elasticsearch</th></tr>
+	<tr><td>master</td><td>0.19.x - master</td></tr>
+	<tr><td>2.0.0</td><td>0.19.x - 0.20.x</td></tr>
+	<tr><td>1.0.0</td><td>0.17.x - 0.18.x</td></tr>
+</table>
 
 <div>
 <a href="https://twitter.com/bigdesk_" class="twitter-follow-button" data-show-count="false">Follow @bigdesk_</a>
@@ -46,9 +53,9 @@ To install bigdesk **master** branch as an [elasticsearch plugin](http://www.ela
 
 	bin/plugin -install lukas-vlcek/bigdesk
 
-To install a specific version (for example **1.0.0**) run:
+To install a specific version (for example **2.0.0**) run:
 
-	bin/plugin -install lukas-vlcek/bigdesk/1.0.0
+	bin/plugin -install lukas-vlcek/bigdesk/2.0.0
 
 Then you can navigate your web browser to `http://<elasticsearch_REST_endpoint>/_plugin/bigdesk/`
 
@@ -56,11 +63,15 @@ Then you can navigate your web browser to `http://<elasticsearch_REST_endpoint>/
 
 ### download locally
 
-Download bigdesk **master** as a [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/master) or a [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/master) and extract the archive. Alternatively, you can clone the git repository from GitHub:
+You can either download and extract bigdesk archive:
+
+- **master**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/master), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/master)
+- **2.0.0**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v2.0.0), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v2.0.0)
+- **1.0.0**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v1.0.0), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v1.0.0)
+
+Or you can clone the git repository from GitHub:
 
 	git clone git://github.com/lukas-vlcek/bigdesk.git bigdesk
-
-If you are looking for bigdesk **1.0.0** then use the following [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v1.0.0) or [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v1.0.0).
 
 Then simply open `bigdesk/index.html` in your web broswer.
 
