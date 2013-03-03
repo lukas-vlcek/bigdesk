@@ -1,8 +1,8 @@
 h1. Bigdesk
 
-Live charts and statistics for ElasticSearch cluster.
+Live charts and statistics for Elasticsearch cluster.
 
-|_. bigdesk |_. ElasticSearch |
+|_. Bigdesk |_. Elasticsearch |
 | master | 0.20.0 -> 0.20.x |
 | 2.0.0 | 0.19.x -> 0.20.x |
 | 1.0.0 | 0.17.x -> 0.18.x |
