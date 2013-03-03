@@ -16,4 +16,4 @@ layout: v
 
 #### master
 
-\[<a href="master">Open</a>\] Supports elasticsearch **0.19** and **0.20**
+\[<a href="master">Open</a>\] Supports elasticsearch **0.20**
