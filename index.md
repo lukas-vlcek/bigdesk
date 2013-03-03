@@ -2,7 +2,7 @@
 layout: default
 ---
 
-In simple words **bigdesk** makes it very easy to see how your Elasticsearch cluster is doing. Just install it as an [elasticsearch plugin](#elasticsearch_plugin), [download locally](#download_locally) or run [online from the web](#online_from_the_web), then point it to the Elasticsearch node REST endpoint and **have fun**. 
+In simple words **bigdesk** makes it very easy to see how your Elasticsearch cluster is doing. Just install it as an [Elasticsearch plugin](#elasticsearch_plugin), [download locally](#download_locally) or run [online from the web](#online_from_the_web), then point it to the Elasticsearch node REST endpoint and **have fun**. 
 
 *****
 
@@ -35,7 +35,7 @@ Bigdesk supports the following versions of Elasticsearch:
 
 <table>
 	<tr><th>Bigdesk</th><th>Elasticsearch</th></tr>
-	<tr><td>master</td><td>0.19.x - master</td></tr>
+	<tr><td>master</td><td>0.20.0 - 0.20.x</td></tr>
 	<tr><td>2.0.0</td><td>0.19.x - 0.20.x</td></tr>
 	<tr><td>1.0.0</td><td>0.17.x - 0.18.x</td></tr>
 </table>
@@ -47,9 +47,9 @@ Bigdesk supports the following versions of Elasticsearch:
 
 *****
 
-### elasticsearch plugin
+### Elasticsearch plugin
 
-To install bigdesk **master** branch as an [elasticsearch plugin](http://www.elasticsearch.org/guide/reference/modules/plugins.html) on a particular elasticsearch node, navigate to the node installation folder and run the following command:
+To install Bigdesk **master** branch as an [Elasticsearch plugin](http://www.elasticsearch.org/guide/reference/modules/plugins.html) on a particular Elasticsearch node, navigate to the node installation folder and run the following command:
 
 	bin/plugin -install lukas-vlcek/bigdesk
 
@@ -63,7 +63,7 @@ Then you can navigate your web browser to `http://<elasticsearch_REST_endpoint>/
 
 ### download locally
 
-You can either download and extract bigdesk archive:
+You can either download and extract Bigdesk archive:
 
 - **master**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/master), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/master)
 - **2.0.0**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v2.0.0), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v2.0.0)
@@ -79,7 +79,7 @@ Then simply open `bigdesk/index.html` in your web broswer.
 
 ### online from the web
 
-You can also run bigdesk directly from the web without needing to install it. Just [select the version](v) you want to use and you are ready to go.
+You can also run Bigdesk directly from the web without needing to install it. Just [select the version](v) you want to use and you are ready to go.
 
 *****
 
@@ -88,10 +88,10 @@ You can also run bigdesk directly from the web without needing to install it. Ju
 You can use URL parameters to immediately **connect** to a particular **endpoint** or set **history** and **refresh** interval:
 
 ##### &mdash; endpoint
-URL of elasticsearch node REST endpoint (you might want to use URL encoded value). Defaults to `http://localhost:9200`.
+URL of Elasticsearch node REST endpoint (you might want to use URL encoded value). Defaults to `http://localhost:9200`.
 
 ##### &mdash; connect
-If set to `true` bigdesk will try to connect immediately to the endpoint. Defaults to `false`.
+If set to `true` Bigdesk will try to connect immediately to the endpoint. Defaults to `false`.
 
 ##### &mdash; refresh
 Refresh interval in milliseconds. Defaults to `2000` (2 sec).
@@ -99,7 +99,7 @@ Refresh interval in milliseconds. Defaults to `2000` (2 sec).
 ##### &mdash; history
 How much data in milliseconds to keep in history. Defaults to `300000` (5 min).
 
-For example, to open bigdesk and have it connect to `http://127.0.0.1:9201` endpoint with a `3` sec refresh interval use:
+For example, to open Bigdesk and have it connect to `http://127.0.0.1:9201` endpoint with a `3` sec refresh interval use:
 
 `index.html?endpoint=http://127.0.0.1:9201&connect=true&refresh=3000`
 
