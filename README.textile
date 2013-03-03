@@ -3,7 +3,7 @@ h1. BigDesk
 Live charts and statistics for ElasticSearch cluster.
 
 |_. bigdesk |_. ElasticSearch |
-| master | 0.19.x -> master |
+| master | 0.20.0 -> 0.20.x |
 | 2.0.0 | 0.19.x -> 0.20.x |
 | 1.0.0 | 0.17.x -> 0.18.x |
 
