@@ -1,3 +1,19 @@
+/*   
+   Copyright 2011-2012 Lukas Vlcek
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 var bigdesk_charts = {
     default: {
         width: 270,
@@ -208,6 +224,182 @@ bigdesk_charts.jvmGC = {
         })
     }
 };
+
+bigdesk_charts.threadpoolSearch = {
+	chart: function(element) {
+        return timeSeriesChart()
+            .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
+            .legend({
+                caption: "Search",
+                series1: "Count",
+                series2: "Peak",
+                series3: "Queue",
+                margin_left: 5,
+                margin_bottom: 6,
+                width: 60})
+            .svg(element);
+    },
+
+    series1: function(stats){
+         return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.node.timestamp,
+                value: +snapshot.node.thread_pool.search.active
+            }
+        })
+    },
+
+	series2: function(stats){
+         return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.node.timestamp,
+                value: +snapshot.node.thread_pool.search.largest
+            }
+        })
+    },
+
+	series3: function(stats){
+         return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.node.timestamp,
+                value: +snapshot.node.thread_pool.search.queue
+            }
+        })
+    }
+
+}
+
+bigdesk_charts.threadpoolIndex = {
+	chart: function(element) {
+        return timeSeriesChart()
+            .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
+            .legend({
+                caption: "Index",
+                series1: "Count",
+                series2: "Peak",
+                series3: "Queue",
+                margin_left: 5,
+                margin_bottom: 6,
+                width: 60})
+            .svg(element);
+    },
+
+    series1: function(stats){
+         return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.node.timestamp,
+                value: +snapshot.node.thread_pool.index.active
+            }
+        })
+    },
+
+	series2: function(stats){
+         return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.node.timestamp,
+                value: +snapshot.node.thread_pool.index.largest
+            }
+        })
+    },
+
+	series3: function(stats){
+         return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.node.timestamp,
+                value: +snapshot.node.thread_pool.index.queue
+            }
+        })
+    }
+
+}
+
+bigdesk_charts.threadpoolBulk = {
+	chart: function(element) {
+        return timeSeriesChart()
+            .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
+            .legend({
+                caption: "Bulk",
+                series1: "Count",
+                series2: "Peak",
+                series3: "Queue",
+                margin_left: 5,
+                margin_bottom: 6,
+                width: 60})
+            .svg(element);
+    },
+
+    series1: function(stats){
+         return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.node.timestamp,
+                value: +snapshot.node.thread_pool.bulk.active
+            }
+        })
+    },
+
+	series2: function(stats){
+         return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.node.timestamp,
+                value: +snapshot.node.thread_pool.bulk.largest
+            }
+        })
+    },
+
+	series3: function(stats){
+         return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.node.timestamp,
+                value: +snapshot.node.thread_pool.bulk.queue
+            }
+        })
+    }
+
+}
+
+bigdesk_charts.threadpoolRefresh = {
+	chart: function(element) {
+        return timeSeriesChart()
+            .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
+            .legend({
+                caption: "Refresh",
+                series1: "Count",
+                series2: "Peak",
+                series3: "Queue",
+                margin_left: 5,
+                margin_bottom: 6,
+                width: 60})
+            .svg(element);
+    },
+
+    series1: function(stats){
+         return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.node.timestamp,
+                value: +snapshot.node.thread_pool.refresh.active
+            }
+        })
+    },
+
+	series2: function(stats){
+         return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.node.timestamp,
+                value: +snapshot.node.thread_pool.refresh.largest
+            }
+        })
+    },
+
+	series3: function(stats){
+         return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.node.timestamp,
+                value: +snapshot.node.thread_pool.refresh.queue
+            }
+        })
+    }
+
+}
 
 bigdesk_charts.osCpu = {
 

@@ -1,3 +1,19 @@
+/*   
+   Copyright 2011-2012 Lukas Vlcek
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 var templates = {
 
     avgCalculationType: [
@@ -89,6 +105,30 @@ var templates = {
             "<div>Total time: <span id='jvm_gc_time'>n/a</span></div>",
             "<div>Total count: <span id='jvm_gc_count'>n/a</span></div>"
         ].join(""),
+
+		threadPoolSearch: [
+            "<div>Queue: <span id='tp_search_queue'>n/a</span></div>",
+			"<div>Peak: <span id='tp_search_peak'>n/a</span></div>",
+            "<div>Count: <span id='tp_search_count'>n/a</span></div>"
+		].join(""),
+
+		threadPoolIndex: [
+            "<div>Queue: <span id='tp_index_queue'>n/a</span></div>",
+			"<div>Peak: <span id='tp_index_peak'>n/a</span></div>",
+            "<div>Count: <span id='tp_index_count'>n/a</span></div>"
+		].join(""),
+
+		threadPoolBulk: [
+            "<div>Queue: <span id='tp_bulk_queue'>n/a</span></div>",
+			"<div>Peak: <span id='tp_bulk_peak'>n/a</span></div>",
+            "<div>Count: <span id='tp_bulk_count'>n/a</span></div>"
+		].join(""),
+
+		threadPoolRefresh: [
+            "<div>Queue: <span id='tp_refresh_queue'>n/a</span></div>",
+			"<div>Peak: <span id='tp_refresh_peak'>n/a</span></div>",
+            "<div>Count: <span id='tp_refresh_count'>n/a</span></div>"
+		].join(""),
 
         fileDescriptorsTemplate: [
             "<div>Max: {{process.max_file_descriptors}}</div>",
