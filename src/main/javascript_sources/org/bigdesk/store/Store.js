@@ -222,7 +222,7 @@ org.bigdesk.store.Store.prototype.timestampsCompareOnlyGreater = function(a, b) 
 
 /**
  * @param {!number} timestamp
- * @param {!Object|!string} item
+ * @param {!Object|!string} item can be JSON or string (hot threads)
  * @param {goog.array.ArrayLike} array
  * @return {boolean} insert succeeded?
  * @private
