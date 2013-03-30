@@ -36,16 +36,43 @@ org.bigdesk.net.TestService = function() {
 };
 
 /** @inheritDoc */
-org.bigdesk.net.TestService.prototype.getNodesStats = function (callback, opt_timestamp) {
+org.bigdesk.net.TestService.prototype.getNodesStats = function (callback, opt_errback, opt_timestamp) {
     var timestamp = opt_timestamp || goog.now();
     var data = { type: 'nodes stats' };
     callback(timestamp, data);
 };
 
 /** @inheritDoc */
-org.bigdesk.net.TestService.prototype.getNodesInfo = function (callback, opt_timestamp) {
+org.bigdesk.net.TestService.prototype.getNodesInfo = function (callback, opt_errback, opt_timestamp) {
     var timestamp = opt_timestamp || goog.now();
     var data = { type: 'nodes info' };
     callback(timestamp, data);
 };
 
+/** @inheritDoc */
+org.bigdesk.net.TestService.prototype.getClusterStates = function(callback, opt_errback, opt_timestamp) {
+    var timestamp = opt_timestamp || goog.now();
+    var data = { type: 'cluster states' };
+    callback(timestamp, data);
+};
+
+/** @inheritDoc */
+org.bigdesk.net.TestService.prototype.getClusterHealth = function(callback, opt_errback, opt_timestamp) {
+    var timestamp = opt_timestamp || goog.now();
+    var data = { type: 'cluster health' };
+    callback(timestamp, data);
+};
+
+/** @inheritDoc */
+org.bigdesk.net.TestService.prototype.getIndexSegments = function(callback, opt_errback, opt_timestamp) {
+    var timestamp = opt_timestamp || goog.now();
+    var data = { type: 'index segments' };
+    callback(timestamp, data);
+};
+
+/** @inheritDoc */
+org.bigdesk.net.TestService.prototype.getHotThreads = function(callback, opt_errback, opt_timestamp) {
+    var timestamp = opt_timestamp || goog.now();
+    var data = { type: 'hot threads' };
+    callback(timestamp, data);
+};
