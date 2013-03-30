@@ -647,22 +647,76 @@ org.bigdesk.store.Manager.prototype.getEndpointUri = function() {
 
 
 /**
- * Return nodes stats less of equal to timestamp.
+ *
  * @param {number} timestamp
- * @return {{timestamp: number, value: Object}|null}
+ * @param {Array.<{timestamp: number, value: !Object}>|Array.<{timestamp: number, value: string}>} array
+ * @return {{timestamp: number, value: !Object}|{timestamp: number, value: string}|null}
+ * @private
  */
-/*
-org.bigdesk.store.Manager.prototype.getNodesStatsFor = function(timestamp) {
+org.bigdesk.store.Manager.prototype.getDataFor_ = function(timestamp, array) {
     var evaluator = function(obj) {
         return timestamp - obj.timestamp;
     };
-    var index = goog.array.binarySelect(this.store_.nodesStats, evaluator);
+    var index = goog.array.binarySelect(array, evaluator);
     if (index < 0) {
         index = (-(index) - 2);
     }
-    return this.store_.nodesStats.length > 0 ? this.store_.nodesStats[index] : null;
+    return array.length > 0 ? array[index] : null;
 };
-*/
+
+/**
+ * Return nodes stats less of equal to timestamp. Returns null if no values available or all are greater then timestamp.
+ * @param {number} timestamp
+ * @return {?{timestamp: number, value: !Object}}
+ */
+org.bigdesk.store.Manager.prototype.getNodesStatsFor = function(timestamp) {
+    return /** @type {?{timestamp: number, value: !Object}} */ (this.getDataFor_(timestamp, this.store_.nodesStats));
+};
+
+/**
+ * Return nodes info less of equal to timestamp. Returns null if no values available or all are greater then timestamp.
+ * @param {number} timestamp
+ * @return {?{timestamp: number, value: !Object}}
+ */
+org.bigdesk.store.Manager.prototype.getNodesInfoFor = function(timestamp) {
+    return /** @type {?{timestamp: number, value: !Object}} */ (this.getDataFor_(timestamp, this.store_.nodesInfos));
+};
+
+/**
+ * Return cluster state less of equal to timestamp. Returns null if no values available or all are greater then timestamp.
+ * @param {number} timestamp
+ * @return {?{timestamp: number, value: !Object}}
+ */
+org.bigdesk.store.Manager.prototype.getClusterStateFor = function(timestamp) {
+    return /** @type {?{timestamp: number, value: !Object}} */ (this.getDataFor_(timestamp, this.store_.clusterStates));
+};
+
+/**
+ * Return cluster health less of equal to timestamp. Returns null if no values available or all are greater then timestamp.
+ * @param {number} timestamp
+ * @return {?{timestamp: number, value: !Object}}
+ */
+org.bigdesk.store.Manager.prototype.getClusterHealthFor = function(timestamp) {
+    return /** @type {?{timestamp: number, value: !Object}} */ (this.getDataFor_(timestamp, this.store_.clusterHealths));
+};
+
+/**
+ * Return index segments less of equal to timestamp. Returns null if no values available or all are greater then timestamp.
+ * @param {number} timestamp
+ * @return {?{timestamp: number, value: !Object}}
+ */
+org.bigdesk.store.Manager.prototype.getIndexSegmentsFor = function(timestamp) {
+    return /** @type {?{timestamp: number, value: !Object}} */ (this.getDataFor_(timestamp, this.store_.indexSegments));
+};
+
+/**
+ * Return hot threads less of equal to timestamp. Returns null if no values available or all are greater then timestamp.
+ * @param {number} timestamp
+ * @return {?{timestamp: number, value: string}}
+ */
+org.bigdesk.store.Manager.prototype.getHotThreadsFor = function(timestamp) {
+    return /** @type {?{timestamp: number, value: string}} */ (this.getDataFor_(timestamp, this.store_.hotThreads));
+};
 
 
 /**
