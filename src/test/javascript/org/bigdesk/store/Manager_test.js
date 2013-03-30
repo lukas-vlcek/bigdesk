@@ -28,10 +28,10 @@ goog.require('goog.testing.jsunit');
 /**
  * Setup new Manager instance into global variable called 'manager'.
  * It allows for customized manager configuration.
- * @param {Object} configuration
+ * @param {Object=} opt_configuration
  * @return {org.bigdesk.store.Manager}
  */
-var setUpNewGlobalManager = function(configuration) {
+var setUpNewGlobalManager = function(opt_configuration) {
 
     if (goog.isDefAndNotNull(this.manager)) { tearDown() }
 
@@ -39,8 +39,8 @@ var setUpNewGlobalManager = function(configuration) {
         net_service_provider: 'test'
     };
 
-    if (goog.isDefAndNotNull(configuration)) {
-        goog.mixin(config, configuration)
+    if (goog.isDefAndNotNull(opt_configuration)) {
+        goog.mixin(config, opt_configuration)
     }
 
     /** @type {org.bigdesk.net.ServiceProvider} */
