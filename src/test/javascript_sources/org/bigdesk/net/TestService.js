@@ -73,6 +73,6 @@ org.bigdesk.net.TestService.prototype.getIndexSegments = function(callback, opt_
 /** @inheritDoc */
 org.bigdesk.net.TestService.prototype.getHotThreads = function(callback, opt_errback, opt_timestamp) {
     var timestamp = opt_timestamp || goog.now();
-    var data = { type: 'hot threads' };
+    var data = 'hot threads';
     callback(timestamp, data);
 };

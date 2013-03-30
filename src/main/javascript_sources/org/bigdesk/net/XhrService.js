@@ -184,10 +184,10 @@ org.bigdesk.net.XhrService.prototype.getHotThreads = function(callback, opt_errb
 };
 
 /**
- * @param {!string} rest_call_id
- * @param {!string} rest_call_url
- * @param {!function(!number, !Object)} callback
- * @param {!function(!number, !Object)} opt_errback
+ * @param {string} rest_call_id
+ * @param {string} rest_call_url
+ * @param {(function(number, !Object)|function(number, string))} callback
+ * @param {function(number, !Object)} opt_errback
  * @param {number=} opt_timestamp
  * @param {boolean=} opt_raw_text if 'true' get raw text otherwise extract JSON object
  * @private

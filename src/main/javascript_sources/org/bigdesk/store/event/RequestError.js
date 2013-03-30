@@ -25,13 +25,15 @@ goog.require('goog.events.Event');
 
 /**
  * Create a new instance.
+ * @param {string} error_type
  * @param {!Object} error
  * @param {number=} opt_timestamp if not provided goog.now() is used instead
  * @constructor
+ * @extends {goog.events.Event}
  */
-org.bigdesk.store.event.RequestError = function(error, opt_timestamp) {
+org.bigdesk.store.event.RequestError = function(error_type, error, opt_timestamp) {
 
-    goog.events.Event.call(this, error);
+    goog.events.Event.call(this, error_type);
 
     /**
      * @type {!Object}

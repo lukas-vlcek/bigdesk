@@ -33,22 +33,22 @@ goog.require("goog.Disposable");
 org.bigdesk.store.Store = function() {
     goog.Disposable.call(this);
 
-    /** @type {goog.array.ArrayLike} */
+    /** @type {Array.<{timestamp: number, value: !Object}>} */
     this.nodesStats = [];
 
-    /** @type {goog.array.ArrayLike} */
+    /** @type {Array.<{timestamp: number, value: !Object}>} */
     this.nodesInfos = [];
 
-    /** @type {goog.array.ArrayLike} */
+    /** @type {Array.<{timestamp: number, value: !Object}>} */
     this.clusterStates = [];
 
-    /** @type {goog.array.ArrayLike} */
+    /** @type {Array.<{timestamp: number, value: !Object}>} */
     this.clusterHealths = [];
 
-    /** @type {goog.array.ArrayLike} */
+    /** @type {Array.<{timestamp: number, value: !Object}>} */
     this.indexSegments = [];
 
-    /** @type {goog.array.ArrayLike} */
+    /** @type {Array.<{timestamp: number, value: string}>} */
     this.hotThreads = [];
 
     /** @private */ this.setNodesStats     = goog.bind(function(a){this.nodesStats=a},this);
@@ -81,7 +81,7 @@ org.bigdesk.store.Store.prototype.disposeInternal = function() {
 
 /**
  * Add a new item into nodesStats.
- * @param {!number} timestamp
+ * @param {number} timestamp
  * @param {!Object} nodesStats
  * @return {boolean} True if an element was inserted.
  */
@@ -91,7 +91,7 @@ org.bigdesk.store.Store.prototype.addNodesStats = function(timestamp, nodesStats
 
 /**
  * Remove all items from nodesStats older then timestamp (including).
- * @param {!number} timestamp
+ * @param {number} timestamp
  * @return {!Array.<number>} array with dropped timestamps
  */
 org.bigdesk.store.Store.prototype.dropNodesStatsStartingFrom = function(timestamp) {
@@ -100,7 +100,7 @@ org.bigdesk.store.Store.prototype.dropNodesStatsStartingFrom = function(timestam
 
 /**
  * Add a new item into nodesInfo.
- * @param {!number} timestamp
+ * @param {number} timestamp
  * @param {!Object} nodesInfo
  * @return {boolean}
  */
@@ -110,7 +110,7 @@ org.bigdesk.store.Store.prototype.addNodesInfo = function(timestamp, nodesInfo) 
 
 /**
  * Remove all items from nodesInfo older then timestamp (including).
- * @param {!number} timestamp
+ * @param {number} timestamp
  * @return {!Array.<number>} array with dropped timestamps
  */
 org.bigdesk.store.Store.prototype.dropNodesInfosStartingFrom = function(timestamp) {
@@ -119,7 +119,7 @@ org.bigdesk.store.Store.prototype.dropNodesInfosStartingFrom = function(timestam
 
 /**
  * Add a new item into clusterStates.
- * @param {!number} timestamp
+ * @param {number} timestamp
  * @param {!Object} clusterState
  * @return {boolean}
  */
@@ -129,7 +129,7 @@ org.bigdesk.store.Store.prototype.addClusterState = function(timestamp, clusterS
 
 /**
  * Remove all items from clusterStates older then timestamp (including).
- * @param {!number} timestamp
+ * @param {number} timestamp
  * @return {!Array.<number>} array with dropped timestamps
  */
 org.bigdesk.store.Store.prototype.dropClusterStatesStaringFrom = function(timestamp) {
@@ -138,7 +138,7 @@ org.bigdesk.store.Store.prototype.dropClusterStatesStaringFrom = function(timest
 
 /**
  * Add a new item into clusterHealths.
- * @param {!number} timestamp
+ * @param {number} timestamp
  * @param {!Object} clusterHealth
  * @return {boolean}
  */
@@ -148,7 +148,7 @@ org.bigdesk.store.Store.prototype.addClusterHealth = function(timestamp, cluster
 
 /**
  * Remove all items from clusterHealths older then timestamp (including).
- * @param {!number} timestamp
+ * @param {number} timestamp
  * @return {!Array.<number>} array with dropped timestamps
  */
 org.bigdesk.store.Store.prototype.dropClusterHealthsStaringFrom = function(timestamp) {
@@ -157,7 +157,7 @@ org.bigdesk.store.Store.prototype.dropClusterHealthsStaringFrom = function(times
 
 /**
  * Add a new item into indexSegments.
- * @param {!number} timestamp
+ * @param {number} timestamp
  * @param {!Object} indexSegments
  * @return {boolean}
  */
@@ -167,7 +167,7 @@ org.bigdesk.store.Store.prototype.addIndexSegments = function(timestamp, indexSe
 
 /**
  * Remove all items from indexSegments older then timestamp (including).
- * @param {!number} timestamp
+ * @param {number} timestamp
  * @return {!Array.<number>} array with dropped timestamps
  */
 org.bigdesk.store.Store.prototype.dropIndexSegmentsStaringFrom = function(timestamp) {
@@ -176,8 +176,8 @@ org.bigdesk.store.Store.prototype.dropIndexSegmentsStaringFrom = function(timest
 
 /**
  * Add a new item into hotThreads.
- * @param {!number} timestamp
- * @param {!string} hotThreads
+ * @param {number} timestamp
+ * @param {string} hotThreads
  * @return {boolean}
  */
 org.bigdesk.store.Store.prototype.addHotThreads = function(timestamp, hotThreads) {
@@ -186,7 +186,7 @@ org.bigdesk.store.Store.prototype.addHotThreads = function(timestamp, hotThreads
 
 /**
  * Remove all items from hotThreads older then timestamp (including).
- * @param {!number} timestamp
+ * @param {number} timestamp
  * @return {!Array.<number>} array with dropped timestamps
  */
 org.bigdesk.store.Store.prototype.dropHotThreadsStaringFrom = function(timestamp) {
@@ -221,9 +221,9 @@ org.bigdesk.store.Store.prototype.timestampsCompareOnlyGreater = function(a, b) 
 };
 
 /**
- * @param {!number} timestamp
- * @param {!Object|!string} item can be JSON or string (hot threads)
- * @param {goog.array.ArrayLike} array
+ * @param {number} timestamp
+ * @param {!Object|string} item can be JSON or string (hot threads)
+ * @param {Array.<{timestamp: number}>} array
  * @return {boolean} insert succeeded?
  * @private
  */
@@ -248,9 +248,9 @@ org.bigdesk.store.Store.prototype.addItem_ = function(timestamp, item, array) {
 };
 
 /**
- * @param {!number} timestamp
+ * @param {number} timestamp
  * @param {goog.array.ArrayLike} array
- * @param {!function(goog.array.ArrayLike)} setParentArray function to set array in parent
+ * @param {function(goog.array.ArrayLike)} setParentArray function to set array in parent
  * @return {!Array.<number>} array with dropped timestamps
  * @private
  */

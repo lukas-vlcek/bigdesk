@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-// ?? I put this dependency manually here to get rid of
-// TypeError: 'undefined' is not an object (evaluating 'goog.events.EventTarget')
-// not sure why it was not picked by calcdeps.
-goog.require('goog.events.EventTarget');
-
 goog.require('org.bigdesk.store.Manager');
 goog.require('org.bigdesk.net.TestServiceProvider');
 goog.require('org.bigdesk.store.event.EventType');
@@ -67,35 +62,107 @@ var testManagerStartStop = function () {
 
     assertEquals("Manager's store is empty", 0, manager.getNodesStatsCount());
     assertEquals("Manager's store is empty", 0, manager.getNodesInfoCount());
+    assertEquals("Manager's store is empty", 0, manager.getClusterHealthCount());
+    assertEquals("Manager's store is empty", 0, manager.getClusterStatesCount());
+    assertEquals("Manager's store is empty", 0, manager.getIndexSegmentsCount());
+    assertEquals("Manager's store is empty", 0, manager.getHotThreadsCount());
 
     manager.start().stop();
 
     assertEquals("Manager's store contains just one item", 1, manager.getNodesStatsCount());
     assertEquals("Manager's store contains just one item", 1, manager.getNodesInfoCount());
-
+    assertEquals("Manager's store contains just one item", 1, manager.getClusterHealthCount());
+    assertEquals("Manager's store contains just one item", 1, manager.getClusterStatesCount());
+    assertEquals("Manager's store contains just one item", 1, manager.getIndexSegmentsCount());
+    assertEquals("Manager's store contains just one item", 1, manager.getHotThreadsCount());
 };
 
-var testManagerBasicEvents = function () {
+/**
+ * Simple test that Manager dispatches all AddData events.
+ */
+var testManagerAddDataEvents = function () {
+
+    var firedEvents = 0;
 
     var manager = setUpNewGlobalManager();
 
-    var id1 = goog.events.listen(
+    goog.events.listenOnce(
         manager,
         org.bigdesk.store.event.EventType.NODES_STATS_ADD,
         function(e) {
-            var event = /** @type {org.bigdesk.store.event.DataAdd} */ e;
-            assertEquals('Expecting event with nodes stats', 'nodes stats', event.getData()['type'])
+            var event = /** @type {org.bigdesk.store.event.DataAdd} */ (e);
+            assertEquals('Expecting event with nodes stats', 'nodes stats', event.getData()['type']);
+            firedEvents++;
         }
     );
 
-    var id2 = goog.events.listen(
+    goog.events.listenOnce(
         manager,
         org.bigdesk.store.event.EventType.NODES_INFO_ADD,
         function(e) {
-            var event = /** @type {org.bigdesk.store.event.DataAdd} */ e;
-            assertEquals('Expecting event with nodes info', 'nodes info', event.getData()['type'])
+            var event = /** @type {org.bigdesk.store.event.DataAdd} */ (e);
+            assertEquals('Expecting event with nodes info', 'nodes info', event.getData()['type']);
+            firedEvents++;
+        }
+    );
+
+    goog.events.listenOnce(
+        manager,
+        org.bigdesk.store.event.EventType.CLUSTER_HEALTH_ADD,
+        function(e) {
+            var event = /** @type {org.bigdesk.store.event.DataAdd} */ (e);
+            assertEquals('Expecting event with cluster health', 'cluster health', event.getData()['type']);
+            firedEvents++;
+        }
+    );
+
+    goog.events.listenOnce(
+        manager,
+        org.bigdesk.store.event.EventType.CLUSTER_STATE_ADD,
+        function(e) {
+            var event = /** @type {org.bigdesk.store.event.DataAdd} */ (e);
+            assertEquals('Expecting event with cluster states', 'cluster states', event.getData()['type']);
+            firedEvents++;
+        }
+    );
+
+    goog.events.listenOnce(
+        manager,
+        org.bigdesk.store.event.EventType.INDEX_SEGMENTS_ADD,
+        function(e) {
+            var event = /** @type {org.bigdesk.store.event.DataAdd} */ (e);
+            assertEquals('Expecting event with index segments', 'index segments', event.getData()['type']);
+            firedEvents++;
+        }
+    );
+
+    goog.events.listenOnce(
+        manager,
+        org.bigdesk.store.event.EventType.HOT_THREADS_ADD,
+        function(e) {
+            var event = /** @type {org.bigdesk.store.event.DataAdd} */ (e);
+            assertEquals('Expecting event with hot threads', 'hot threads', event.getData());
+            firedEvents++;
         }
     );
 
     manager.start().stop();
+
+    assertEquals('We expect 6 events', 6, firedEvents);
+};
+
+/**
+ * Simple test that Manager's getXLatest() return data.
+ */
+var testManagerGetLatestData = function () {
+
+    var manager = setUpNewGlobalManager();
+    manager.start().stop();
+
+    assertEquals('nodes info',      manager.getNodesInfoLatest().value['type']);
+    assertEquals('nodes stats',     manager.getNodesStatsLatest().value['type']);
+    assertEquals('cluster health',  manager.getClusterHealthLatest().value['type']);
+    assertEquals('cluster states',  manager.getClusterStateLatest().value['type']);
+    assertEquals('index segments',  manager.getIndexSegmentsLatest().value['type']);
+    assertEquals('hot threads',     manager.getHotThreadsLatest().value);
 };

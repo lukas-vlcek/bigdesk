@@ -69,6 +69,6 @@ org.bigdesk.net.JsonpService.prototype.getIndexSegments = function(callback, opt
 /** @inheritDoc */
 org.bigdesk.net.JsonpService.prototype.getHotThreads = function(callback, opt_errback, opt_timestamp) {
     var timestamp = opt_timestamp || goog.now();
-    var data = {};
+    var data = "";
     callback(timestamp, data);
 };
