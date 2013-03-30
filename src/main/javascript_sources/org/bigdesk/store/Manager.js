@@ -667,7 +667,7 @@ org.bigdesk.store.Manager.prototype.getNodesStatsFor = function(timestamp) {
 
 /**
  * Return the latest nodes stats.
- * @return {{timestamp: number, value: !Object}|null}
+ * @return {?{timestamp: number, value: !Object}}
  */
 org.bigdesk.store.Manager.prototype.getNodesStatsLatest = function() {
     return this.store_.nodesStats.length > 0 ? this.store_.nodesStats[0] : null;
@@ -675,7 +675,7 @@ org.bigdesk.store.Manager.prototype.getNodesStatsLatest = function() {
 
 /**
  * Return the latest nodes info.
- * @return {{timestamp: number, value: !Object}|null}
+ * @return {?{timestamp: number, value: !Object}}
  */
 org.bigdesk.store.Manager.prototype.getNodesInfoLatest = function() {
     return this.store_.nodesInfos.length > 0 ? this.store_.nodesInfos[0] : null;
@@ -683,7 +683,7 @@ org.bigdesk.store.Manager.prototype.getNodesInfoLatest = function() {
 
 /**
  * Return the latest cluster state.
- * @return {{timestamp: number, value: !Object}|null}
+ * @return {?{timestamp: number, value: !Object}}
  */
 org.bigdesk.store.Manager.prototype.getClusterStateLatest = function() {
     return this.store_.clusterStates.length > 0 ? this.store_.clusterStates[0] : null;
@@ -691,7 +691,7 @@ org.bigdesk.store.Manager.prototype.getClusterStateLatest = function() {
 
 /**
  * Return the latest cluster health.
- * @return {{timestamp: number, value: !Object}|null}
+ * @return {?{timestamp: number, value: !Object}}
  */
 org.bigdesk.store.Manager.prototype.getClusterHealthLatest = function() {
     return this.store_.clusterHealths.length > 0 ? this.store_.clusterHealths[0] : null;
@@ -699,7 +699,7 @@ org.bigdesk.store.Manager.prototype.getClusterHealthLatest = function() {
 
 /**
  * Return the latest index segments.
- * @return {{timestamp: number, value: !Object}|null}
+ * @return {?{timestamp: number, value: !Object}}
  */
 org.bigdesk.store.Manager.prototype.getIndexSegmentsLatest = function() {
     return this.store_.indexSegments.length > 0 ? this.store_.indexSegments[0] : null;
@@ -707,7 +707,7 @@ org.bigdesk.store.Manager.prototype.getIndexSegmentsLatest = function() {
 
 /**
  * Return the latest hot threads.
- * @return {{timestamp: number, value: string}|null}
+ * @return {?{timestamp: number, value: string}}
  */
 org.bigdesk.store.Manager.prototype.getHotThreadsLatest = function() {
     return this.store_.hotThreads.length > 0 ? this.store_.hotThreads[0] : null;
