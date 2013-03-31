@@ -667,7 +667,7 @@ org.bigdesk.store.Manager.prototype.getDataFor_ = function(timestamp, array) {
         index = array.length + index;
     }
     // if (index = -1) then position was not found (all array items are greater)
-    return array.length > 0 ? array[array.length - index - 1] : null;
+    return (array.length > 0 && index >= 0 ) ? array[array.length - index - 1] : null;
 };
 
 /**

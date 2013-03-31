@@ -24,16 +24,16 @@ goog.provide('org.bigdesk.state.State');
 /**
  *
  * @param {number} position
- * @param {{timestamp: number, value: !Object}=} opt_nodesStats
- * @param {{timestamp: number, value: !Object}=} opt_nodesInfo
- * @param {{timestamp: number, value: !Object}=} opt_clusterState
- * @param {{timestamp: number, value: !Object}=} opt_clusterHealth
- * @param {{timestamp: number, value: !Object}=} opt_indexSegments
- * @param {{timestamp: number, value: string}=}  opt_hotThreads
+ * @param {?{timestamp: number, value: !Object}} nodesStats
+ * @param {?{timestamp: number, value: !Object}} nodesInfo
+ * @param {?{timestamp: number, value: !Object}} clusterState
+ * @param {?{timestamp: number, value: !Object}} clusterHealth
+ * @param {?{timestamp: number, value: !Object}} indexSegments
+ * @param {?{timestamp: number, value: string}}  hotThreads
  * @constructor
  */
-org.bigdesk.state.State = function (position, opt_nodesStats, opt_nodesInfo, opt_clusterState,
-                                    opt_clusterHealth, opt_indexSegments, opt_hotThreads) {
+org.bigdesk.state.State = function (position, nodesStats, nodesInfo, clusterState,
+                                    clusterHealth, indexSegments, hotThreads) {
     /**
      * @type {number}
      * @private
@@ -44,37 +44,37 @@ org.bigdesk.state.State = function (position, opt_nodesStats, opt_nodesInfo, opt
      * @type {?{timestamp: number, value: !Object}}
      * @private
      */
-    this.nodesStats_ = opt_nodesStats || null;
+    this.nodesStats_ = nodesStats;
 
     /**
      * @type {?{timestamp: number, value: !Object}}
      * @private
      */
-    this.nodesInfo_ = opt_nodesInfo || null;
+    this.nodesInfo_ = nodesInfo;
 
     /**
      * @type {?{timestamp: number, value: !Object}}
      * @private
      */
-    this.clusterState_ = opt_clusterState || null;
+    this.clusterState_ = clusterState;
 
     /**
      * @type {?{timestamp: number, value: !Object}}
      * @private
      */
-    this.clusterHealth_ = opt_clusterHealth || null;
+    this.clusterHealth_ = clusterHealth;
 
     /**
      * @type {?{timestamp: number, value: !Object}}
      * @private
      */
-    this.indicesSegments_ = opt_indexSegments || null;
+    this.indicesSegments_ = indexSegments;
 
     /**
      * @type {?{timestamp: number, value: string}}
      * @private
      */
-    this.hotThreads_ = opt_hotThreads || null;
+    this.hotThreads_ = hotThreads;
 };
 
 /**

@@ -15,7 +15,8 @@
  */
 
 /**
- * @fileoverview
+ * @fileoverview Head is to track state of the {@link org.bigdesk.store.Store} in specific point in time.
+ * Head can read {@link org.bigdesk.state.State} of the Store.
  * @author Lukas Vlcek (lukas.vlcek@gmail.com)
  */
 
@@ -29,6 +30,7 @@ goog.require('goog.events');
 goog.require('goog.Disposable');
 
 /**
+ * Create new instance.
  * @param {!org.bigdesk.store.Manager} manager
  * @constructor
  * @extends {goog.Disposable}
@@ -127,14 +129,6 @@ org.bigdesk.state.Head.prototype.getState = function(timestamp) {
         var clusterHealth = this.manager_.getClusterHealthFor(timestamp);
         var indexSegments = this.manager_.getIndexSegmentsFor(timestamp);
         var hotThreads    = this.manager_.getHotThreadsFor(timestamp);
-
-        // we need this because parameters in State constructor are optional (~undefined)
-        if (goog.isNull(nodesStats)) { nodesStats = undefined }
-        if (goog.isNull(nodesInfo)) { nodesInfo = undefined }
-        if (goog.isNull(clusterState)) { clusterState = undefined }
-        if (goog.isNull(clusterHealth)) { clusterHealth = undefined }
-        if (goog.isNull(indexSegments)) { indexSegments = undefined }
-        if (goog.isNull(hotThreads)) { hotThreads = undefined }
 
         state = new org.bigdesk.state.State(this.position_,
             nodesStats, nodesInfo, clusterState, clusterHealth, indexSegments, hotThreads);

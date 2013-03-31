@@ -189,10 +189,10 @@ var testManagerGetStateFor = function () {
 
     var head = new org.bigdesk.state.Head(manager);
 
-    assertEquals(null, head.getState(-10).getClusterHealth());
-    assertEquals(null, head.getState(-1).getClusterHealth());
-    assertEquals(null, head.getState(0).getClusterHealth());
-    assertEquals(null, head.getState(1).getClusterHealth());
+    assertNull(head.getState(-10).getClusterHealth());
+    assertNull(head.getState(-1).getClusterHealth());
+    assertNull(head.getState(0).getClusterHealth());
+    assertNull(head.getState(1).getClusterHealth());
     assertEquals(2, head.getState(2).getClusterHealth().timestamp);
     assertEquals(2, head.getState(3).getClusterHealth().timestamp);
     assertEquals(4, head.getState(4).getClusterHealth().timestamp);
@@ -208,4 +208,13 @@ var testManagerGetStateFor = function () {
     assertEquals(0, head.getState(0).getPosition());
     assertEquals(5, head.getState(5).getPosition());
     assertEquals(100, head.getState(100).getPosition());
+
+    var state = head.getState(-10);
+
+    assertNull(state.getNodesStats());
+    assertNull(state.getNodesInfo());
+    assertNull(state.getClusterState());
+    assertNull(state.getClusterHealth());
+    assertNull(state.getIndicesSegments());
+    assertNull(state.getHotThreads());
 };
