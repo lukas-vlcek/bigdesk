@@ -114,7 +114,7 @@ org.bigdesk.state.Head.prototype.getPosition = function() {
 };
 
 /**
- *
+ * Get State for specific timestamp.
  * @param {number} timestamp
  * @return {org.bigdesk.state.State}
  */
