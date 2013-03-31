@@ -15,8 +15,11 @@
  */
 
 goog.require('org.bigdesk.store.Manager');
+goog.require('org.bigdesk.store.TestManager');
 goog.require('org.bigdesk.net.TestServiceProvider');
 goog.require('org.bigdesk.store.event.EventType');
+goog.require('org.bigdesk.state.Head');
+goog.require('org.bigdesk.state.State');
 
 goog.require('goog.testing.jsunit');
 
@@ -41,7 +44,11 @@ var setUpNewGlobalManager = function(opt_configuration) {
     /** @type {org.bigdesk.net.ServiceProvider} */
      var serviceProvider = new org.bigdesk.net.TestServiceProvider();
 
-    this.manager = new org.bigdesk.store.Manager(config, serviceProvider);
+    if (config.net_service_provider == 'noop') {
+        this.manager = new org.bigdesk.store.TestManager(config, serviceProvider);
+    } else {
+        this.manager = new org.bigdesk.store.Manager(config, serviceProvider);
+    }
     return this.manager;
 };
 
@@ -165,4 +172,40 @@ var testManagerGetLatestData = function () {
     assertEquals('cluster states',  manager.getClusterStateLatest().value['type']);
     assertEquals('index segments',  manager.getIndexSegmentsLatest().value['type']);
     assertEquals('hot threads',     manager.getHotThreadsLatest().value);
+};
+
+/**
+ * Simple test of State position.
+ */
+var testManagerGetStateFor = function () {
+
+    var manager = /** @type {org.bigdesk.store.TestManager} */ (setUpNewGlobalManager({net_service_provider: 'noop'}));
+
+    manager.addIntoClusterHealthsTest(2, {value:2});
+    manager.addIntoClusterHealthsTest(4, {value:4});
+    manager.addIntoClusterHealthsTest(5, {value:5});
+    manager.addIntoClusterHealthsTest(7, {value:7});
+    manager.addIntoClusterHealthsTest(9, {value:9});
+
+    var head = new org.bigdesk.state.Head(manager);
+
+    assertEquals(null, head.getState(-10).getClusterHealth());
+    assertEquals(null, head.getState(-1).getClusterHealth());
+    assertEquals(null, head.getState(0).getClusterHealth());
+    assertEquals(null, head.getState(1).getClusterHealth());
+    assertEquals(2, head.getState(2).getClusterHealth().timestamp);
+    assertEquals(2, head.getState(3).getClusterHealth().timestamp);
+    assertEquals(4, head.getState(4).getClusterHealth().timestamp);
+    assertEquals(5, head.getState(5).getClusterHealth().timestamp);
+    assertEquals(5, head.getState(6).getClusterHealth().timestamp);
+    assertEquals(7, head.getState(7).getClusterHealth().timestamp);
+    assertEquals(7, head.getState(8).getClusterHealth().timestamp);
+    assertEquals(9, head.getState(9).getClusterHealth().timestamp);
+    assertEquals(9, head.getState(10).getClusterHealth().timestamp);
+    assertEquals(9, head.getState(100).getClusterHealth().timestamp);
+
+    assertEquals(-10, head.getState(-10).getPosition());
+    assertEquals(0, head.getState(0).getPosition());
+    assertEquals(5, head.getState(5).getPosition());
+    assertEquals(100, head.getState(100).getPosition());
 };

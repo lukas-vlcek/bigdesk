@@ -655,13 +655,19 @@ org.bigdesk.store.Manager.prototype.getEndpointUri = function() {
  */
 org.bigdesk.store.Manager.prototype.getDataFor_ = function(timestamp, array) {
     var evaluator = function(obj) {
-        return timestamp - obj.timestamp;
+        return obj.timestamp - timestamp;
     };
     var index = goog.array.binarySelect(array, evaluator);
-    if (index < 0) {
-        index = (-(index) - 2);
+    // exact match found
+    if (index >= 0) {
+        index = array.length - index - 1;
     }
-    return array.length > 0 ? array[index] : null;
+    // exact match found not found
+    if (index < 0) {
+        index = array.length + index;
+    }
+    // if (index = -1) then position was not found (all array items are greater)
+    return array.length > 0 ? array[array.length - index - 1] : null;
 };
 
 /**

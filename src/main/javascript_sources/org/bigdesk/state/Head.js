@@ -136,7 +136,8 @@ org.bigdesk.state.Head.prototype.getState = function(timestamp) {
         if (goog.isNull(indexSegments)) { indexSegments = undefined }
         if (goog.isNull(hotThreads)) { hotThreads = undefined }
 
-        state = new org.bigdesk.state.State(nodesStats, nodesInfo, clusterState, clusterHealth, indexSegments, hotThreads);
+        state = new org.bigdesk.state.State(this.position_,
+            nodesStats, nodesInfo, clusterState, clusterHealth, indexSegments, hotThreads);
     }
     return state;
 };

@@ -16,7 +16,7 @@
 
 /**
  * @fileoverview Simple implementation of ServiceProvider used in tests. It knows only
- * how to serve TestService instance.
+ * how to serve {@link org.bigdesk.net.TestService} and {@link org.bigdesk.net.NoopService} instances.
  * @author Lukas Vlcek (lukas.vlcek@gmail.com)
  */
 
@@ -24,6 +24,7 @@ goog.provide('org.bigdesk.net.TestServiceProvider');
 
 goog.require('org.bigdesk.net.ServiceProvider');
 goog.require('org.bigdesk.net.TestService');
+goog.require('org.bigdesk.net.NoopService');
 
 goog.require('goog.Uri');
 
@@ -38,6 +39,8 @@ org.bigdesk.net.TestServiceProvider.prototype.getService = function (name, uri) 
 
     if (name === 'test') {
         return new org.bigdesk.net.TestService();
+    } else if (name === 'noop') {
+        return new org.bigdesk.net.NoopService();
     } else {
         throw new Error("Unsupported name of service implementation ["+name+"]");
     }
