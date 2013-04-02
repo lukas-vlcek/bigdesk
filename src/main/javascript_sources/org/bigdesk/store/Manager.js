@@ -64,7 +64,7 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceFactory) {
     /** @private */
     this.config = {
         endpoint: 'http://localhost:9200',
-        net_service_provider: 'xhr',
+        net_service: 'xhr',
         delay: 4000,
         window: 60000
     };
@@ -84,7 +84,7 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceFactory) {
      * @type {!org.bigdesk.net.Service}
      * @private
      */
-    this.netService = this.serviceFactory.getService(this.config.net_service_provider,endpointUri);
+    this.netService = this.serviceFactory.getService(this.config.net_service,endpointUri);
 
     /**
      * @type {boolean}

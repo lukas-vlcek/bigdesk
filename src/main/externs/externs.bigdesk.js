@@ -28,7 +28,7 @@ var bigdesk = {};
 // manager configuration
 bigdesk.prototype.config;
 bigdesk.prototype.endpoint;
-bigdesk.prototype.net_service_provider;
+bigdesk.prototype.net_service;
 bigdesk.prototype.delay;
 bigdesk.prototype.window;
 

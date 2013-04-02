@@ -49,14 +49,14 @@ This is equivalent to the following configuration:
 ```javascript
 var manager = new org.bigdesk.store.Manager({
   endpoint: 'http://localhost:9200',
-  net_service_provider: 'xhr'
+  net_service: 'xhr'
 });
 ```
 Using `JSONP` on default `endpoint` would be:
 
 ```javascript
 var manager = new org.bigdesk.store.Manager({
-  net_service_provider: 'jsonp'
+  net_service: 'jsonp'
 });
 ```
 
@@ -67,6 +67,6 @@ var manager = new org.bigdesk.store.Manager({
 ```javascript
 var factory = new org.bigdesk.net.TestServiceFactory();
 var manager = new org.bigdesk.store.Manager({
-  net_service_provider: 'noop'
+  net_service: 'noop'
 }, factory);
 ```

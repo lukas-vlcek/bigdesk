@@ -34,7 +34,7 @@ var setUpNewGlobalManager = function(opt_configuration) {
     if (goog.isDefAndNotNull(this.manager)) { tearDown() }
 
     var config = {
-        net_service_provider: 'test'
+        net_service: 'test'
     };
 
     if (goog.isDefAndNotNull(opt_configuration)) {
@@ -44,7 +44,7 @@ var setUpNewGlobalManager = function(opt_configuration) {
     /** @type {org.bigdesk.net.ServiceFactory} */
     var serviceFactory = new org.bigdesk.net.TestServiceFactory();
 
-    if (config.net_service_provider == 'noop') {
+    if (config.net_service == 'noop') {
         this.manager = new org.bigdesk.store.TestManager(config, serviceFactory);
     } else {
         this.manager = new org.bigdesk.store.Manager(config, serviceFactory);
@@ -179,7 +179,7 @@ var testManagerGetLatestData = function () {
  */
 var testManagerGetStateFor = function () {
 
-    var manager = /** @type {org.bigdesk.store.TestManager} */ (setUpNewGlobalManager({net_service_provider: 'noop'}));
+    var manager = /** @type {org.bigdesk.store.TestManager} */ (setUpNewGlobalManager({net_service: 'noop'}));
 
     manager.addIntoClusterHealthsTest(2, {value:2});
     manager.addIntoClusterHealthsTest(4, {value:4});
