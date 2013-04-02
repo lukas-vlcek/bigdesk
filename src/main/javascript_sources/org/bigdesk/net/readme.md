@@ -24,8 +24,8 @@ The following implementations are available:
 
 There are two implementations available:
 
-- [`DefaultServiceFatory`](DefaultServiceFatory.js): can create `XhrService` or `JsonpService`.
-- [`TestServiceFatory`](../../../../../test/javascript_sources/org/bigdesk/net/TestServiceFatory.js): used for tests only. It can create `TestService` or `NoopService`.
+- [`DefaultServiceFactory`](DefaultServiceFactory.js): can create `XhrService` or `JsonpService`.
+- [`TestServiceFactory`](../../../../../test/javascript_sources/org/bigdesk/net/TestServiceFactory.js): used for tests only. It can create `TestService` or `NoopService`.
 
 Example of using `DefaultServiceFactory` to :
 
