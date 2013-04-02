@@ -26,13 +26,13 @@ State object is not typically instantiated by client. You can use `Head` object 
 
 [`org.bigdesk.state.Head`](Head.js) is an object that can produce State(s). Constructor of Head requires Store Manager.
 
-```
-  // create new manager and start collecting data
-  var manager = new org.bigdesk.store.Manager().start();
+```javascript
+// create new manager and start collecting data
+var manager = new org.bigdesk.store.Manager().start();
   
-  var head = new org.bigdesk.state.Head(manager);
+var head = new org.bigdesk.state.Head(manager);
   
-  // get state now
-  var state = head.getState(new Date().getTime());
+// get state now
+var state = head.getState(new Date().getTime());
   
 ```

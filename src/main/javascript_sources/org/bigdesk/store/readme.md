@@ -5,19 +5,19 @@ The core of Bigdesk functionality is based on [REST API][REST_API] that any [HTT
 [REST_API]:     http://www.elasticsearch.org/guide/reference/api/
 [HTTP_ENABLED]: http://www.elasticsearch.org/guide/reference/modules/http.html
 
-All the JSON data pulled from Elasticsearch node is stored in `org.bigdesk.store.Store`. This is a simple object that contains several arrays where the data for specific Elasticsearch cluster is kept.
+All the JSON data pulled from Elasticsearch node is stored in [`org.bigdesk.store.Store`](Store.js). This is a simple object that contains several arrays where the data for specific Elasticsearch cluster is kept.
 
 Internally, every JSON object stored in the Store gets `timestamp` and all objects in each array are sorted by it. 
 
 # Manager
 
-Store is typically not instantiated and used directly by a client, instead the client creates an instance of `org.bigdesk.store.Manager` which is in charge of the Store lifecycle.
+Store is typically not instantiated and used directly by a client, instead the client creates an instance of [`org.bigdesk.store.Manager`](Manager.js) which is in charge of the Store lifecycle.
 
 The important thing is that single Manager takes care of single Store only. This means that single Manager can collect data from one Elasticsearch cluster only.
 
 The simplest use of the `Manager` can look like the following:
 
-```
+```javascript
 var manager = new org.bigdesk.store.Manager();
 
 // start pulling the data
@@ -29,7 +29,7 @@ manager.stop();
 
 Manager can accept a configuration:
 
-```
+```javascript
 var configuration =
 {
     endpoint: 'http://localhost:9200'
