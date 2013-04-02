@@ -18,7 +18,7 @@ For example consider the following Store that keeps track of three colletions `A
                          |
                          Time selected by client
 ```
-The the State for time `{ T: B }` would be `{ A: null, B: 2, C: 3 }`.
+Then the State for time `{ T: B }` would be `{ A: null, B: 2, C: 3 }`.
 
 State object is not typically instantiated by client. You can use `Head` object for it instead.
 
