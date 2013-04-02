@@ -38,7 +38,7 @@ goog.require('org.bigdesk.store.snapshot.load.event.SnapshotLoadDone');
 
 goog.require('org.bigdesk.store.Store');
 
-goog.require('org.bigdesk.net.DefaultServiceProvider');
+goog.require('org.bigdesk.net.DefaultServiceFactory');
 
 goog.require('goog.async.Delay');
 goog.require('goog.object');
@@ -75,7 +75,7 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceFactory) {
 
     this.log.info('Instantiating Manager with configuration: ' + goog.debug.expose(this.config));
 
-    this.serviceFactory = goog.isDef(opt_serviceFactory) ? opt_serviceFactory : new org.bigdesk.net.DefaultServiceProvider();
+    this.serviceFactory = goog.isDef(opt_serviceFactory) ? opt_serviceFactory : new org.bigdesk.net.DefaultServiceFactory();
 
     /** @type {!goog.Uri} */
     var endpointUri = goog.Uri.parse(this.config.endpoint);

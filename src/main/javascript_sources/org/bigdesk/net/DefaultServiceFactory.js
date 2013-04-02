@@ -14,33 +14,29 @@
  * limitations under the License.
  */
 
-/**
- * @fileoverview Simple implementation of ServiceFactory used in tests. It knows only
- * how to serve {@link org.bigdesk.net.TestService} and {@link org.bigdesk.net.NoopService} instances.
- * @author Lukas Vlcek (lukas.vlcek@gmail.com)
- */
-
-goog.provide('org.bigdesk.net.TestServiceProvider');
+goog.provide('org.bigdesk.net.DefaultServiceFactory');
 
 goog.require('org.bigdesk.net.ServiceFactory');
-goog.require('org.bigdesk.net.TestService');
-goog.require('org.bigdesk.net.NoopService');
+goog.require('org.bigdesk.net.XhrService');
+goog.require('org.bigdesk.net.JsonpService');
 
 goog.require('goog.Uri');
 
 /**
+ * The default implementation of ServiceFactory. It can return Service for two
+ * different names: 'xhr' and 'jsonp'.
  * @constructor
  * @implements {org.bigdesk.net.ServiceFactory}
  */
-org.bigdesk.net.TestServiceProvider = function() {};
+org.bigdesk.net.DefaultServiceFactory = function () {};
 
 /** @inheritDoc */
-org.bigdesk.net.TestServiceProvider.prototype.getService = function (name, uri) {
+org.bigdesk.net.DefaultServiceFactory.prototype.getService = function (name, uri) {
 
-    if (name === 'test') {
-        return new org.bigdesk.net.TestService();
-    } else if (name === 'noop') {
-        return new org.bigdesk.net.NoopService();
+    if (name === 'xhr') {
+        return new org.bigdesk.net.XhrService(uri);
+    } else if (name === 'jsonp') {
+        return new org.bigdesk.net.JsonpService();
     } else {
         throw new Error("Unsupported name of service implementation ["+name+"]");
     }
