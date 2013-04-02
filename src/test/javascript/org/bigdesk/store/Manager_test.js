@@ -41,13 +41,13 @@ var setUpNewGlobalManager = function(opt_configuration) {
         goog.mixin(config, opt_configuration)
     }
 
-    /** @type {org.bigdesk.net.ServiceProvider} */
-     var serviceProvider = new org.bigdesk.net.TestServiceProvider();
+    /** @type {org.bigdesk.net.ServiceFactory} */
+    var serviceFactory = new org.bigdesk.net.TestServiceProvider();
 
     if (config.net_service_provider == 'noop') {
-        this.manager = new org.bigdesk.store.TestManager(config, serviceProvider);
+        this.manager = new org.bigdesk.store.TestManager(config, serviceFactory);
     } else {
-        this.manager = new org.bigdesk.store.Manager(config, serviceProvider);
+        this.manager = new org.bigdesk.store.Manager(config, serviceFactory);
     }
     return this.manager;
 };

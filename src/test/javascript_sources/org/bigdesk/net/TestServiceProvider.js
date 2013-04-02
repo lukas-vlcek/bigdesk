@@ -15,14 +15,14 @@
  */
 
 /**
- * @fileoverview Simple implementation of ServiceProvider used in tests. It knows only
+ * @fileoverview Simple implementation of ServiceFactory used in tests. It knows only
  * how to serve {@link org.bigdesk.net.TestService} and {@link org.bigdesk.net.NoopService} instances.
  * @author Lukas Vlcek (lukas.vlcek@gmail.com)
  */
 
 goog.provide('org.bigdesk.net.TestServiceProvider');
 
-goog.require('org.bigdesk.net.ServiceProvider');
+goog.require('org.bigdesk.net.ServiceFactory');
 goog.require('org.bigdesk.net.TestService');
 goog.require('org.bigdesk.net.NoopService');
 
@@ -30,7 +30,7 @@ goog.require('goog.Uri');
 
 /**
  * @constructor
- * @implements {org.bigdesk.net.ServiceProvider}
+ * @implements {org.bigdesk.net.ServiceFactory}
  */
 org.bigdesk.net.TestServiceProvider = function() {};
 

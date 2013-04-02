@@ -16,17 +16,17 @@
 
 goog.provide('org.bigdesk.net.DefaultServiceProvider');
 
-goog.require('org.bigdesk.net.ServiceProvider');
+goog.require('org.bigdesk.net.ServiceFactory');
 goog.require('org.bigdesk.net.XhrService');
 goog.require('org.bigdesk.net.JsonpService');
 
 goog.require('goog.Uri');
 
 /**
- * The default implementation of ServiceProvider. It can return Service for two
+ * The default implementation of ServiceFactory. It can return Service for two
  * different names: 'xhr' and 'jsonp'.
  * @constructor
- * @implements {org.bigdesk.net.ServiceProvider}
+ * @implements {org.bigdesk.net.ServiceFactory}
  */
 org.bigdesk.net.DefaultServiceProvider = function() {};
 

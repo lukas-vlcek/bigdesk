@@ -22,7 +22,7 @@
  *     <li>Drops old data from Store.
  *     <li>Fires custom events when data in Store changes (i.e. when new data is added or old data dropped).
  * </ul>
- * Execution of async calls is delegated to Service implementation provided by ServiceProvider.
+ * Execution of async calls is delegated to Service implementation provided by ServiceFactory.
  * @author Lukas Vlcek (lukas.vlcek@gmail.com)
  */
 
@@ -52,11 +52,11 @@ goog.require('goog.debug.Logger');
 /**
  * Creates a new Manager.
  * @param {Object=} opt_config optional configuration
- * @param {org.bigdesk.net.ServiceProvider=} opt_serviceProvider
+ * @param {org.bigdesk.net.ServiceFactory=} opt_serviceFactory
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-org.bigdesk.store.Manager = function(opt_config, opt_serviceProvider) {
+org.bigdesk.store.Manager = function(opt_config, opt_serviceFactory) {
     goog.events.EventTarget.call(this);
 
     /** @private */ this.log = goog.debug.Logger.getLogger('org.bigdesk.store.Manager');
@@ -75,7 +75,7 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceProvider) {
 
     this.log.info('Instantiating Manager with configuration: ' + goog.debug.expose(this.config));
 
-    this.serviceProvider = goog.isDef(opt_serviceProvider) ? opt_serviceProvider : new org.bigdesk.net.DefaultServiceProvider();
+    this.serviceFactory = goog.isDef(opt_serviceFactory) ? opt_serviceFactory : new org.bigdesk.net.DefaultServiceProvider();
 
     /** @type {!goog.Uri} */
     var endpointUri = goog.Uri.parse(this.config.endpoint);
@@ -84,7 +84,7 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceProvider) {
      * @type {!org.bigdesk.net.Service}
      * @private
      */
-    this.netService = this.serviceProvider.getService(this.config.net_service_provider,endpointUri);
+    this.netService = this.serviceFactory.getService(this.config.net_service_provider,endpointUri);
 
     /**
      * @type {boolean}

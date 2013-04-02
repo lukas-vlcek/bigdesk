@@ -2,7 +2,7 @@
 goog.addDependency("../../../src/main/javascript_sources/org/bigdesk/net/DefaultServiceProvider.js", ['org.bigdesk.net.DefaultServiceProvider'], ['org.bigdesk.net.ServiceProvider', 'org.bigdesk.net.XhrService', 'org.bigdesk.net.JsonpService', 'goog.Uri']);
 goog.addDependency("../../../src/main/javascript_sources/org/bigdesk/net/JsonpService.js", ['org.bigdesk.net.JsonpService'], ['org.bigdesk.net.Service']);
 goog.addDependency("../../../src/main/javascript_sources/org/bigdesk/net/Service.js", ['org.bigdesk.net.Service'], []);
-goog.addDependency("../../../src/main/javascript_sources/org/bigdesk/net/ServiceProvider.js", ['org.bigdesk.net.ServiceProvider'], []);
+goog.addDependency("../../../src/main/javascript_sources/org/bigdesk/net/ServiceFactory.js", ['org.bigdesk.net.ServiceProvider'], []);
 goog.addDependency("../../../src/main/javascript_sources/org/bigdesk/net/XhrService.js", ['org.bigdesk.net.XhrService'], ['org.bigdesk.net.Service', 'goog.string', 'goog.net.XhrManager', 'goog.net.XhrManager.Event', 'goog.net.XhrManager.Request', 'goog.Uri', 'goog.Disposable']);
 goog.addDependency("../../../src/main/javascript_sources/org/bigdesk/store/Manager.js", ['org.bigdesk.store.Manager'], ['org.bigdesk.store.event.StoreWhippedOut', 'org.bigdesk.store.event.DataAdd', 'org.bigdesk.store.event.DataRemove', 'org.bigdesk.store.snapshot.load.event.SnapshotLoadProgress', 'org.bigdesk.store.snapshot.load.event.SnapshotLoadDone', 'org.bigdesk.store.Store', 'org.bigdesk.net.DefaultServiceProvider', 'goog.async.Delay', 'goog.object', 'goog.Uri', 'goog.events.EventTarget', 'goog.events', 'goog.debug.Logger']);
 goog.addDependency("../../../src/main/javascript_sources/org/bigdesk/store/Store.js", ['org.bigdesk.store.Store'], ['goog.array', 'goog.Disposable']);
