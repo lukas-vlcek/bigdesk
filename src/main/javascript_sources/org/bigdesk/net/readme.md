@@ -10,8 +10,8 @@ The following implementations are available:
 
 - [`XhrService`](XhrService.js): uses [XMLHttpRequest][XMLHttpRequest] API to make `GET` requests. This is recommended implementation.
 - [`JsonpService`](JsonpService.js): uses [JSONP][JSNOP] technique to load data from Elasticsearch. _(Not implemented yet…)_
-- [`TestService`](../../../../test/javascript_sources/org/bigdesk/net/TestService.js): used only for testing. Not available in production code.
-- [`NoopService`](../../../../test/javascript_sources/org/bigdesk/net/NoopService.js): used only for testing. Not available in production code.
+- [`TestService`](../../../../../test/javascript_sources/org/bigdesk/net/TestService.js): used only for testing. Not available in production code.
+- [`NoopService`](../../../../../test/javascript_sources/org/bigdesk/net/NoopService.js): used only for testing. Not available in production code.
 
 [XMLHttpRequest]: http://en.wikipedia.org/wiki/XMLHttpRequest
 [JSNOP]: http://en.wikipedia.org/wiki/JSONP
@@ -25,7 +25,7 @@ The following implementations are available:
 There are two implementations available:
 
 - [`DefaultServiceFatory`](DefaultServiceFatory.js): can create `XhrService` or `JsonpService`.
-- [`TestServiceFatory`](../../../../test/javascript_sources/org/bigdesk/net/TestServiceFatory.js): used for tests only. It can create `TestService` or `NoopService`.
+- [`TestServiceFatory`](../../../../../test/javascript_sources/org/bigdesk/net/TestServiceFatory.js): used for tests only. It can create `TestService` or `NoopService`.
 
 Example of using `DefaultServiceFactory` to :
 
@@ -34,10 +34,10 @@ goog.require('org.bigdesk.net.DefaultServiceFactory');
 goog.require('goog.Uri');  
 
 // get ServiceFactory
-var serviceFactory = /** @type {org.bigdesk.net.ServiceFactory} */ new org.bigdesk.net.DefaultServiceFactory();
+var factory = /** @type {org.bigdesk.net.ServiceFactory} */ new org.bigdesk.net.DefaultServiceFactory();
   
 // we want use XhrService
-var xhrService = serviceFactroy.getService('xhr', goog.Uri.parse('http://localhost:9200'));
+var xhrService = factory.getService('xhr', goog.Uri.parse('http://localhost:9200'));
   
 // get hot threads …
 xhrService.getHotThreads(goog.nullFunction);
