@@ -1,4 +1,4 @@
-/*   
+/*
    Copyright 2011-2012 Lukas Vlcek
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -804,7 +804,7 @@ bigdesk_charts.indicesCacheSize = {
         return stats.map(function(snapshot){
             return {
                 timestamp: +snapshot.id,
-                value: +snapshot.node.indices.cache.field_size_in_bytes
+                value: +snapshot.node.indices.fielddata.memory_size_in_bytes
             }
         })
     },
@@ -838,7 +838,7 @@ bigdesk_charts.indicesCacheEvictions = {
         return stats.map(function(snapshot){
             return {
                 timestamp: +snapshot.id,
-                value: +snapshot.node.indices.cache.field_evictions
+                value: +snapshot.node.indices.fielddata.evictions
             }
         })
     },
