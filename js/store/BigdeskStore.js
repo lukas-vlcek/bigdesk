@@ -132,7 +132,7 @@ var Cluster = Backbone.Model.extend({
 
     // returns false or true depending on given version numbers
     checkVersion: function(major, minor, maintenance) {
-        if (major == 0 && (minor == 20) && maintenance >= 0) {
+        if (major == 0 && (minor == 90) && maintenance >= 0) {
             return true;
         }
         return false;
