@@ -1,4 +1,4 @@
-/*   
+/*
    Copyright 2011-2012 Lukas Vlcek
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -251,7 +251,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
 					// --------------------------------------------
 					// Threadpool Search
-					
+
                     _.defer(function(){
                         var threadpool_search_count = bigdesk_charts.threadpoolSearch.series1(stats);
                         var threadpool_search_peak = bigdesk_charts.threadpoolSearch.series2(stats);
@@ -272,7 +272,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
 					// --------------------------------------------
 					// Threadpool Index
-					
+
                     _.defer(function(){
                         var threadpool_index_count = bigdesk_charts.threadpoolIndex.series1(stats);
                         var threadpool_index_peak = bigdesk_charts.threadpoolIndex.series2(stats);
@@ -292,8 +292,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     });
 
 					// --------------------------------------------
-					// Threadpool Bulk 
-					
+					// Threadpool Bulk
+
                     _.defer(function(){
                         var threadpool_bulk_count = bigdesk_charts.threadpoolBulk.series1(stats);
                         var threadpool_bulk_peak = bigdesk_charts.threadpoolBulk.series2(stats);
@@ -311,10 +311,10 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             $("#tp_bulk_queue").text("n/a");
                         }
                     });
-					
+
 					// --------------------------------------------
-					// Threadpool Refresh 
-					
+					// Threadpool Refresh
+
                     _.defer(function(){
                         var threadpool_refresh_count = bigdesk_charts.threadpoolRefresh.series1(stats);
                         var threadpool_refresh_peak = bigdesk_charts.threadpoolRefresh.series2(stats);
@@ -332,7 +332,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             $("#tp_refresh_queue").text("n/a");
                         }
                     });
-						
+
 
                     // --------------------------------------------
                     // OS Info
@@ -587,7 +587,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                         if (stats_the_latest.node && stats_the_latest.node.indices && stats_the_latest.node.indices.cache) {
                             $("#indices_filter_cache_size").text(stats_the_latest.node.indices.cache.filter_size);
-                            $("#indices_field_cache_size").text(stats_the_latest.node.indices.cache.field_size);
+                            $("#indices_field_cache_size").text(stats_the_latest.node.indices.fielddata.memory_size);
                         } else {
                             $("#indices_filter_cache_size").text("n/a");
                             $("#indices_field_cache_size").text("n/a");
@@ -609,7 +609,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
                             try { chart_indicesCacheEvictions.animate(animatedCharts).update(indices_cache_field_evictions, indices_cache_filter_evictions); } catch (ignore) {}
 
                             $("#indices_filter_cache_evictions").text(stats_the_latest.node.indices.cache.filter_evictions);
-                            $("#indices_field_cache_evictions").text(stats_the_latest.node.indices.cache.field_evictions);
+                            $("#indices_field_cache_evictions").text(stats_the_latest.node.indices.fielddata.evictions);
 
                         }
                     });
