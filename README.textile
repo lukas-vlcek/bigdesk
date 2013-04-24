@@ -56,3 +56,7 @@ Bigdesk <b>2.0.0</b> and <b>master</b> (this is WIP, actual screen can be differ
 h3. Supported web browsers
 
 Bigdesk should work in all modern web browsers as long as they support SVG. It has been tested in Safari, Firefox and Chrome.
+
+h3. Credits
+
+Lukas Vlcek and "contributors":https://github.com/lukas-vlcek/bigdesk/contributors.
