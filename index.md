@@ -31,14 +31,7 @@ In simple words **bigdesk** makes it very easy to see how your Elasticsearch clu
 
 It pulls data from Elasticsearch REST API and turns it into charts.
 
-Bigdesk supports the following versions of Elasticsearch:
-
-<table>
-	<tr><th>Bigdesk</th><th>Elasticsearch</th></tr>
-	<tr><td>master</td><td>0.20.0 - 0.20.x</td></tr>
-	<tr><td>2.0.0</td><td>0.19.x - 0.20.x</td></tr>
-	<tr><td>1.0.0</td><td>0.17.x - 0.18.x</td></tr>
-</table>
+Don't forget to check Elasticsearch [support matrix](https://github.com/lukas-vlcek/bigdesk#bigdesk) to install correct version of Bigdesk.
 
 <div>
 <a href="https://twitter.com/bigdesk_" class="twitter-follow-button" data-show-count="false">Follow @bigdesk_</a>
@@ -53,9 +46,9 @@ To install Bigdesk **master** branch as an [Elasticsearch plugin](http://www.ela
 
 	bin/plugin -install lukas-vlcek/bigdesk
 
-To install a specific version (for example **2.0.0**) run:
+To install a specific version (for example **2.2.0**) run:
 
-	bin/plugin -install lukas-vlcek/bigdesk/2.0.0
+	bin/plugin -install lukas-vlcek/bigdesk/2.2.0
 
 Then you can navigate your web browser to `http://<elasticsearch_REST_endpoint>/_plugin/bigdesk/`
 
@@ -66,6 +59,8 @@ Then you can navigate your web browser to `http://<elasticsearch_REST_endpoint>/
 You can either download and extract Bigdesk archive:
 
 - **master**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/master), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/master)
+- **2.2.0**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v2.2.0), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v2.2.0)
+- **2.1.0**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v2.1.0), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v2.1.0)
 - **2.0.0**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v2.0.0), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v2.0.0)
 - **1.0.0**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v1.0.0), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v1.0.0)
 
