@@ -6,8 +6,8 @@ Live charts and statistics for Elasticsearch cluster.
 | master | 0.90.0 -> 0.90.x |
 | 2.2.0 | 0.90.0 -> 0.90.x |
 | 2.1.0 | 0.20.0 -> 0.20.x |
-| 2.0.0 | 0.19.x -> 0.20.x |
-| 1.0.0 | 0.17.x -> 0.18.x |
+| 2.0.0 | 0.19.0 -> 0.20.x |
+| 1.0.0 | 0.17.0 -> 0.18.x |
 
 h2. Release Notes
 
@@ -68,7 +68,7 @@ Bigdesk <b>1.0.0</b>
 
 !https://github.com/lukas-vlcek/bigdesk/raw/master/bigdesk-1.0.0.jpg!
 
-Bigdesk <b>2.0.0</b> and <b>master</b> (this is WIP, actual screen can be different)
+Bigdesk <b>2.0.0</b>
 
 !https://github.com/lukas-vlcek/bigdesk/raw/master/bigdesk-2.0.0-SNAPSHOT.jpg!
 
