@@ -9,17 +9,36 @@ Live charts and statistics for Elasticsearch cluster.
 | 2.0.0 | 0.19.x -> 0.20.x |
 | 1.0.0 | 0.17.x -> 0.18.x |
 
-h3. Installation
+h2. Release Notes
+
+h4. 2.2.0 (24-04-2013)
+
+* Upgrade to Elasticsearch 0.90.0 and higher (kudos to "@mrflip":https://github.com/mrflip and "@hustonhoburg":https://github.com/hustonhoburg)
+
+h4. 2.1.0
+
+* Added threadpool row to the metrics for Elasticsearch 0.20.0 and higher (kudos to "@jgagnon1":https://github.com/jgagnon1)
+
+h4. 2.0.0
+
+* Complete reimplementation (based on backbone and underscore)
+* Switched to D3.js (mainly due to friendly License)
+
+h4. 1.0.0
+
+* Initial version (jQuery and Highcharts)
+
+h2. Installation
 
 In order to install the plugin, simply run: <code>bin/plugin -install lukas-vlcek/bigdesk</code> for master version.
 
-To get specific version of Bigdesk use:  <code>bin/plugin -install lukas-vlcek/bigdesk/1.0.0</code>
+To get specific version of Bigdesk use:  <code>bin/plugin -install lukas-vlcek/bigdesk/2.2.0</code>
 
 For example, if you are running ES node on <code>localhost:9200</code> then you can navigate your browser to <code>http://localhost:9200/_plugin/bigdesk/</code> and Bigdesk will auto connect to existing node.
 
 You can also checkout Bigdesk into your local harddrive (or download and extract zip from github) and simply use it by opening <code>index.html</code> in your favorite web browser.
 
-h3. How to use Bigdesk
+h2. How to use Bigdesk
 
 Once you open Bigdesk in your web broswer, you need to <b>point it to the Elasticsearch node REST endpoint</b>. For example if you run Elasticsearch locally the REST endpoint would be <code>http://localhost:9200/</code> by default. In Bigdesk <b>master</b> you can simply specify any endpoint URL in the text field on top of the screen. If you are using Bigdesk <b>1.0.0</b> (ie. you want to connect Bigdesk to elasticearch 0.17.x - 0.18.x) then you need to fill into two different text fields. First you specify <code>hostname</code> of the Elasticsearch node into the first text field and its <code>port</code> number into the second text field (but in some situations this can be limiting, for example if you run Elasticsearch behind firewall).
 
@@ -43,7 +62,7 @@ Example connecting to <code>http://127.0.0.1:9201</code> with 3 sec refresh inte
 
 <code>index.html?endpoint=http%3A%2F%2F127.0.0.1%3A9201&refresh=3000&connect=true</code>
 
-h3. Screenshots
+h2. Screenshots
 
 Bigdesk <b>1.0.0</b>
 
@@ -53,10 +72,10 @@ Bigdesk <b>2.0.0</b> and <b>master</b> (this is WIP, actual screen can be differ
 
 !https://github.com/lukas-vlcek/bigdesk/raw/master/bigdesk-2.0.0-SNAPSHOT.jpg!
 
-h3. Supported web browsers
+h2. Supported web browsers
 
 Bigdesk should work in all modern web browsers as long as they support SVG. It has been tested in Safari, Firefox and Chrome.
 
-h3. Credits
+h2. Credits
 
 Lukas Vlcek and "contributors":https://github.com/lukas-vlcek/bigdesk/contributors.
