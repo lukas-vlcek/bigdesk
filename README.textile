@@ -3,11 +3,11 @@ h1. Bigdesk
 Live charts and statistics for Elasticsearch cluster.
 
 |_. Bigdesk |_. Elasticsearch |
-| master | 0.20.0 -> 0.20.x |
+| master | 0.90.0 -> 0.90.x |
+| 2.2.0 | 0.90.0 -> 0.90.x |
+| 2.1.0 | 0.20.0 -> 0.20.x |
 | 2.0.0 | 0.19.x -> 0.20.x |
 | 1.0.0 | 0.17.x -> 0.18.x |
-
-Note: Support of Elasticsearch v0.90.x may not be perfect now, better support is coming soon.
 
 h3. Installation
 
