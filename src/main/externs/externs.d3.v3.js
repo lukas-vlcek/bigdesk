@@ -33,6 +33,9 @@ d3.prototype.transition;
 d3.prototype.layout;
 d3.prototype.scale;
 d3.prototype.svg;
+d3.prototype.max;
+d3.prototype.format;
+d3.prototype.call; // probably not needed as JS has call function
 
 /**
  * Selection.
@@ -143,6 +146,38 @@ function scale() {}
 
 // @see https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-category20
 scale.prototype.category20;
+scale.prototype.rangeRound;
+scale.prototype.nice;
+// @see https://github.com/mbostock/d3/wiki/Quantitative-Scales#wiki-linear
+scale.prototype.linear;
+scale.prototype.range;
+
+
+/**
+ * Time.
+ * @see https://github.com/mbostock/d3/wiki/Time
+ * @interface */
+function time() {}
+
+// @see https://github.com/mbostock/d3/wiki/Time-Intervals
+time.prototype.floor;
+time.prototype.ceil;
+time.prototype.range;
+
+// @see https://github.com/mbostock/d3/wiki/Time-Scales
+time.prototype.scale;
+time.prototype.orient;
+time.prototype.ticks;
+time.prototype.tickSize;
+time.prototype.tickPadding;
+time.prototype.tickFormat;
+
+/**
+ * Axes.
+ * @see https://github.com/mbostock/d3/wiki/SVG-Axes
+ * @interface */
+function axis() {}
+
 
 /**
  * Layout.
@@ -164,13 +199,27 @@ pie.prototype.sort;
 
 /**
  * SVG.
- * @see https://github.com/mbostock/d3/wiki/SVG-Shapes
+ * @see https://github.com/mbostock/d3/wiki/SVG
  * @interface
  */
 function svg() {}
 
+// @see https://github.com/mbostock/d3/wiki/SVG-Shapes
 svg.prototype.arc;
+// @see https://github.com/mbostock/d3/wiki/SVG-Controls
+svg.prototype.brush;
 
+/**
+ * Brush
+ * @see https://github.com/mbostock/d3/wiki/SVG-Controls#wiki-brush
+ * @interface
+ */
+function brush() {}
+brush.prototype.x;
+brush.prototype.y;
+brush.prototype.on;
+brush.prototype.extent;
+brush.prototype.clear;
 
 /**
  * Arc Shape generator.
