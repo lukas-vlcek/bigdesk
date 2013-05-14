@@ -47,7 +47,9 @@ var xhrService = factory.getService('xhr', goog.Uri.parse('http://localhost:9200
 xhrService.getHotThreads(goog.nullFunction);
 ```
 
-But hold on! Client does not instantiate ServiceFactory directly (except for tests). By default the `Manager` does this for you and uses the `DefaultServiceManager` and `XhrService` implementations. 
+But hold on! Client does not instantiate ServiceFactory directly (except for tests).
+By default the `Manager` does this for you (it does it via `LookUp` context) and uses
+the `DefaultServiceManager` and `XhrService` implementations.
 This is equivalent to the following Manager configuration:
 
 ```javascript
@@ -69,11 +71,16 @@ var manager = new org.bigdesk.store.Manager({
 
 ## Unit Testing
 
-`Manager` can accept implementation of `ServiceFactry` as a second optional argument in the constructor. This allows us to tell the `Manager` to use `TestService`, `NoopService` or any other `Service` implementation that provided factory knows how to create.
+To make `Manager` use specific implementation of `ServiceFactory` one need to setup it in `LookUp` context.
+This allows us to tell the `Manager` to use `TestService`, `NoopService` or any other `Service` implementation
+that specific `ServiceFactory` knows to create.
 
 ```javascript
-var factory = new org.bigdesk.net.TestServiceFactory();
+org.bigdesk.context.LookUp.getInstance()
+  .setServiceFactory(
+    new org.bigdesk.net.TestServiceFactory()
+  );
 var manager = new org.bigdesk.store.Manager({
   net_service: 'noop'
-}, factory);
+});
 ```

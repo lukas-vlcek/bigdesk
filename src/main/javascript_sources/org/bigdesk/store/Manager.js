@@ -38,7 +38,7 @@ goog.require('org.bigdesk.store.snapshot.load.event.SnapshotLoadDone');
 
 goog.require('org.bigdesk.store.Store');
 
-goog.require('org.bigdesk.net.DefaultServiceFactory');
+goog.require('org.bigdesk.context.LookUp');
 
 goog.require('goog.async.Delay');
 goog.require('goog.object');
@@ -52,11 +52,10 @@ goog.require('goog.debug.Logger');
 /**
  * Creates a new Manager.
  * @param {Object=} opt_config optional configuration
- * @param {org.bigdesk.net.ServiceFactory=} opt_serviceFactory
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-org.bigdesk.store.Manager = function(opt_config, opt_serviceFactory) {
+org.bigdesk.store.Manager = function(opt_config) {
     goog.events.EventTarget.call(this);
 
     /** @private */ this.log = goog.debug.Logger.getLogger('org.bigdesk.store.Manager');
@@ -75,8 +74,6 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceFactory) {
 
     this.log.info('Instantiating Manager with configuration: ' + goog.debug.expose(this.config));
 
-    this.serviceFactory = goog.isDef(opt_serviceFactory) ? opt_serviceFactory : new org.bigdesk.net.DefaultServiceFactory();
-
     /** @type {!goog.Uri} */
     var endpointUri = goog.Uri.parse(this.config.endpoint);
 
@@ -84,7 +81,9 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceFactory) {
      * @type {!org.bigdesk.net.Service}
      * @private
      */
-    this.netService = this.serviceFactory.getService(this.config.net_service,endpointUri);
+    this.netService_ = org.bigdesk.context.LookUp.getInstance()
+                        .getServiceFactory()
+                        .getService(this.config.net_service,endpointUri);
 
     /**
      * @type {boolean}
@@ -106,7 +105,7 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceFactory) {
     /** @private */
     this.delay_nodesStats_ = new goog.async.Delay(
         function(){
-            thiz_.netService.getNodesStats(
+            thiz_.netService_.getNodesStats(
                 goog.bind(thiz_.processNodesStatsDelay, thiz_),
                 goog.bind(thiz_.processNodesStatsDelayError, thiz_)
             )
@@ -116,7 +115,7 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceFactory) {
     /** @private */
     this.delay_nodesInfo_ = new goog.async.Delay(
         function(){
-            thiz_.netService.getNodesInfo(
+            thiz_.netService_.getNodesInfo(
                 goog.bind(thiz_.processNodesInfoDelay, thiz_),
                 goog.bind(thiz_.processNodesInfoDelayError, thiz_)
             )
@@ -126,7 +125,7 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceFactory) {
     /** @private */
     this.delay_clusterStates_ = new goog.async.Delay(
         function(){
-            thiz_.netService.getClusterStates(
+            thiz_.netService_.getClusterStates(
                 goog.bind(thiz_.processClusterStatesDelay, thiz_),
                 goog.bind(thiz_.processClusterStatesDelayError, thiz_)
             )
@@ -136,7 +135,7 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceFactory) {
     /** @private */
     this.delay_clusterHealth_ = new goog.async.Delay(
         function(){
-            thiz_.netService.getClusterHealth(
+            thiz_.netService_.getClusterHealth(
                 goog.bind(thiz_.processClusterHealthDelay, thiz_),
                 goog.bind(thiz_.processClusterHealthDelayError, thiz_)
             )
@@ -146,7 +145,7 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceFactory) {
     /** @private */
     this.delay_indexSegments_ = new goog.async.Delay(
         function(){
-            thiz_.netService.getIndexSegments(
+            thiz_.netService_.getIndexSegments(
                 goog.bind(thiz_.processIndexSegmentsDelay, thiz_),
                 goog.bind(thiz_.processIndexSegmentsDelayError, thiz_)
             )
@@ -156,7 +155,7 @@ org.bigdesk.store.Manager = function(opt_config, opt_serviceFactory) {
     /** @private */
     this.delay_hotThreads_ = new goog.async.Delay(
         function(){
-            thiz_.netService.getHotThreads(
+            thiz_.netService_.getHotThreads(
                 goog.bind(thiz_.processHotThreadsDelay, thiz_),
                 goog.bind(thiz_.processHotThreadsDelayError, thiz_)
             )
@@ -186,7 +185,7 @@ org.bigdesk.store.Manager.prototype.disposeInternal = function() {
     // Remove references to DOM nodes, which are COM objects in IE.
 
     delete this.store_;
-    delete this.netService;
+    delete this.netService_;
     delete this.running;
     delete this.config;
     delete this.evnts_;

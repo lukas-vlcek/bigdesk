@@ -1,9 +1,17 @@
-/**
- * Created with IntelliJ IDEA.
- * User: lukas
- * Date: 3/31/13
- * Time: 9:03 AM
- * To change this template use File | Settings | File Templates.
+/*
+ * Copyright 2011-2013 Lukas Vlcek
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 /**
@@ -18,12 +26,13 @@ goog.provide('org.bigdesk.store.TestManager');
 goog.require('org.bigdesk.store.Manager');
 
 /**
- * Create new instance.
+ * Creates a new instance.
+ * @param {Object=} opt_config optional configuration
  * @constructor
  * @extends {org.bigdesk.store.Manager}
  */
-org.bigdesk.store.TestManager = function() {
-    org.bigdesk.store.Manager.call(this);
+org.bigdesk.store.TestManager = function(opt_config) {
+    org.bigdesk.store.Manager.call(this, opt_config);
 };
 goog.inherits(org.bigdesk.store.TestManager, org.bigdesk.store.Manager);
 

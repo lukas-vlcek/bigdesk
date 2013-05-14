@@ -17,6 +17,7 @@
 goog.require('org.bigdesk.store.Manager');
 goog.require('org.bigdesk.store.TestManager');
 goog.require('org.bigdesk.net.TestServiceFactory');
+goog.require('org.bigdesk.context.LookUp');
 goog.require('org.bigdesk.store.event.EventType');
 goog.require('org.bigdesk.state.Head');
 goog.require('org.bigdesk.state.State');
@@ -41,13 +42,12 @@ var setUpNewGlobalManager = function(opt_configuration) {
         goog.mixin(config, opt_configuration)
     }
 
-    /** @type {org.bigdesk.net.ServiceFactory} */
-    var serviceFactory = new org.bigdesk.net.TestServiceFactory();
+    org.bigdesk.context.LookUp.getInstance().setServiceFactory(new org.bigdesk.net.TestServiceFactory());
 
     if (config.net_service == 'noop') {
-        this.manager = new org.bigdesk.store.TestManager(config, serviceFactory);
+        this.manager = new org.bigdesk.store.TestManager(config);
     } else {
-        this.manager = new org.bigdesk.store.Manager(config, serviceFactory);
+        this.manager = new org.bigdesk.store.Manager(config);
     }
     return this.manager;
 };

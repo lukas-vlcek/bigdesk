@@ -49,6 +49,6 @@ org.bigdesk.net.DefaultServiceFactory.prototype.getService = function (name, uri
             break;
 
         default:
-            throw new Error("Unsupported name of service implementation ["+name+"]");
+            throw new Error("Unsupported name of net service implementation ["+name+"]");
     }
 };

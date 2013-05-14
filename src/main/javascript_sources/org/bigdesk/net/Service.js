@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+/**
+ * @fileoverview
+ * @author Lukas Vlcek (lukas.vlcek@gmail.com)
+ */
+
 goog.provide('org.bigdesk.net.Service');
 
 /**
@@ -32,7 +37,7 @@ org.bigdesk.net.Service = function() {};
  * @param {function(number, !Object)} opt_errback
  * @param {number=} opt_timestamp
  */
-org.bigdesk.net.Service.prototype.getNodesStats = function(callback, opt_errback, opt_timestamp) {};
+org.bigdesk.net.Service.prototype.getNodesStats;
 
 /**
  * Request for NodesInfo data.
@@ -44,7 +49,7 @@ org.bigdesk.net.Service.prototype.getNodesStats = function(callback, opt_errback
  * @param {function(number, !Object)} opt_errback
  * @param {number=} opt_timestamp
  */
-org.bigdesk.net.Service.prototype.getNodesInfo = function(callback, opt_errback, opt_timestamp) {};
+org.bigdesk.net.Service.prototype.getNodesInfo;
 
 /**
  * Request for ClusterState data.
@@ -56,7 +61,7 @@ org.bigdesk.net.Service.prototype.getNodesInfo = function(callback, opt_errback,
  * @param {function(number, !Object)} opt_errback
  * @param {number=} opt_timestamp
  */
-org.bigdesk.net.Service.prototype.getClusterStates = function(callback, opt_errback, opt_timestamp) {};
+org.bigdesk.net.Service.prototype.getClusterStates;
 
 /**
  * Request for ClusterHealth data.
@@ -68,7 +73,7 @@ org.bigdesk.net.Service.prototype.getClusterStates = function(callback, opt_errb
  * @param {function(number, !Object)} opt_errback
  * @param {number=} opt_timestamp
  */
-org.bigdesk.net.Service.prototype.getClusterHealth = function(callback, opt_errback, opt_timestamp) {};
+org.bigdesk.net.Service.prototype.getClusterHealth;
 
 /**
  * Request for IndexSegments data.
@@ -80,7 +85,7 @@ org.bigdesk.net.Service.prototype.getClusterHealth = function(callback, opt_errb
  * @param {function(number, !Object)} opt_errback
  * @param {number=} opt_timestamp
  */
-org.bigdesk.net.Service.prototype.getIndexSegments = function(callback, opt_errback, opt_timestamp) {};
+org.bigdesk.net.Service.prototype.getIndexSegments;
 
 /**
  * Request for HotThreads data.
@@ -92,4 +97,4 @@ org.bigdesk.net.Service.prototype.getIndexSegments = function(callback, opt_errb
  * @param {function(number, !Object)} opt_errback
  * @param {number=} opt_timestamp
  */
-org.bigdesk.net.Service.prototype.getHotThreads = function(callback, opt_errback, opt_timestamp) {};
+org.bigdesk.net.Service.prototype.getHotThreads;

@@ -2,6 +2,7 @@
 
 ../../../../../../closure-library-r2388/closure/bin/calcdeps.py \
 --dep ./../../../../../../closure-library-r2388 \
+--path ./../../../../../main/javascript_sources/org/bigdesk/context \
 --path ./../../../../../main/javascript_sources/org/bigdesk/state \
 --path ./../../../../../main/javascript_sources/org/bigdesk/store \
 --path ./../../../../../main/javascript_sources/org/bigdesk/net \
