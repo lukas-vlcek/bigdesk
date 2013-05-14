@@ -1,4 +1,8 @@
-`org.bigdesk.net` package provides functionality for network communication. In most cases client does not have to directly deal with objects found in this package at all, expect when implementing tests.
+`org.bigdesk.net` package provides functionality for network communication.
+In most cases **client does not have to directly deal with objects found in this package** at all,
+expect when implementing tests.
+
+For experts only.
 
 # Service
 
@@ -8,7 +12,7 @@
 
 The following implementations are available:
 
-- [`XhrService`](XhrService.js): uses [XMLHttpRequest][XMLHttpRequest] API to make `GET` requests. This is recommended implementation.
+- [`XhrService`](XhrService.js): uses [XMLHttpRequest][XMLHttpRequest] API to make `GET` requests. This is the recommended implementation.
 - [`JsonpService`](JsonpService.js): uses [JSONP][JSNOP] technique to load data from Elasticsearch. _(Not implemented yet…)_
 - [`TestService`](../../../../../test/javascript_sources/org/bigdesk/net/TestService.js): used only for testing. Not available in production code.
 - [`NoopService`](../../../../../test/javascript_sources/org/bigdesk/net/NoopService.js): used only for testing. Not available in production code.
@@ -44,13 +48,16 @@ xhrService.getHotThreads(goog.nullFunction);
 ```
 
 But hold on! Client does not instantiate ServiceFactory directly (except for tests). By default the `Manager` does this for you and uses the `DefaultServiceManager` and `XhrService` implementations. 
-This is equivalent to the following configuration:
+This is equivalent to the following Manager configuration:
 
 ```javascript
 var manager = new org.bigdesk.store.Manager({
   endpoint: 'http://localhost:9200',
   net_service: 'xhr'
 });
+
+// is the same as the following:
+// var manager = new org.bigdesk.store.Manager();
 ```
 Using `JSONP` on default `endpoint` would be:
 
