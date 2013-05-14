@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+/**
+ * @fileoverview The default implementation of ServiceFactory. It can return Service for two
+ * different names: 'xhr' and 'jsonp'.
+ * @author Lukas Vlcek (lukas.vlcek@gmail.com)
+ */
+
 goog.provide('org.bigdesk.net.DefaultServiceFactory');
 
 goog.require('org.bigdesk.net.ServiceFactory');
@@ -23,8 +29,7 @@ goog.require('org.bigdesk.net.JsonpService');
 goog.require('goog.Uri');
 
 /**
- * The default implementation of ServiceFactory. It can return Service for two
- * different names: 'xhr' and 'jsonp'.
+ * Create a new instance.
  * @constructor
  * @implements {org.bigdesk.net.ServiceFactory}
  */
@@ -33,12 +38,17 @@ org.bigdesk.net.DefaultServiceFactory = function () {};
 /** @inheritDoc */
 org.bigdesk.net.DefaultServiceFactory.prototype.getService = function (name, uri) {
 
-    if (name === 'xhr') {
-        return new org.bigdesk.net.XhrService(uri);
-    } else if (name === 'jsonp') {
-        return new org.bigdesk.net.JsonpService();
-    } else {
-        throw new Error("Unsupported name of service implementation ["+name+"]");
-    }
+    switch(name)
+    {
+        case 'xhr':
+            return new org.bigdesk.net.XhrService(uri);
+            break;
 
+        case 'jsonp':
+            return new org.bigdesk.net.JsonpService();
+            break;
+
+        default:
+            throw new Error("Unsupported name of service implementation ["+name+"]");
+    }
 };

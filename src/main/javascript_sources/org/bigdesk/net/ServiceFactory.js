@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
+/**
+ * @fileoverview
+ * @author Lukas Vlcek (lukas.vlcek@gmail.com)
+ */
+
 goog.provide('org.bigdesk.net.ServiceFactory');
 
 /**
- * An interface that represents provider of a net Services.
- * The idea is that the provider implementation can return specific Service
+ * An interface that represents a factory to construct providers a network Services.
+ * The idea is that the factory implementation can return specific Service
  * implementation for given string name (e.g. 'xhr', 'jsonp') and Uri.
  *
- * Services are typically quite dependent on browser objects and functionality
- * (such as DOM objects) which makes it hard for (headless) testing. ServiceFactory
- * makes it easy to provide ad-hoc Services for unit tests.
+ * For network Services an internal browser objects (like XmlHttpRequest) are typically used
+ * which makes it hard for (headless) testing. ServiceFactory makes it easy to allow
+ * for Service mock implementation for unit tests.
  *
  * @interface
  */
@@ -31,8 +36,8 @@ org.bigdesk.net.ServiceFactory = function() {};
 
 /**
  * Return Service for given name. Throws an error if no Service is defined for this name.
- * @param {!string} name
+ * @param {string} name
  * @param {!goog.Uri} uri
  * @return {!org.bigdesk.net.Service}
  */
-org.bigdesk.net.ServiceFactory.prototype.getService = function(name, uri) {};
+org.bigdesk.net.ServiceFactory.prototype.getService;

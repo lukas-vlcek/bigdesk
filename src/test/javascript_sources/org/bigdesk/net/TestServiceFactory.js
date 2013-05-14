@@ -29,6 +29,7 @@ goog.require('org.bigdesk.net.NoopService');
 goog.require('goog.Uri');
 
 /**
+ * Create a new instance.
  * @constructor
  * @implements {org.bigdesk.net.ServiceFactory}
  */
@@ -37,12 +38,17 @@ org.bigdesk.net.TestServiceFactory = function () {};
 /** @inheritDoc */
 org.bigdesk.net.TestServiceFactory.prototype.getService = function (name, uri) {
 
-    if (name === 'test') {
-        return new org.bigdesk.net.TestService();
-    } else if (name === 'noop') {
-        return new org.bigdesk.net.NoopService();
-    } else {
-        throw new Error("Unsupported name of service implementation ["+name+"]");
-    }
+    switch(name)
+    {
+        case 'test':
+            return new org.bigdesk.net.TestService();
+            break;
 
+        case 'noop':
+            return new org.bigdesk.net.NoopService();
+            break;
+
+        default:
+            throw new Error("Unsupported name of service implementation ["+name+"]");
+    }
 };
