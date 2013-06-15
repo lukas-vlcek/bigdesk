@@ -585,8 +585,8 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                         try { chart_indicesCacheSize.animate(animatedCharts).update(indices_cache_field_size, indices_cache_filter_size); } catch (ignore) {}
 
-                        if (stats_the_latest.node && stats_the_latest.node.indices && stats_the_latest.node.indices.cache) {
-                            $("#indices_filter_cache_size").text(stats_the_latest.node.indices.cache.filter_size);
+                        if (stats_the_latest.node && stats_the_latest.node.indices && stats_the_latest.node.indices.filter_cache) {
+                            $("#indices_filter_cache_size").text(stats_the_latest.node.indices.filter_cache.memory_size);
                             $("#indices_field_cache_size").text(stats_the_latest.node.indices.fielddata.memory_size);
                         } else {
                             $("#indices_filter_cache_size").text("n/a");
@@ -608,7 +608,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                             try { chart_indicesCacheEvictions.animate(animatedCharts).update(indices_cache_field_evictions, indices_cache_filter_evictions); } catch (ignore) {}
 
-                            $("#indices_filter_cache_evictions").text(stats_the_latest.node.indices.cache.filter_evictions);
+                            $("#indices_filter_cache_evictions").text(stats_the_latest.node.indices.filter_cache.evictions);
                             $("#indices_field_cache_evictions").text(stats_the_latest.node.indices.fielddata.evictions);
 
                         }
