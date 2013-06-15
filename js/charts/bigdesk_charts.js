@@ -813,7 +813,7 @@ bigdesk_charts.indicesCacheSize = {
         return stats.map(function(snapshot){
             return {
                 timestamp: +snapshot.id,
-                value: +snapshot.node.indices.cache.filter_size_in_bytes
+                value: +snapshot.node.indices.filter_cache.memory_size_in_bytes
             }
         })
     }
@@ -847,7 +847,7 @@ bigdesk_charts.indicesCacheEvictions = {
         return stats.map(function(snapshot){
             return {
                 timestamp: +snapshot.id,
-                value: +snapshot.node.indices.cache.filter_evictions
+                value: +snapshot.node.indices.filter_cache.evictions
             }
         })
     }
