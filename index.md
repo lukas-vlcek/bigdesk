@@ -31,7 +31,7 @@ In simple words **bigdesk** makes it very easy to see how your Elasticsearch clu
 
 It pulls data from Elasticsearch REST API and turns it into charts.
 
-Don't forget to check Elasticsearch [support matrix](https://github.com/lukas-vlcek/bigdesk#bigdesk) to install correct version of Bigdesk.
+Don't forget to check Elasticsearch [support matrix](https://github.com/lukas-vlcek/bigdesk#support-matrix) to install correct version of Bigdesk.
 
 <div>
 <a href="https://twitter.com/bigdesk_" class="twitter-follow-button" data-show-count="false">Follow @bigdesk_</a>
@@ -46,9 +46,9 @@ To install Bigdesk **master** branch as an [Elasticsearch plugin](http://www.ela
 
 	bin/plugin -install lukas-vlcek/bigdesk
 
-To install a specific version (for example **2.2.0**) run:
+To install a specific version (for example **2.2.1**) run:
 
-	bin/plugin -install lukas-vlcek/bigdesk/2.2.0
+	bin/plugin -install lukas-vlcek/bigdesk/2.2.1
 
 Then you can navigate your web browser to `http://<elasticsearch_REST_endpoint>/_plugin/bigdesk/`
 
@@ -59,7 +59,7 @@ Then you can navigate your web browser to `http://<elasticsearch_REST_endpoint>/
 You can either download and extract Bigdesk archive:
 
 - **master**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/master), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/master)
-- **2.2.0**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v2.2.0), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v2.2.0)
+- **2.2.1**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v2.2.1), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v2.2.1)
 - **2.1.0**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v2.1.0), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v2.1.0)
 - **2.0.0**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v2.0.0), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v2.0.0)
 - **1.0.0**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v1.0.0), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v1.0.0)
