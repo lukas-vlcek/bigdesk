@@ -2,14 +2,22 @@ h1. Bigdesk
 
 Live charts and statistics for Elasticsearch cluster.
 
+h2. Support matrix
+
 |_. Bigdesk |_. Elasticsearch |
 | master | 0.90.0 -> 1.0.x |
-| 2.2.0 | 0.90.0 -> 0.90.x |
+| 2.2.1 | 0.90.0 -> 1.0.x |
 | 2.1.0 | 0.20.0 -> 0.20.x |
 | 2.0.0 | 0.19.0 -> 0.20.x |
 | 1.0.0 | 0.17.0 -> 0.18.x |
 
 h2. Release Notes
+
+h4. 2.2.1 (02-07-2013)
+
+* This release is a recommended upgrade from 2.2.0
+* Fix bug: Update filter cache stats for latest stats API (#35) (kudos to "@cbcase":https://github.com/cbcase)
+* Improvement: Tolerate ES version 1.0.x (#32) (kudos to "@hmalphettes":https://github.com/hmalphettes)
 
 h4. 2.2.0 (24-04-2013)
 
