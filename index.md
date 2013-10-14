@@ -46,9 +46,9 @@ To install Bigdesk **master** branch as an [Elasticsearch plugin](http://www.ela
 
 	bin/plugin -install lukas-vlcek/bigdesk
 
-To install a specific version (for example **2.2.1**) run:
+To install a specific version (for example **2.2.2**) run:
 
-	bin/plugin -install lukas-vlcek/bigdesk/2.2.1
+	bin/plugin -install lukas-vlcek/bigdesk/2.2.2
 
 Then you can navigate your web browser to `http://<elasticsearch_REST_endpoint>/_plugin/bigdesk/`
 
@@ -59,6 +59,7 @@ Then you can navigate your web browser to `http://<elasticsearch_REST_endpoint>/
 You can either download and extract Bigdesk archive:
 
 - **master**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/master), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/master)
+- **2.2.2**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v2.2.2), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v2.2.2)
 - **2.2.1**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v2.2.1), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v2.2.1)
 - **2.1.0**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v2.1.0), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v2.1.0)
 - **2.0.0**: [zipball](https://github.com/lukas-vlcek/bigdesk/zipball/v2.0.0), [tarball](https://github.com/lukas-vlcek/bigdesk/tarball/v2.0.0)

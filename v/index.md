@@ -28,6 +28,9 @@ Check [Release Notes](https://github.com/lukas-vlcek/bigdesk#release-notes) for 
 
 \[<a href="2.2.1">Open</a>\] Supports elasticsearch **0.90.0** and **1.0.x**
 
+#### 2.2.2
+
+\[<a href="2.2.2">Open</a>\] Supports elasticsearch **0.90.0** and **1.0.x**
 
 #### master
 
