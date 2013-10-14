@@ -6,12 +6,21 @@ h2. Support matrix
 
 |_. Bigdesk |_. Elasticsearch |
 | master | 0.90.0 -> 1.0.x |
+| 2.2.2 | 0.90.0 -> 1.0.x |
 | 2.2.1 | 0.90.0 -> 1.0.x |
 | 2.1.0 | 0.20.0 -> 0.20.x |
 | 2.0.0 | 0.19.0 -> 0.20.x |
 | 1.0.0 | 0.17.0 -> 0.18.x |
 
 h2. Release Notes
+
+h4. 2.2.2 (14-10-2013)
+
+Reducing the amount of data pulled over HTTP and kept in the memory.
+
+* Show Elasticsearch version as part of node information [#38](https://github.com/lukas-vlcek/bigdesk/issues/38).
+* Reduce the amount of the data pulled via HTTP/REST [#41](https://github.com/lukas-vlcek/bigdesk/issues/41).
+* Further reduce the amount of the data kept in web browser memory [#42](https://github.com/lukas-vlcek/bigdesk/issues/42).
 
 h4. 2.2.1 (02-07-2013)
 
