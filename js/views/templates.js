@@ -67,7 +67,8 @@ var templates = {
             "<h2>Selected node:</h2>" +
                 "Name: {{name}}",
             "ID: \"{{id}}\"",
-            "Hostname: {{hostname}}"
+            "Hostname: {{hostname}}",
+            "Elasticsearch version: {{version}}"
         ].join("<br>"),
 
         selectedNodeHTTPTemplate: [
