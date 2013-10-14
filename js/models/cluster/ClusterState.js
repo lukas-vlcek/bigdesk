@@ -14,7 +14,10 @@
    limitations under the License.
 */
 
-// full _cluster/state response, http://www.elasticsearch.org/guide/reference/api/admin-cluster-state.html
+/**
+ * REST end point: _cluster/state?filter_metadata=true&filter_blocks=true
+ * @see <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-state.html">cluster state</a>
+ */
 
 var ClusterStateTimestamp = Backbone.Model;
 
@@ -23,7 +26,9 @@ var ClusterState = Backbone.Collection.extend({
     model: ClusterStateTimestamp,
 
     url: function() {
-        return '/_cluster/state';
+		var flags = ["filter_metadata", "filter_blocks"];
+		var query = flags.join("=true&")+"=true";
+        return '/_cluster/state?'+query;
     },
 
     parse: function(data) {

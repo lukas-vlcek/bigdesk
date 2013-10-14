@@ -14,7 +14,10 @@
    limitations under the License.
 */
 
-// full _all/_status response, http://www.elasticsearch.org/guide/reference/api/admin-indices-status.html
+/**
+ * REST end point: _all/_status
+ * @see <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-status.html">indices status</a>
+ */
 
 var IndicesStatusTimestamp = Backbone.Model;
 

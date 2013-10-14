@@ -14,7 +14,10 @@
    limitations under the License.
 */
 
-// just nodes from _cluster/state
+/**
+ * REST end point: _cluster/state?filter_routing_table=true&filter_metadata=true&filter_blocks=true
+ * @see <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-state.html">cluster state</a>
+ */
 
 var NodeState = Backbone.Model.extend({
     defaults: {

@@ -14,7 +14,10 @@
    limitations under the License.
 */
 
-// _cluster/health
+/**
+ * REST end point: _cluster/health
+ * @see <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-health.html">cluster health</a>
+ */
 
 var ClusterHealth = Backbone.Model.extend({
 

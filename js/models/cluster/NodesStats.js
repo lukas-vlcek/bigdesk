@@ -14,7 +14,10 @@
    limitations under the License.
 */
 
-// _nodes/stats
+/**
+ * REST end point: _nodes/stats
+ * @see <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-nodes-stats.html">nodes statistics<a/>
+ */
 
 var NodeStats = Backbone.Model;
 
