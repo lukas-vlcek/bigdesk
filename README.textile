@@ -5,12 +5,14 @@ Live charts and statistics for Elasticsearch cluster.
 h2. Support matrix
 
 |_. Bigdesk |_. Elasticsearch |
-| master | 0.90.0 -> 1.0.x |
-| 2.2.2 | 0.90.0 -> 1.0.x |
-| 2.2.1 | 0.90.0 -> 1.0.x |
+| master | 0.90.0 -> 0.90.x |
+| 2.2.2 | 0.90.0 -> 0.90.x |
+| 2.2.1 | 0.90.0 -> 0.90.x |
 | 2.1.0 | 0.20.0 -> 0.20.x |
 | 2.0.0 | 0.19.0 -> 0.20.x |
 | 1.0.0 | 0.17.0 -> 0.18.x |
+
+_Note: Support of Elasticsearch 1.x is planned for Bigdesk 3.0.0 and above._
 
 h2. Release Notes
 
