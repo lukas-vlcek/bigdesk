@@ -5,8 +5,9 @@ Live charts and statistics for Elasticsearch cluster.
 h2. Support matrix
 
 |_. Bigdesk |_. Elasticsearch |
-| master | 0.90.0 -> 0.90.x |
-| 2.2.2 | 0.90.0 -> 0.90.x |
+| master | 0.90.10 -> 0.90.x |
+| 2.2.3 | 0.90.10 -> 0.90.x |
+| 2.2.2 | 0.90.0 -> 0.90.9 |
 | 2.2.1 | 0.90.0 -> 0.90.x |
 | 2.1.0 | 0.20.0 -> 0.20.x |
 | 2.0.0 | 0.19.0 -> 0.20.x |
@@ -15,6 +16,12 @@ h2. Support matrix
 _Note: Support of Elasticsearch 1.x is planned for Bigdesk 3.0.0 and above._
 
 h2. Release Notes
+
+h4. 2.2.3 (14-02-2014)
+
+* Support for Elasticsearch 0.90.10 and above in 0.90.x. (Main changes introduced in "#4661":https://github.com/elasticsearch/elasticsearch/issues/4661)
+* JVM GC (Garbage Collection) Chart shows separated series for Young and Old generations.
+* Fixed node get stats retrieval.
 
 h4. 2.2.2 (14-10-2013)
 
@@ -55,11 +62,11 @@ To get specific version of Bigdesk use:  <code>bin/plugin -install lukas-vlcek/b
 
 For example, if you are running ES node on <code>localhost:9200</code> then you can navigate your browser to <code>http://localhost:9200/_plugin/bigdesk/</code> and Bigdesk will auto connect to existing node.
 
-You can also checkout Bigdesk into your local harddrive (or download and extract zip from github) and simply use it by opening <code>index.html</code> in your favorite web browser.
+You can also checkout Bigdesk into your local hard-drive (or download and extract zip from github) and simply use it by opening <code>index.html</code> in your favorite web browser.
 
 h2. How to use Bigdesk
 
-Once you open Bigdesk in your web broswer, you need to <b>point it to the Elasticsearch node REST endpoint</b>. For example if you run Elasticsearch locally the REST endpoint would be <code>http://localhost:9200/</code> by default. In Bigdesk <b>master</b> you can simply specify any endpoint URL in the text field on top of the screen. If you are using Bigdesk <b>1.0.0</b> (ie. you want to connect Bigdesk to elasticearch 0.17.x - 0.18.x) then you need to fill into two different text fields. First you specify <code>hostname</code> of the Elasticsearch node into the first text field and its <code>port</code> number into the second text field (but in some situations this can be limiting, for example if you run Elasticsearch behind firewall).
+Once you open Bigdesk in your web browser, you need to <b>point it to the Elasticsearch node REST endpoint</b>. For example if you run Elasticsearch locally the REST endpoint would be <code>http://localhost:9200/</code> by default. In Bigdesk <b>master</b> you can simply specify any endpoint URL in the text field on top of the screen. If you are using Bigdesk <b>1.0.0</b> (ie. you want to connect Bigdesk to elasticsearch 0.17.x - 0.18.x) then you need to fill into two different text fields. First you specify <code>hostname</code> of the Elasticsearch node into the first text field and its <code>port</code> number into the second text field (but in some situations this can be limiting, for example if you run Elasticsearch behind firewall).
 
 Then you hit <code>Connect</code> button (it is called <code>GO!</code> button in Bigdesk 1.0.0) and that's it.
 

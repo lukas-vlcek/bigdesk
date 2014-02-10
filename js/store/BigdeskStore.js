@@ -1,5 +1,5 @@
 /*   
-   Copyright 2011-2012 Lukas Vlcek
+   Copyright 2011-2014 Lukas Vlcek
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ var Cluster = Backbone.Model.extend({
                     if (version && version.number) {
                         version = version.number;
                         var _vArray = version.split(".");
-                        if (_vArray.length > 2 && _model.checkVersion(_vArray[0], _vArray[1], _vArray[2])) {
+                        if (_vArray.length > 2 && _model.checkVersion(_vArray)) {
                             _model.versionVerified(version);
                             _model.initCluster(connection);
                         } else {
@@ -131,11 +131,16 @@ var Cluster = Backbone.Model.extend({
     },
 
     // returns false or true depending on given version numbers
-    checkVersion: function(major, minor, maintenance) {
-        if ( (major == 1 && minor == 0) || (major == 0 && minor == 90 && maintenance >= 0)) {
-            return true;
-        }
-        return false;
+    checkVersion: function(parsedArray) {
+		var major = parsedArray[0];
+		var minor = parsedArray[1];
+		var maintenance = parsedArray[2];
+		var build = undefined;
+		if (parsedArray.length > 3) {
+			build = parsedArray[3]; // Betax, RCx, GAx ...
+		}
+        return (major == 0 && minor == 90 && maintenance >= 10);
+
     },
 
     versionVerified: function(version) {
@@ -147,7 +152,7 @@ var Cluster = Backbone.Model.extend({
             "*********************************\n" +
             "Bigdesk may not work correctly!\n" +
             "Found ES node version: " + version + "\n" +
-            "Requires ES node version: >= 0.90.0 or 1.0.x\n" +
+            "Requires ES node version: >= 0.90.10\n" +
             "*********************************";
         console.log(message);
         if (alert) { alert(message); }
@@ -217,8 +222,7 @@ var Cluster = Backbone.Model.extend({
 
             var timeoutFn = function() {
                 functionCall();
-                var t = window.setTimeout(timeoutFn, interval);
-                timeouts[timeoutId] = t;
+				timeouts[timeoutId] = window.setTimeout(timeoutFn, interval);
                 _model.set({timeouts: timeouts});
             };
 
@@ -234,8 +238,7 @@ var Cluster = Backbone.Model.extend({
                 console.log("[WARN] clearing and replacing existing interval");
                 _model.clearInterval(intervalId);
             }
-            var i = window.setInterval(functionCall, interval);
-            intervals[intervalId] = i;
+			intervals[intervalId] = window.setInterval(functionCall, interval);
             this.set({intervals: intervals});
             // fire callback right now
             functionCall();
@@ -366,6 +369,6 @@ var BigdeskStore = Backbone.Model.extend({
             _c.add(clusterModel)
         } else {
             throw "Cluster already exists.";
-        };
+        }
     }
 });

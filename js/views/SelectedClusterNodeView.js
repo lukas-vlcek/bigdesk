@@ -1,5 +1,5 @@
 /*
-   Copyright 2011-2012 Lukas Vlcek
+   Copyright 2011-2014 Lukas Vlcek
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -194,19 +194,30 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // JVM GC
 
                     _.defer(function(){
-                        var jvm_gc_collection_count_delta = bigdesk_charts.jvmGC.series1(stats);
-                        var jvm_gc_collection_time_delta = bigdesk_charts.jvmGC.series2(stats);
-                        if (jvm_gc_collection_count_delta.length > 1 && jvm_gc_collection_time_delta.length > 1) {
+                        var jvm_gc_young_collection_count_delta = bigdesk_charts.jvmGC.series1(stats);
+                        var jvm_gc_old_collection_count_delta = bigdesk_charts.jvmGC.series2(stats);
+                        var jvm_gc_both_collection_time_delta = bigdesk_charts.jvmGC.series3(stats);
+                        if (jvm_gc_old_collection_count_delta.length > 1 && jvm_gc_young_collection_count_delta.length > 1 && jvm_gc_both_collection_time_delta.length > 1) {
 
-                            delta(jvm_gc_collection_count_delta);
-                            delta(jvm_gc_collection_time_delta);
+                            delta(jvm_gc_old_collection_count_delta);
+                            delta(jvm_gc_young_collection_count_delta);
+                            delta(jvm_gc_both_collection_time_delta);
 
-                            try { chart_jvmGC.animate(animatedCharts).update(jvm_gc_collection_count_delta, jvm_gc_collection_time_delta); } catch (ignore) {}
+                            try {
+								chart_jvmGC.animate(animatedCharts).update(
+									jvm_gc_young_collection_count_delta,
+									jvm_gc_old_collection_count_delta,
+									jvm_gc_both_collection_time_delta);
+							} catch (ignore) {}
                         }
 
                         if (stats_the_latest && stats_the_latest.node) {
-                            $("#jvm_gc_time").text(stats_the_latest.node.jvm.gc.collection_time_in_millis + "ms");
-                            $("#jvm_gc_count").text(stats_the_latest.node.jvm.gc.collection_count);
+                            $("#jvm_gc_time").text(
+								stats_the_latest.node.jvm.gc.collectors.old.collection_time_in_millis + "ms / " + stats_the_latest.node.jvm.gc.collectors.young.collection_time_in_millis + "ms"
+							);
+                            $("#jvm_gc_count").text(
+								stats_the_latest.node.jvm.gc.collectors.old.collection_count + " / " + stats_the_latest.node.jvm.gc.collectors.young.collection_count
+							);
                         } else {
                             $("#jvm_gc_time").text("n/a");
                             $("#jvm_gc_count").text("n/a");
@@ -532,7 +543,7 @@ var SelectedClusterNodeView = Backbone.View.extend({
 
                             try { chart_indicesGetTime.animate(animatedCharts).update(indices_get_time, indices_missing_time, indices_exists_time); } catch (ignore) {}
 
-                            $("#indices_get_time").text(stats_the_latest.node.indices.get.time);
+                            $("#indices_get_time").text(stats_the_latest.node.indices.get.get_time);
                             $("#indices_exists_time").text(stats_the_latest.node.indices.get.exists_time);
                             $("#indices_missing_time").text(stats_the_latest.node.indices.get.missing_time);
                         }

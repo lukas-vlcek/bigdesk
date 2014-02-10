@@ -1,5 +1,5 @@
 /*   
-   Copyright 2011-2012 Lukas Vlcek
+   Copyright 2011-2014 Lukas Vlcek
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -35,27 +35,31 @@ var IndicesStatus = Backbone.Collection.extend({
         data.id = new Date().getTime();
 		if (data.indices) {
 			for (var i in data.indices) {
-				// drop unused data about index
-				delete data.indices[i].docs;
-				delete data.indices[i].flush;
-				delete data.indices[i].index;
-				delete data.indices[i].merges;
-				delete data.indices[i].refresh;
-				delete data.indices[i].translog;
-				if (data.indices[i].shards) {
-					var _shards = data.indices[i].shards;
-					if (_shards) {
-						for (var _s in _shards) {
-							for (var _i in _shards[_s]) {
-								var _tmp = _shards[_s][_i];
-								if (_tmp) {
-									// drop unused data about index shards
-									delete _tmp.docs;
-									delete _tmp.flush;
-									delete _tmp.merges;
-									delete _tmp.refresh;
-//									delete _tmp.routing;
-									delete _tmp.translog;
+				if (data.indices.hasOwnProperty(i)) {
+					// drop unused data about index
+					delete data.indices[i].docs;
+					delete data.indices[i].flush;
+					delete data.indices[i].index;
+					delete data.indices[i].merges;
+					delete data.indices[i].refresh;
+					delete data.indices[i].translog;
+					if (data.indices[i].shards) {
+						var _shards = data.indices[i].shards;
+						if (_shards) {
+							for (var _s in _shards) {
+								if (_shards.hasOwnProperty(_s)) {
+									for (var _i in _shards[_s]) {
+										var _tmp = _shards[_s][_i];
+										if (_tmp) {
+											// drop unused data about index shards
+											delete _tmp.docs;
+											delete _tmp.flush;
+											delete _tmp.merges;
+											delete _tmp.refresh;
+											// delete _tmp.routing;
+											delete _tmp.translog;
+										}
+									}
 								}
 							}
 						}

@@ -1,5 +1,5 @@
 /*
-   Copyright 2011-2012 Lukas Vlcek
+   Copyright 2011-2014 Lukas Vlcek
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -198,28 +198,38 @@ bigdesk_charts.jvmGC = {
             .width(bigdesk_charts.default.width).height(bigdesk_charts.default.height)
             .legend({
                 caption: "GC (Δ)",
-                series1: "Count",
-                series2: "Time (sec)",
+                series1: "Young gen count",
+                series2: "Old gen count",
+                series3: "Time both (sec)",
                 margin_left: 5,
                 margin_bottom: 6,
-                width: 85})
+                width: 105})
             .svg(element);
     },
 
-    series1: function(stats) {
-        return stats.map(function(snapshot){
-            return {
-                timestamp: +snapshot.node.jvm.timestamp,
-                value: +snapshot.node.jvm.gc.collection_count
-            }
-        })
-    },
+	series1: function(stats) {
+		return stats.map(function(snapshot){
+			return {
+				timestamp: +snapshot.node.jvm.timestamp,
+				value: +snapshot.node.jvm.gc.collectors.young.collection_count
+			}
+		})
+	},
 
     series2: function(stats) {
         return stats.map(function(snapshot){
             return {
                 timestamp: +snapshot.node.jvm.timestamp,
-                value: +snapshot.node.jvm.gc.collection_time_in_millis / 1000
+                value: +snapshot.node.jvm.gc.collectors.old.collection_count
+            }
+        })
+    },
+
+    series3: function(stats) {
+        return stats.map(function(snapshot){
+            return {
+                timestamp: +snapshot.node.jvm.timestamp,
+                value: +(snapshot.node.jvm.gc.collectors.old.collection_time_in_millis + snapshot.node.jvm.gc.collectors.young.collection_time_in_millis) / 1000
             }
         })
     }
