@@ -593,15 +593,20 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     _.defer(function(){
                         var indices_cache_field_size = bigdesk_charts.indicesCacheSize.series1(stats);
                         var indices_cache_filter_size = bigdesk_charts.indicesCacheSize.series2(stats);
+                        var indices_id_cache_size = bigdesk_charts.indicesCacheSize.series3(stats);
 
-                        try { chart_indicesCacheSize.animate(animatedCharts).update(indices_cache_field_size, indices_cache_filter_size); } catch (ignore) {}
+                        try { chart_indicesCacheSize.animate(animatedCharts)
+							.update(indices_cache_field_size, indices_cache_filter_size, indices_id_cache_size);
+						} catch (ignore) {}
 
                         if (stats_the_latest.node && stats_the_latest.node.indices && stats_the_latest.node.indices.filter_cache) {
                             $("#indices_filter_cache_size").text(stats_the_latest.node.indices.filter_cache.memory_size);
                             $("#indices_field_cache_size").text(stats_the_latest.node.indices.fielddata.memory_size);
+                            $("#indices_id_cache_size").text(stats_the_latest.node.indices.id_cache.memory_size);
                         } else {
                             $("#indices_filter_cache_size").text("n/a");
                             $("#indices_field_cache_size").text("n/a");
+                            $("#indices_id_cache_size").text("n/a");
                         }
                     });
 
@@ -628,13 +633,13 @@ var SelectedClusterNodeView = Backbone.View.extend({
                     // --------------------------------------------
                     // Indices: cache filter count
 
-                    _.defer(function(){
-                        if (stats_the_latest.node && stats_the_latest.node.indices && stats_the_latest.node.indices.cache) {
-                            $("#indices_cache_filter_size").text(stats_the_latest.node.indices.cache.filter_count);
-                        } else {
-                            $("#indices_cache_filter_size").text("n/a");
-                        }
-                    });
+//                    _.defer(function(){
+//                        if (stats_the_latest.node && stats_the_latest.node.indices && stats_the_latest.node.indices.cache) {
+//                            $("#indices_cache_filter_size").text(stats_the_latest.node.indices.cache.filter_count);
+//                        } else {
+//                            $("#indices_cache_filter_size").text("n/a");
+//                        }
+//                    });
 
                     // --------------------------------------------
                     // Process: CPU time (in millis)

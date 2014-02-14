@@ -30,9 +30,7 @@ var NodesState = Backbone.Collection.extend({
     model: NodeState,
 
     url: function() {
-        var flags = ["filter_routing_table", "filter_metadata", "filter_blocks"];
-        var query = flags.join("=true&")+"=true";
-        return '/_cluster/state?'+query;
+        return '/_cluster/state/nodes,master_node';
     },
 
     // Move important keys into values.

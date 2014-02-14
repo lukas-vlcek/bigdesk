@@ -803,6 +803,7 @@ bigdesk_charts.indicesCacheSize = {
                 caption: "Cache size",
                 series1: "Field",
                 series2: "Filter",
+                series3: "ID",
                 margin_left: 5,
                 margin_bottom: 6,
                 width: 65
@@ -826,7 +827,16 @@ bigdesk_charts.indicesCacheSize = {
                 value: +snapshot.node.indices.filter_cache.memory_size_in_bytes
             }
         })
-    }
+    },
+
+	series3: function(stats) {
+		return stats.map(function(snapshot){
+			return {
+				timestamp: +snapshot.id,
+				value: +snapshot.node.indices.id_cache.memory_size_in_bytes
+			}
+		})
+	}
 };
 
 bigdesk_charts.indicesCacheEvictions = {

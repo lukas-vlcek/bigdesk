@@ -66,8 +66,8 @@ var templates = {
         selectedNodeInfoTemplate: [
             "<h2>Selected node:</h2>" +
                 "Name: {{name}}",
-            "ID: \"{{id}}\"",
-            "Hostname: {{hostname}}",
+            "ID: <code>{{nodeId}}</code>",
+            "Hostname: {{host}}",
             "Elasticsearch version: {{version}}"
         ].join("<br>"),
 
@@ -232,8 +232,8 @@ var templates = {
         ].join("<br>"),
 
         indices1Template3: [
-            "Size: <span id='indices_store_size'>n/a</span>",
-            "Filters cached: <span id='indices_cache_filter_size'>n/a</span>"
+            "Size: <span id='indices_store_size'>n/a</span>"//,
+            //"Filter cache size: <span id='indices_cache_filter_size'>n/a</span>"
         ].join("<br>"),
 
         indicesSearchReqsTemplate: [
@@ -259,6 +259,7 @@ var templates = {
         ].join("<br>"),
 
         indicesCacheSizeTemplate: [
+            "ID: <span id='indices_id_cache_size'>n/a</span>",
             "Filter: <span id='indices_filter_cache_size'>n/a</span>",
             "Field: <span id='indices_field_cache_size'>n/a</span>"
         ].join("<br>"),

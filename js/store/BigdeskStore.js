@@ -139,8 +139,7 @@ var Cluster = Backbone.Model.extend({
 		if (parsedArray.length > 3) {
 			build = parsedArray[3]; // Betax, RCx, GAx ...
 		}
-        return (major == 0 && minor == 90 && maintenance >= 10);
-
+        return (major == 1 && minor >= 0 && maintenance >= 0 && (build != 'Beta1' || build != 'Beta2'));
     },
 
     versionVerified: function(version) {
@@ -152,7 +151,7 @@ var Cluster = Backbone.Model.extend({
             "*********************************\n" +
             "Bigdesk may not work correctly!\n" +
             "Found ES node version: " + version + "\n" +
-            "Requires ES node version: >= 0.90.10\n" +
+            "Requires ES node version: >= 1.0.0.RC1\n" +
             "*********************************";
         console.log(message);
         if (alert) { alert(message); }

@@ -41,7 +41,7 @@ var NodeStatsTimestamp = Backbone.Model.extend({
 var NodesStats = Backbone.Collection.extend({
     model: NodeStatsTimestamp,
     url: function() {
-        return '/_nodes/stats?all=true';
+        return '/_nodes/stats?human=true';
     },
     parse: function(response) {
         delete response.cluster_name;

@@ -26,9 +26,7 @@ var ClusterState = Backbone.Collection.extend({
     model: ClusterStateTimestamp,
 
     url: function() {
-		var flags = ["filter_metadata", "filter_blocks"];
-		var query = flags.join("=true&")+"=true";
-        return '/_cluster/state?'+query;
+        return '/_cluster/state/nodes,routing_table?human=true';
     },
 
     parse: function(data) {
