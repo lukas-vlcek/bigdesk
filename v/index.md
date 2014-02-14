@@ -8,30 +8,26 @@ Check [Release Notes](https://github.com/lukas-vlcek/bigdesk#release-notes) for 
 
 ### Available Online Versions
 
-#### 1.0.0
+#### 2.2.3
 
-\[<a href="1.0.0">Open</a>\] Supports elasticsearch **0.17.0** and **0.18.x**
+\[<a href="2.2.3">Open</a>\] Supports elasticsearch **0.90.10** and **0.90.x**
 
-#### 2.0.0
+#### 2.2.2
 
-\[<a href="2.0.0">Open</a>\] Supports elasticsearch **0.19.0** and **0.20.x**
+\[<a href="2.2.2">Open</a>\] Supports elasticsearch **0.90.0** and **0.90.9**
+
+#### 2.2.1
+
+\[<a href="2.2.1">Open</a>\] Supports elasticsearch **0.90.0** and **0.90.9**
 
 #### 2.1.0
 
 \[<a href="2.1.0">Open</a>\] Supports elasticsearch **0.20.0** and **0.20.x**
 
-#### 2.2.0
+#### 2.0.0
 
-\[<a href="2.2.0">Open</a>\] Supports elasticsearch **0.90.0** and **0.90.x**
+\[<a href="2.0.0">Open</a>\] Supports elasticsearch **0.19.0** and **0.20.x**
 
-#### 2.2.1
+#### 1.0.0
 
-\[<a href="2.2.1">Open</a>\] Supports elasticsearch **0.90.0** and **1.0.x**
-
-#### 2.2.2
-
-\[<a href="2.2.2">Open</a>\] Supports elasticsearch **0.90.0** and **1.0.x**
-
-#### master
-
-\[<a href="master">Open</a>\] Supports elasticsearch **0.90.0** and **1.0.x**
+\[<a href="1.0.0">Open</a>\] Supports elasticsearch **0.17.0** and **0.18.x**
