@@ -15,7 +15,7 @@
 */
 
 /**
- * REST end point: _all/_status
+ * REST end point: _status
  * @see <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-status.html">indices status</a>
  */
 
@@ -27,7 +27,8 @@ var IndicesStatus = Backbone.Collection.extend({
 
     url: function() {
         // TODO 'recovery' and 'snapshot' status
-        return '/_all/_status';
+//        return '/_all/_status';
+        return '/_status';
     },
 
     parse: function(data) {

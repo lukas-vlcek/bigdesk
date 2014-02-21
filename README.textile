@@ -5,7 +5,7 @@ Live charts and statistics for Elasticsearch cluster.
 h2. Support matrix
 
 |_. Bigdesk |_. Elasticsearch |
-| 2.4.0 | 1.0.0.RC1 -> 1.0.0.x |
+| 2.4.0 | 1.0.0.RC1 -> 1.x.x |
 | 2.2.3 | 0.90.10 -> 0.90.x |
 | 2.2.2 | 0.90.0 -> 0.90.9 |
 | 2.2.1 | 0.90.0 -> 0.90.9 |
