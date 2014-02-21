@@ -8,6 +8,10 @@ Check [Release Notes](https://github.com/lukas-vlcek/bigdesk#release-notes) for 
 
 ### Available Online Versions
 
+#### 2.4.0
+
+\[<a href="2.4.0">Open</a>\] Supports elasticsearch **1.0.0.RC1** and **1.0.x**
+
 #### 2.2.3
 
 \[<a href="2.2.3">Open</a>\] Supports elasticsearch **0.90.10** and **0.90.x**
