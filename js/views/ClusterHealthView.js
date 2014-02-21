@@ -52,7 +52,7 @@ var ClusterHealthView = Backbone.View.extend({
             $(this.el).html(
                 "Cluster: " + health.get("cluster_name") +
                 "<br>Number of nodes: " + health.get("number_of_nodes") +
-                "<br>Status: <span style='background-color: "+health.get("status")+"'>" + health.get("status") +"</span>");
+                "<br>Status: <span class='clusterStatus " + health.get("status") + "'>" + health.get("status") +"</span>");
         }
         return this;
     },
