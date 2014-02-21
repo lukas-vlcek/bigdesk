@@ -113,6 +113,21 @@ h3 {
     /*background: url("../images/award_star_gold.png") no-repeat 1px 3px;*/
 }
 
+.clusterStatus {
+  padding: 1px 2px;
+}
+.clusterStatus.red {
+  background-color: red;
+  color: white;
+}
+.clusterStatus.yellow {
+  background-color: yellow;
+}
+.clusterStatus.green {
+  background-color: green;
+  color: white;
+}
+
 /* TODO css for chart, move it into different file */
 .line {
     fill: none;
