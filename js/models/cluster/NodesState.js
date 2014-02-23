@@ -15,7 +15,7 @@
 */
 
 /**
- * REST end point: _cluster/state?filter_routing_table=true&filter_metadata=true&filter_blocks=true
+ * REST end point: _cluster/state/nodes,master_node
  * @see <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-state.html">cluster state</a>
  */
 

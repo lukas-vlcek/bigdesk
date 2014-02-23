@@ -15,7 +15,7 @@
 */
 
 /**
- * REST end point: _cluster/nodes/{nodeId}
+ * REST end point: _nodes/{nodeId}?human=true
  * @see <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster.html">cluster nodes</a>
  */
 
