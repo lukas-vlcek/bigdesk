@@ -124,7 +124,7 @@ Elasticsearch plugin manager then downloads and install Bigdesk sources:
 	Installed lukas-vlcek/bigdesk/2.4.0 into /Users/lukas/projects/elasticsearch-1.0.0/plugins/bigdesk
 	Identified as a _site plugin, moving to _site structure ...
 
-Then you can open web browser and navigate to `http://localhost:9200/_plugin/bigdesk` it will open installed Bigdesk
+Then you can open web browser and navigate to `http://localhost:9200/_plugin/bigdesk/` it will open installed Bigdesk
 and automatically auto-connect to local node.
 
 #### 2) Clone Bigdesk repo into local filesystem and checkout specific tag
