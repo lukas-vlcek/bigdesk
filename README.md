@@ -21,7 +21,7 @@ Live charts and statistics for Elasticsearch cluster.
   </tr>
   <tr>
     <td>2.4.0</td>
-    <td>1.0.0.RC1 ... 1.1.x</td>
+    <td>1.0.0.RC1 ... 1.2.x</td>
   </tr>
   <tr>
     <td>n/a</td>
