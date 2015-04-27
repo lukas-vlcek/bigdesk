@@ -320,6 +320,10 @@ $(document).ready(
                 // if "endpoint" or "connect" values provided as an URL parameter, do not change them
                 if (!getSearchUrlVar("endpoint")) {
                     params.endpoint = window.location.protocol + "//" + window.location.host;
+                    var index = window.location.pathname.indexOf("/_plugin");
+                    if (index > 0){
+                    	params.endpoint += window.location.pathname.substr(0, index);
+                    }
                 }
                 if (!getSearchUrlVar("connect")) {
                     params.connect = true;
