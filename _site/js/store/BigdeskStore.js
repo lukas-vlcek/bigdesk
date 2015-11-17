@@ -139,7 +139,7 @@ var Cluster = Backbone.Model.extend({
 		if (parsedArray.length > 3) {
 			build = parsedArray[3]; // Betax, RCx, GAx ...
 		}
-        return (major == 1 && minor >= 0 && maintenance >= 0 && (build != 'Beta1' || build != 'Beta2'));
+        return (major >= 1 && minor >= 0 && maintenance >= 0 && (build != 'Beta1' || build != 'Beta2'));
     },
 
     versionVerified: function(version) {
