@@ -15,7 +15,8 @@
 */
 
 /**
- * REST end point: _status
+ * The REST endpoint was changed to _recovery since _status was deprecated in prior versions of Elasticsearch
+ * REST end point: _recovery
  * @see <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-status.html">indices status</a>
  */
 
@@ -26,7 +27,7 @@ var IndicesStatus = Backbone.Collection.extend({
     model: IndicesStatusTimestamp,
 
     url: function() {
-        return '/_status';
+        return '/_recovery';
     },
 
     parse: function(data) {
