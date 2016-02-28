@@ -2,7 +2,7 @@
 layout: default
 ---
 
-In simple words **bigdesk** makes it very easy to see how your Elasticsearch cluster is doing. Just install it as an [Elasticsearch plugin](#elasticsearch_plugin), [download locally](#download_locally) or run [online from the web](#online_from_the_web), then point it to the Elasticsearch node REST endpoint and **have fun**. 
+In simple words **bigdesk** makes it very easy to see how your Elasticsearch cluster is doing. Just install it as an [Elasticsearch plugin](#elasticsearch-plugin), [download locally](#download-locally) or run [online from the web](#online-from-the-web), then point it to the Elasticsearch node REST endpoint and **have fun**. 
 
 *****
 
