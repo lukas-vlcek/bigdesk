@@ -44,13 +44,17 @@ Don't forget to check Elasticsearch [support matrix](https://github.com/lukas-vl
 
 To install the Bigdesk **master** branch as an [Elasticsearch plugin](http://www.elasticsearch.org/guide/reference/modules/plugins.html) on a particular Elasticsearch node, navigate to the node installation folder and run the following command:
 
-	bin/plugin install lukas-vlcek/bigdesk
+	bin/plugin --install lukas-vlcek/bigdesk
 
 To install a specific version (for example **2.4.0**) run:
 
-	bin/plugin install lukas-vlcek/bigdesk/2.4.0
+	bin/plugin --install lukas-vlcek/bigdesk/2.4.0
 
 Then you can navigate your web browser to `http://<elasticsearch_REST_endpoint>/_plugin/bigdesk/`
+
+Note that site plugin installation syntax changed a few times for different Elasticsearch versions. For detailed instructions please consult Elasticsearch documentation [here](https://www.elastic.co/guide/en/elasticsearch/reference/0.90/modules-plugins.html#site-plugins)
+for \< 0.90.2 and \> 0.90.2 or [here](https://www.elastic.co/guide/en/elasticsearch/plugins/2.2/installation.html)
+for \>= 2.2.
 
 *****
 
