@@ -1,4 +1,4 @@
-/*   
+/*
    Copyright 2011-2014 Lukas Vlcek
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -85,10 +85,19 @@ var selectedView = undefined;
 
 var selectedClusterName = undefined;
 
-var connectTo = function(url, refreshInterval, storeSize, dispatcher, selectedView, callback) {
+var configureBasicAuth = function(username, password) {
+    $.ajaxSetup({
+        headers: {
+            "Authorization": "Basic " + btoa(username + ":" + password)
+        }
+    });
+};
 
-    var connectionConfig = { baseUrl: url };
+var connectTo = function(url, username, password, refreshInterval, storeSize, dispatcher, selectedView, callback) {
+    var connectionConfig = { baseUrl: url};
     var clusterHealth = new ClusterHealth({},connectionConfig);
+
+    if(username && username.trim() != '') configureBasicAuth( username, password );
 
     clusterHealth.fetch({
 
@@ -213,6 +222,8 @@ $(document).ready(
     function($) {
 
         var restEndPoint = $("#restEndPoint"),
+            authUsername = $("#basicAuthUser"),
+            authPassword = $("#basicAuthPass"),
             refreshInterval = $("#refreshInterval"),
             storeSize = $("#storeSize"),
             button = $("#connectButton"),
@@ -277,7 +288,7 @@ $(document).ready(
             if (isConnected()) {
                 disconnectFrom(restEndPoint.val(), switchButtonText);
             } else {
-                connectTo(restEndPoint.val(), getRefreshInterval(), getStoreSize(), bigdeskEventDispatcher, selectedView, switchButtonText);
+                connectTo(restEndPoint.val(), authUsername.val(), authPassword.val(), getRefreshInterval(), getStoreSize(), bigdeskEventDispatcher, selectedView, switchButtonText);
             }
         });
 
