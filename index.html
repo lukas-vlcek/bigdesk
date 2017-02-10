@@ -78,10 +78,15 @@
     <form>
     <div class="row connectionPanel">
         <div class="sixcol">
-            <span class="connectionPanelSectionWithoutDecoration">
-                ES node REST endpoint
-                <input id="restEndPoint" type="text" size="40" value="http://localhost:9200" />
-            </span>
+            <div class="connectionPanelSectionWithoutDecoration panel">
+                <label>ES node REST endpoint</label>
+                <input id="restEndPoint" type="text" value="http://localhost:9200" />
+            </div>
+            <div class="basicAuthPanel panel">
+                <label>Basic Auth Credentials</label>
+                <input id="basicAuthUser" type="text" />
+                <input id="basicAuthPass" type="password" />
+            </div>
         </div>
         <div class="sixcol last">
             <span class="connectionPanelSection">

@@ -75,8 +75,22 @@ h3 {
     padding: 0 5px 0 7px;
 }
 
-.connectionPanelSectionWithoutDecoration {
+.connectionPanel .panel {
     padding: 0 2px 0 7px;
+}
+
+.connectionPanel .panel label {
+  display: inline-block;
+  min-width: 170px;
+}
+
+.connectionPanel .panel input {
+  width: 150px;
+  margin-right: 5px;
+}
+
+.connectionPanelSectionWithoutDecoration.panel input {
+  width: 315px
 }
 
 #clusterHealth {
