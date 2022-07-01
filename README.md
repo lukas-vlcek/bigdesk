@@ -1,3 +1,7 @@
+<table><tr><th>
+&nbsp;&nbsp;&nbsp;——— This repository is archived. Thanks :purple_heart: to all contributors. ———&nbsp;&nbsp;&nbsp;
+</th></tr></table>
+
 # Bigdesk
 
 Live charts and statistics for Elasticsearch cluster.
